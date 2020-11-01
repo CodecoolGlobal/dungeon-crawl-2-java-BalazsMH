@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tiles {
-    public static int TILE_WIDTH = 32;
+/*    public static int TILE_WIDTH = 32;
 
     private static Image tileset = new Image("/tiles.png", 543 * 2, 543 * 2, true, false);
     private static Map<String, Tile> tileMap = new HashMap<>();
@@ -30,7 +30,32 @@ public class Tiles {
         tileMap.put("skeleton", new Tile(29, 6));
         tileMap.put("lootbox", new Tile(12, 31));
 
+    }*/
+
+    public static int TILE_WIDTH = 32;
+
+    private static Image tileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
+    private static Map<String, Tile> tileMap = new HashMap<>();
+    public static class Tile {
+        public final int x, y, w, h;
+        Tile(int i, int j) {
+            x = i * (TILE_WIDTH);
+            y = j * (TILE_WIDTH);
+            w = TILE_WIDTH;
+            h = TILE_WIDTH;
+        }
     }
+
+    static {
+        tileMap.put("empty", new Tile(0, 0));
+        tileMap.put("wall", new Tile(7, 0));
+        tileMap.put("floor", new Tile(1, 0));
+        tileMap.put("player", new Tile(27, 0));
+        tileMap.put("skeleton", new Tile(29, 6));
+        tileMap.put("lootbox", new Tile(12, 31));
+
+    }
+
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
