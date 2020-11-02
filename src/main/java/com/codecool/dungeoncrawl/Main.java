@@ -6,17 +6,24 @@ import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
@@ -25,6 +32,10 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Label currentInfo = new Label();
+//    static {
+//        currentInfo
+//    }
 
     public static void main(String[] args) {
         launch(args);
@@ -32,17 +43,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
-
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+
+        VBox infoBox = createInfoBox();
+        VBox rightPane = new VBox(ui, infoBox);
+        rightPane.setSpacing(100.00);
 
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
-        borderPane.setRight(ui);
+        borderPane.setRight(rightPane);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -54,7 +70,9 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
+        KeyCode keyPressed = keyEvent.getCode();
+        currentInfo.setText(String.format("User pressed button: %s", keyPressed));
+        switch (keyPressed) {
             case UP:
                 map.getPlayer().move(0, -1);
                 refresh();
@@ -98,5 +116,18 @@ public class Main extends Application {
     private void moveAllPokemon() {
         List<Pokemon> pokemonList= map.getPokemonList();
         pokemonList.forEach(p -> p.move());
+    }
+
+    private VBox createInfoBox(){
+        Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
+        Label infoLabel = new Label();
+        infoLabel.setGraphic(new ImageView(infoImage));
+        VBox infoBox = new VBox(infoLabel, currentInfo);
+        infoBox.setAlignment(Pos.BASELINE_CENTER);
+        infoBox.setStyle("-fx-border-color: blue;" +
+                "-fx-padding: 10px;");
+        infoBox.snapSizeY(100);
+        infoBox.setSpacing(20);
+        return infoBox;
     }
 }
