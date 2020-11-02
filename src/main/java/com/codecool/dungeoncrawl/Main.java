@@ -55,7 +55,7 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
 
         primaryStage.setTitle("JavaMon");
-        primaryStage.getIcons().add(new Image("file:icon.png"));
+        primaryStage.getIcons().add(new Image("file:logo.png"));
 
         primaryStage.show();
     }
