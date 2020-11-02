@@ -1,8 +1,10 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import java.io.InputStream;
@@ -45,9 +47,17 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new LootBox(cell);
                             break;
-                        case 'P':
+                        case 'C':
                             cell.setType(CellType.FLOOR);
                             map.addPokemon(new Charizard(cell, "Charizard"));
+                            break;
+                        case 'S':
+                            cell.setType(CellType.FLOOR);
+                            map.addPokemon(new Slowpoke(cell, "Slowpoke"));
+                            break;
+                        case 'B':
+                            cell.setType(CellType.FLOOR);
+                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur"));
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

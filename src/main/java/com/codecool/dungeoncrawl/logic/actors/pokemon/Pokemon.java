@@ -20,9 +20,7 @@ public abstract class Pokemon implements Drawable {
     }
 
     @Override
-    public String getTileName() {
-        return "pokemon";
-    }
+    public String getTileName(){return null;}
 
     public Cell getCell() {
         return cell;

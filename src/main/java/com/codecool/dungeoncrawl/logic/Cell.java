@@ -1,7 +1,7 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Pokemon;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
 public class Cell implements Drawable {

@@ -11,6 +11,9 @@ public class Slowpoke extends Pokemon {
     }
 
     @Override
+    public String getTileName(){return "slowpoke";}
+
+    @Override
     public void move(){
         /***This pokemon takes one random step every second time the player moves  */
         if (shouldMove) {

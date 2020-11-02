@@ -1,15 +1,14 @@
 package com.codecool.dungeoncrawl.logic.actors.pokemon;
 
-
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Charizard extends Pokemon {
+public class Bulbasaur extends Pokemon{
 
-    public Charizard(Cell cell, String name){
+    public Bulbasaur(Cell cell, String name){
         super(cell, name);
     }
     @Override
-    public String getTileName(){return "charizard";}
+    public String getTileName(){return "bulbasaur";}
 
     @Override
     public void move(){
@@ -20,8 +19,4 @@ public class Charizard extends Pokemon {
 
     @Override
     public void fight(){}
-
-
-
-
 }
