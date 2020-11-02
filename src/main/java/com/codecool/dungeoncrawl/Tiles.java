@@ -62,7 +62,7 @@ public class Tiles {
         tileMap.put("empty", new Tile(0, 0));
         tileMap.put("wall", new Tile(7, 0));
         tileMap.put("floor", new Tile(1, 0));
-        tileMap.put("player", new Tile(1, 0));
+        tileMap.put("player", new Tile(1, 0, 64));
         tileMap.put("skeleton", new Tile(29, 6));
         tileMap.put("lootbox", new Tile(12, 31));
         tileMap.put("slowpoke", new Tile(28, 6));
