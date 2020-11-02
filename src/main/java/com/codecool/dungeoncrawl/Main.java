@@ -33,7 +33,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
-    Label currentInfo = new Label("this is a long text to test wrapping");
+    Label currentInfo = new Label();
+    StringBuilder text = new StringBuilder();
 
 
     public static void main(String[] args) {
@@ -69,8 +70,8 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        text.setLength(0);
         KeyCode keyPressed = keyEvent.getCode();
-//        currentInfo.setText(String.format("User pressed button: %s", keyPressed));
         switch (keyPressed) {
             case UP:
                 map.getPlayer().move(0, -1);
@@ -95,7 +96,10 @@ public class Main extends Application {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
-//        if(getPokemonInRange().isPresent()) currentInfo.setText("pokemon in capture/fight range");
+        if(getPokemonInRange().isPresent()) {
+            text.append("pokemon in fight range:\n");
+            getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
+        }
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -111,6 +115,7 @@ public class Main extends Application {
             }
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
+        currentInfo.setText(text.toString());
     }
 
     private void moveAllPokemon() {
@@ -127,6 +132,7 @@ public class Main extends Application {
         pokemonList.forEach(p -> {
             if (Math.abs(p.getCell().getX() - playerX) + Math.abs(p.getCell().getY() - playerY) <= 3){
                 pokemonInRange.add(p);
+                currentInfo.setText(p.toString());
             }
         });
         if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
