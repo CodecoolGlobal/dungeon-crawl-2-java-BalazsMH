@@ -19,9 +19,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +33,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
-    Label currentInfo = new Label();
-//    static {
-//        currentInfo
-//    }
+    Label currentInfo = new Label("this is a long text to test wrapping");
+
 
     public static void main(String[] args) {
         launch(args);
@@ -71,7 +70,7 @@ public class Main extends Application {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         KeyCode keyPressed = keyEvent.getCode();
-        currentInfo.setText(String.format("User pressed button: %s", keyPressed));
+//        currentInfo.setText(String.format("User pressed button: %s", keyPressed));
         switch (keyPressed) {
             case UP:
                 map.getPlayer().move(0, -1);
@@ -96,6 +95,7 @@ public class Main extends Application {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
+//        if(getPokemonInRange().isPresent()) currentInfo.setText("pokemon in capture/fight range");
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -118,15 +118,39 @@ public class Main extends Application {
         pokemonList.forEach(p -> p.move());
     }
 
+    private Optional<List<Pokemon>> getPokemonInRange() {
+        Optional<List<Pokemon>> toReturn = Optional.empty();
+        List<Pokemon> pokemonInRange = new ArrayList<Pokemon>();
+        int playerX = map.getPlayer().getCell().getX();
+        int playerY = map.getPlayer().getCell().getY();
+        List<Pokemon> pokemonList= map.getPokemonList();
+        pokemonList.forEach(p -> {
+            if (Math.abs(p.getCell().getX() - playerX) + Math.abs(p.getCell().getY() - playerY) <= 3){
+                pokemonInRange.add(p);
+            }
+        });
+        if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
+        return toReturn;
+    }
+
     private VBox createInfoBox(){
+
+        currentInfo.setWrapText(false);
+        currentInfo.setPrefWidth(200);
+        TextFlow textFlow = new TextFlow();
+        textFlow.setPrefWidth(200);
+        textFlow.getChildren().add(currentInfo);
+
         Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
-        Label infoLabel = new Label();
-        infoLabel.setGraphic(new ImageView(infoImage));
-        VBox infoBox = new VBox(infoLabel, currentInfo);
-        infoBox.setAlignment(Pos.BASELINE_CENTER);
-        infoBox.setStyle("-fx-border-color: blue;" +
-                "-fx-padding: 10px;");
-        infoBox.snapSizeY(100);
+        Label infoTitle = new Label();
+        infoTitle.setGraphic(new ImageView(infoImage));
+
+        VBox infoBox = new VBox(infoTitle, textFlow);
+//        infoBox.setAlignment(Pos.BASELINE_CENTER);
+//        infoBox.setStyle("-fx-border-color: blue;-fx-padding: 10px;");
+        infoBox.setPrefHeight(600);
+        infoBox.setPrefWidth(200);
+
         infoBox.setSpacing(20);
         return infoBox;
     }

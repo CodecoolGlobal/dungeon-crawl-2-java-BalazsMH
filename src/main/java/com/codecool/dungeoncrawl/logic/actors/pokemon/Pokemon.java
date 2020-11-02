@@ -60,10 +60,8 @@ public abstract class Pokemon implements Drawable {
 
     @Override
     public String toString() {
-        return "Pokemon{" +
-                "Health = " + pokeHealth +
-                ", Damage = " + pokeDamage +
-                ", Type = '" + pokeName + '\'' +
-                '}';
+        return pokeName + "\n" +
+                "Health = " + pokeHealth + '\n' +
+                "Damage = " + pokeDamage +  '\n';
     }
 }
