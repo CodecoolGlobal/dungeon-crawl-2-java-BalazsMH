@@ -1,6 +1,6 @@
 package com.codecool.dungeoncrawl.logic;
 
-import com.codecool.dungeoncrawl.logic.actors.Charizard;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
@@ -47,7 +47,7 @@ public class MapLoader {
                             break;
                         case 'P':
                             cell.setType(CellType.FLOOR);
-                            new Charizard(cell, "Charizard");
+                            map.addPokemon(new Charizard(cell, "Charizard"));
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

@@ -1,6 +1,10 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameMap {
     private int width;
@@ -8,6 +12,7 @@ public class GameMap {
     private Cell[][] cells;
 
     private Player player;
+    private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
     public GameMap(int width, int height, CellType defaultCellType) {
         this.width = width;
@@ -27,6 +32,10 @@ public class GameMap {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    public void addPokemon(Pokemon pokemon){this.pokemonList.add(pokemon);}
+
+    public List<Pokemon> getPokemonList(){return pokemonList;}
 
     public Player getPlayer() {
         return player;
