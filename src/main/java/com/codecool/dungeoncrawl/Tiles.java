@@ -58,13 +58,16 @@ public class Tiles {
         tileMap.put("player", new Tile(27, 0));
         tileMap.put("skeleton", new Tile(29, 6));
         tileMap.put("lootbox", new Tile(12, 31));
+        tileMap.put("slowpoke", new Tile(28, 6));
+        tileMap.put("charizard", new Tile(27, 8));
+        tileMap.put("bulbasaur", new Tile(24,8));
 
     }
 
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        if (d.getTileName() != "player") {
+        if (!d.getTileName().equals("player")) {
             context.drawImage(backgroundTileset, tile.x, tile.y, tile.w, tile.h,
                     x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
         } else {
