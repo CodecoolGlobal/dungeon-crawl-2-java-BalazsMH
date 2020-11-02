@@ -3,7 +3,7 @@ package com.codecool.dungeoncrawl.logic;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
@@ -37,7 +37,7 @@ public class MapLoader {
                             break;
                         case 's':
                             cell.setType(CellType.FLOOR);
-                            new Skeleton(cell);
+                            new RocketGrunt(cell);
                             break;
                         case '@':
                             cell.setType(CellType.FLOOR);
