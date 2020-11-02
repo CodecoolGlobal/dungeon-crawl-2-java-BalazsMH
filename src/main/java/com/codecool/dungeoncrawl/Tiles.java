@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tiles {
-/*    public static int TILE_WIDTH = 32;
+    /*
+    public static int TILE_WIDTH = 32;
 
     private static Image tileset = new Image("/tiles.png", 543 * 2, 543 * 2, true, false);
     private static Map<String, Tile> tileMap = new HashMap<>();
@@ -34,7 +35,8 @@ public class Tiles {
 
     public static int TILE_WIDTH = 32;
 
-    private static Image tileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
+    private static Image backgroundTileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
+    private static Image charactersTileset = new Image("/playersprites.png", 800*2, 600*2, true, false );
     private static Map<String, Tile> tileMap = new HashMap<>();
     public static class Tile {
         public final int x, y, w, h;
@@ -59,7 +61,12 @@ public class Tiles {
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        context.drawImage(tileset, tile.x, tile.y, tile.w, tile.h,
-                x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+        if (d.getTileName() != "player") {
+            context.drawImage(backgroundTileset, tile.x, tile.y, tile.w, tile.h,
+                    x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+        } else {
+            context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
+                    x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+        }
     }
 }
