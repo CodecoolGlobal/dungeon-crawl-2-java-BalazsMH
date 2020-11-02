@@ -36,7 +36,7 @@ public class Tiles {
         tileMap.put("wall", new Tile(7, 0));
         tileMap.put("floor", new Tile(1, 0));
         tileMap.put("player", new Tile(1, 0, 64));
-        tileMap.put("skeleton", new Tile(29, 6));
+        tileMap.put("rocketGrunt", new Tile(5, 4, 64));
         tileMap.put("lootbox", new Tile(20, 58));
         tileMap.put("slowpoke", new Tile(22, 2, 64));
         tileMap.put("charizard", new Tile(5, 0, 64 ));
@@ -47,7 +47,7 @@ public class Tiles {
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        if (d.getTileName().equals("player")) {
+        if (d.getTileName().matches("player|rocketGrunt")) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
         } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur")){
