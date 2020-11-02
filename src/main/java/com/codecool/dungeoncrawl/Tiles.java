@@ -29,7 +29,7 @@ public class Tiles {
         tileMap.put("player", new Tile(27, 0));
         tileMap.put("skeleton", new Tile(29, 6));
         tileMap.put("lootbox", new Tile(12, 31));
-        tileMap.put("pokemon", new Tile(6, 18));
+        tileMap.put("pokemon", new Tile(28, 6));
 
     }
 
