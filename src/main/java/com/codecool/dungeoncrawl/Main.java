@@ -40,8 +40,8 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
 
-        Button pickupButton = new Button("Pickup item");
-        ui.add(pickupButton, 0, 10);
+//        Button pickupButton = new Button("Pickup item");
+//        ui.add(pickupButton, 0, 10);
         //pickupButton.setOnAction();
 
         BorderPane borderPane = new BorderPane();
