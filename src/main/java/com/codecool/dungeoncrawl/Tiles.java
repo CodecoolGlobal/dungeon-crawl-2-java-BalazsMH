@@ -40,7 +40,7 @@ public class Tiles {
 
     private static Image backgroundTileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
     private static Image charactersTileset = new Image("/playersprites.png", 800*2, 600*2, true, false );
-    private static Image pokeTileset = new Image("/pokesprites.png", 496*2, 912*2, true, false );
+    private static Image pokeTileset = new Image("/pokesprites.png", 896*2, 576*2, true, false );
     private static Map<String, Tile> tileMap = new HashMap<>();
     public static class Tile {
         public final int x, y, w, h;
@@ -64,10 +64,10 @@ public class Tiles {
         tileMap.put("floor", new Tile(1, 0));
         tileMap.put("player", new Tile(1, 0, 64));
         tileMap.put("skeleton", new Tile(29, 6));
-        tileMap.put("lootbox", new Tile(12, 31));
-        tileMap.put("slowpoke", new Tile(28, 6));
-        tileMap.put("charizard", new Tile(27, 8));
-        tileMap.put("bulbasaur", new Tile(20,8));
+        tileMap.put("lootbox", new Tile(20, 58));
+        tileMap.put("slowpoke", new Tile(22, 2, 64));
+        tileMap.put("charizard", new Tile(5, 0, 64 ));
+        tileMap.put("bulbasaur", new Tile(0,0, 64 ));
 
     }
 
