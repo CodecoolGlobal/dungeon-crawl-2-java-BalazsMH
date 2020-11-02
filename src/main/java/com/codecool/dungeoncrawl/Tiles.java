@@ -50,6 +50,12 @@ public class Tiles {
             w = DEFAULT_TILE_WIDTH;
             h = DEFAULT_TILE_WIDTH;
         }
+        Tile(int i, int j, int tileWidth) {
+            x = i * (tileWidth);
+            y = j * (tileWidth);
+            w = tileWidth;
+            h = tileWidth;
+        }
     }
 
     static {
