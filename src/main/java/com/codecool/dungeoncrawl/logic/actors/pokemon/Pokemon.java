@@ -19,6 +19,10 @@ public abstract class Pokemon implements Drawable {
         this.cell.setPokemon(this);
     }
 
+    /***
+     * VERY BAD SOLUTION to ensure that each pokemon class can override getTileName (which comes from Drawable)
+     * @return as Pokemon cannot be instantiated, null will never be returned
+     */
     @Override
     public String getTileName(){return null;}
 
@@ -29,11 +33,16 @@ public abstract class Pokemon implements Drawable {
     public abstract void move();
     public abstract void fight();
 
+    /***
+     * Aim: make sure that info is updated everywhere it needs to be updated
+     * @param moveTo this Cell has to be determined for each pokemon depending on their moving patterns (e.g. chasing, random...)
+     */
     public void takeStep(Cell moveTo){
         cell.setPokemon(null);
         moveTo.setPokemon(this);
         cell = moveTo;
     }
+
     public Cell findRandomEmptyNeighbouringCell() {
         int[] newCoordinates = new int[2];
         while (true) {
