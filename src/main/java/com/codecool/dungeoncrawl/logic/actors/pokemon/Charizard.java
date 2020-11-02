@@ -9,8 +9,16 @@ public class Charizard extends Pokemon {
         super(cell, name);
     }
     @Override
-    public void move(){}
+    public void move(){
+        /***This pokemon takes one random step every time the player moves  */
+        Cell moveTo = findRandomEmptyNeighbouringCell();
+        takeStep(moveTo);
+    }
+
     @Override
     public void fight(){}
+
+
+
 
 }
