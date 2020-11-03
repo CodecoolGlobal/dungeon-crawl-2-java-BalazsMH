@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -100,10 +101,7 @@ public class Main extends Application {
         context.setFill(Color.GRAY);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
-        if(getPokemonInRange().isPresent()) {
-            text.append("pokemon in fight range:\n");
-            getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
-        }
+        refreshInfoWindow();
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -119,12 +117,22 @@ public class Main extends Application {
             }
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
-        currentInfo.setText(text.toString());
     }
 
     private void moveAllPokemon() {
         List<Pokemon> pokemonList= map.getPokemonList();
         pokemonList.forEach(p -> p.move());
+    }
+
+    private void refreshInfoWindow() {
+        if (map.getPlayer().getCell().getItem() instanceof LootBox){
+            text.append("Get content of Lootbox!\n\n");
+        }
+        if(getPokemonInRange().isPresent()) {
+            text.append("pokemon in fight range:\n");
+            getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
+        }
+        currentInfo.setText(text.toString());
     }
 
     private Optional<List<Pokemon>> getPokemonInRange() {
