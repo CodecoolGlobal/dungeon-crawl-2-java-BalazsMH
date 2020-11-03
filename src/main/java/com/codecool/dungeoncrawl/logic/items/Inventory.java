@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Inventory {
     private int healthPotionNumber = 0;
@@ -17,6 +18,10 @@ public class Inventory {
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
+    }
+
+    public Optional<PokeBall> takePokeBall(){
+        return Optional.of(pokeBallList.remove(pokeBallList.size()-1));
     }
 
     @Override
