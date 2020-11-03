@@ -21,7 +21,13 @@ public class Inventory {
     }
 
     public Optional<PokeBall> takePokeBall(){
-        return Optional.of(pokeBallList.remove(pokeBallList.size()-1));
+        if (pokeBallList.size() > 0){
+            return Optional.of(pokeBallList.remove(pokeBallList.size()-1));
+        } else return Optional.empty();
+    }
+
+    public void addPokemon(Pokemon pokemon){
+        pokemonList.add(pokemon);
     }
 
     @Override
