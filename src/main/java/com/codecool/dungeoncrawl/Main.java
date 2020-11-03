@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -47,7 +48,7 @@ public class Main extends Application {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
-        ui.add(new Label("Health: "), 0, 0);
+        //ui.add(new Label("Health: "), 0, 0);   seems redundant
         ui.add(healthLabel, 1, 0);
 
         VBox infoBox = createInfoBox();
@@ -64,6 +65,13 @@ public class Main extends Application {
         borderPane.setRight(rightPane);
 
         Scene scene = new Scene(borderPane);
+
+        //scene.getStylesheets().add(getClass().getResource("/fontstyle.css").toExternalForm());
+        healthLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+        currentInfo.setWrapText(true);
+
+
         primaryStage.setScene(scene);
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
@@ -116,7 +124,7 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        healthLabel.setText("Health:" + map.getPlayer().getHealth());
     }
 
     private void moveAllPokemon() {
@@ -129,7 +137,7 @@ public class Main extends Application {
             text.append("Get content of Lootbox!\n\n");
         }
         if(getPokemonInRange().isPresent()) {
-            text.append("pokemon in fight range:\n");
+            text.append("Pokemon in fight range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
