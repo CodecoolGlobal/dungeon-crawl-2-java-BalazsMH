@@ -37,6 +37,8 @@ public class GameMap {
 
     public List<Pokemon> getPokemonList(){return pokemonList;}
 
+    public void removePokemon(Pokemon pokemon){ pokemonList.remove(pokemon); }
+
     public Player getPlayer() {
         return player;
     }

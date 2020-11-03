@@ -34,6 +34,8 @@ public abstract class Pokemon implements Drawable {
         return cell;
     }
 
+    public void removePokemonFromCell(){cell.setPokemon(null);}
+
     public abstract void move();
     public abstract void fight();
 
