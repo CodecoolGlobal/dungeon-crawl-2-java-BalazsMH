@@ -89,18 +89,22 @@ public class Main extends Application {
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
+                map.getPlayer().setFacing("up");
                 map.getPlayer().move(0, -1);
                 refresh();
                 break;
             case DOWN:
+                map.getPlayer().setFacing("down");
                 map.getPlayer().move(0, 1);
                 refresh();
                 break;
             case LEFT:
+                map.getPlayer().setFacing("left");
                 map.getPlayer().move(-1, 0);
                 refresh();
                 break;
             case RIGHT:
+                map.getPlayer().setFacing("right");
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
