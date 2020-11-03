@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -33,6 +34,7 @@ public class Main extends Application {
             map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+
     Label healthLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
@@ -106,7 +108,8 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        context.setFill(Color.GRAY);
+        //context.setFill(Color.GRAY);
+        context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();

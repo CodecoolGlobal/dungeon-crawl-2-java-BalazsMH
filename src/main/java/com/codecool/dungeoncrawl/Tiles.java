@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +12,17 @@ public class Tiles {
 
     public static int DEFAULT_TILE_WIDTH = 32;
 
-    private static Image backgroundTileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
-    private static Image charactersTileset = new Image("/playersprites.png", 800*2, 600*2, true, false );
-    private static Image pokeTileset = new Image("/pokesprites.png", 896*2, 576*2, true, false );
+    private static final Image backgroundTileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
+    private static final Image charactersTileset = new Image("/playersprites.png", 800*2, 600*2, true, false );
+    private static final Image pokeTileset = new Image("/pokesprites.png", 896*2, 576*2, true, false );
+    private static final Image floorTile = new Image("/background.png", 510*2, 510*2, true, false );
+
     private static Map<String, Tile> tileMap = new HashMap<>();
+
+    public static Image getFloorTile() {
+        return floorTile;
+    }
+
     public static class Tile {
         public final int x, y, w, h;
         Tile(int i, int j) {
@@ -50,6 +58,8 @@ public class Tiles {
         if (d.getTileName().matches("player|rocketGrunt")) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
+            //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));
+
         } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur")){
             context.drawImage(pokeTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
