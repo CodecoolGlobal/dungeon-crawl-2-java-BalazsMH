@@ -43,7 +43,10 @@ public class Tiles {
         tileMap.put("empty", new Tile(0, 0));
         tileMap.put("wall", new Tile(7, 0));
         tileMap.put("floor", new Tile(1, 0));
-        tileMap.put("player", new Tile(1, 0, 64));
+        tileMap.put("player_down", new Tile(0, 0, 64));
+        tileMap.put("player_up", new Tile(0, 1, 64));
+        tileMap.put("player_left", new Tile(1, 1, 64));
+        tileMap.put("player_right", new Tile(1, 0, 64));
         tileMap.put("rocketGrunt", new Tile(5, 4, 64));
         tileMap.put("lootbox", new Tile(20, 58));
         tileMap.put("slowpoke", new Tile(22, 2, 64));
@@ -55,7 +58,7 @@ public class Tiles {
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        if (d.getTileName().matches("player|rocketGrunt")) {
+        if (d.getTileName().matches("player_left|player_up|player_down|player_right|rocketGrunt")) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
             //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));

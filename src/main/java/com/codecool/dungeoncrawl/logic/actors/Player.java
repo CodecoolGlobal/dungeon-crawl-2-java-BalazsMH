@@ -14,8 +14,19 @@ public class Player extends Actor {
     }
 
     public String getTileName() {
-        return "player";
+        switch (this.facing) {
+            case "down":
+                return "player_down";
+            case "up":
+                return "player_up";
+            case "right":
+                return "player_right";
+            default:
+                return "player_left";
+        }
+
     }
+
     public void pickupItem() {
     }
 }
