@@ -6,9 +6,8 @@ import com.codecool.dungeoncrawl.logic.Cell;
 public class Slowpoke extends Pokemon {
     private boolean shouldMove = true;
 
-    public Slowpoke(Cell cell, String name){
-        super(cell, name);
-    }
+    public Slowpoke(Cell cell, String name){ super(cell, name); }
+    public Slowpoke(String name){ super(name); }
 
     @Override
     public String getTileName(){return "slowpoke";}

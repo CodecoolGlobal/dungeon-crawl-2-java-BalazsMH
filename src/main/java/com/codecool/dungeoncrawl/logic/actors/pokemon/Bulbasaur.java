@@ -7,6 +7,8 @@ public class Bulbasaur extends Pokemon{
     public Bulbasaur(Cell cell, String name){
         super(cell, name);
     }
+    public Bulbasaur(String name){ super(name); }
+
     @Override
     public String getTileName(){return "bulbasaur";}
 

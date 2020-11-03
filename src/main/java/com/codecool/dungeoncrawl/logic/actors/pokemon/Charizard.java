@@ -5,9 +5,9 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public class Charizard extends Pokemon {
 
-    public Charizard(Cell cell, String name){
-        super(cell, name);
-    }
+    public Charizard(Cell cell, String name){ super(cell, name); }
+    public Charizard(String name){ super(name); }
+
     @Override
     public String getTileName(){return "charizard";}
 

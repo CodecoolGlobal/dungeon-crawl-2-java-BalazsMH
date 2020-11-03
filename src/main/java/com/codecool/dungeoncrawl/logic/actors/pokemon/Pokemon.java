@@ -12,11 +12,15 @@ public abstract class Pokemon implements Drawable {
     protected Cell cell;
 
     public Pokemon(Cell cell, String name){
+        this(name);
+        this.cell = cell;
+        this.cell.setPokemon(this);
+    }
+
+    public Pokemon(String name){
         this.pokeName = name;
         this.pokeDamage = 2;
         this.pokeHealth = 4;
-        this.cell = cell;
-        this.cell.setPokemon(this);
     }
 
     /***
