@@ -10,15 +10,31 @@ import java.util.List;
 import java.util.Optional;
 
 public class Player extends Actor {
+    private String facing = "down";
+
     public Player(Cell cell) {
         super(cell);
     }
 
-    public String getTileName() {
-        return "player";
+    public void setFacing(String facing) {
+        this.facing = facing;
     }
-    public void pickupItem() {
 
+    public String getTileName() {
+        switch (this.facing) {
+            case "down":
+                return "player_down";
+            case "up":
+                return "player_up";
+            case "right":
+                return "player_right";
+            default:
+                return "player_left";
+        }
+
+    }
+
+    public void pickupItem() {
     }
 
     public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){

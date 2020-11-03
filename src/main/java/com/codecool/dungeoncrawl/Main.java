@@ -20,6 +20,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -33,6 +35,7 @@ public class Main extends Application {
             map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+
     Label healthLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
@@ -49,7 +52,7 @@ public class Main extends Application {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
-        ui.add(new Label("Health: "), 0, 0);
+        //ui.add(new Label("Health: "), 0, 0);   seems redundant
         ui.add(healthLabel, 1, 0);
 
         VBox infoBox = createInfoBox();
@@ -66,6 +69,13 @@ public class Main extends Application {
         borderPane.setRight(rightPane);
 
         Scene scene = new Scene(borderPane);
+
+        //scene.getStylesheets().add(getClass().getResource("/fontstyle.css").toExternalForm());
+        healthLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+        currentInfo.setWrapText(true);
+
+
         primaryStage.setScene(scene);
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
@@ -81,18 +91,22 @@ public class Main extends Application {
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
+                map.getPlayer().setFacing("up");
                 map.getPlayer().move(0, -1);
                 refresh();
                 break;
             case DOWN:
+                map.getPlayer().setFacing("down");
                 map.getPlayer().move(0, 1);
                 refresh();
                 break;
             case LEFT:
+                map.getPlayer().setFacing("left");
                 map.getPlayer().move(-1, 0);
                 refresh();
                 break;
             case RIGHT:
+                map.getPlayer().setFacing("right");
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
@@ -103,7 +117,8 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        context.setFill(Color.GRAY);
+        //context.setFill(Color.GRAY);
+        context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();
@@ -121,7 +136,7 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        healthLabel.setText("Health:" + map.getPlayer().getHealth());
     }
 
     private void moveAllPokemon() {
