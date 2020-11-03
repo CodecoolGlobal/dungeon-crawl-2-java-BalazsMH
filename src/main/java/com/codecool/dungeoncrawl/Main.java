@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -35,6 +36,7 @@ public class Main extends Application {
     Label healthLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
+    public Inventory inventory = new Inventory();
 
 
     public static void main(String[] args) {
@@ -94,6 +96,9 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
+            case T:
+                map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
+                refresh();
         }
     }
 
@@ -129,7 +134,7 @@ public class Main extends Application {
             text.append("Get content of Lootbox!\n\n");
         }
         if(getPokemonInRange().isPresent()) {
-            text.append("pokemon in fight range:\n");
+            text.append("\n\npokemon in fight range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
