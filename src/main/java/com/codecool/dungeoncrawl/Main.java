@@ -6,15 +6,14 @@ import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -29,8 +28,8 @@ import java.util.Optional;
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
+            map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
+            map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label currentInfo = new Label();
@@ -50,10 +49,13 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
 
-
         VBox infoBox = createInfoBox();
         VBox rightPane = new VBox(ui, infoBox);
         rightPane.setSpacing(100.00);
+
+//        Button pickupButton = new Button("Pickup item");
+//        ui.add(pickupButton, 0, 10);
+        //pickupButton.setOnAction();
 
         BorderPane borderPane = new BorderPane();
 
@@ -65,7 +67,9 @@ public class Main extends Application {
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
 
-        primaryStage.setTitle("Dungeon Crawl");
+        primaryStage.setTitle("JavaMon");
+        primaryStage.getIcons().add(new Image("file:logo.png"));
+
         primaryStage.show();
     }
 
@@ -93,7 +97,7 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        context.setFill(Color.BLACK);
+        context.setFill(Color.GRAY);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         if(getPokemonInRange().isPresent()) {
