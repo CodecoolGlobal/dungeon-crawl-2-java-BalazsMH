@@ -11,27 +11,22 @@ public class Layout {
     private int[] startCoord;
     private int[] endCoord;
     String[][] layout;
-    String filename = "./src/main/resources/new_map.txt";
+    String filename = "./src/main/resources/map.txt";
 
     public Layout(int rows, int cols){
         this.rows = rows;
         this.cols = cols;
     }
+
     public void generateLayout(){
         createEmptyBase();
         markStartEnd();
         generatePath();
         markEdges();
-        for (int i = 0; i < rows; i++) {
-            System.out.println(lineToString(layout[i]));
-        }
-        try{
-            writeTxt();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
+        printToConsole(); // remove when done
+        writeTxt();
     }
+
     private void createEmptyBase(){
         this.layout = new String[rows][cols];
         for (int i = 0; i < rows; i++) {
@@ -42,9 +37,9 @@ public class Layout {
     }
     private void markStartEnd(){
         startCoord = new int[]{2,4}; // needs to be randomized
-        layout[startCoord[0]][startCoord[1]] = "P";
+        layout[startCoord[0]][startCoord[1]] = "@";
         endCoord = new int[]{rows-3, cols-5}; // needs to be randomized
-        layout[endCoord[0]][endCoord[1]] = "G";
+        layout[endCoord[0]][endCoord[1]] = "#"; //we need a character to signal door
     }
     private void generatePath(){
         int[] currentPosition = startCoord;
@@ -89,13 +84,24 @@ public class Layout {
                         layout[r][(c + 1 < cols) ? c + 1 : c].equals(".") ||
                         layout[r][(c - 1 >= 0)? c - 1 : c].equals("."));
     }
-    private void writeTxt() throws IOException {
-        File file = new File(filename);
-        FileWriter fw = new FileWriter(file);
-        for (String[] row: layout){
-            fw.write(String.join("", row) + System.lineSeparator());
+    private void writeTxt() {
+        try{
+            File file = new File(filename);
+            FileWriter fw = new FileWriter(file);
+            fw.write(String.format("%s %s" + System.lineSeparator(), cols, rows));
+            for (String[] row: layout){
+                fw.write(String.join("", row) + System.lineSeparator());
+            }
+            fw.close();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
-        fw.close();
+    }
+    private void printToConsole() {
+        for (int i = 0; i < rows; i++) {
+            System.out.println(lineToString(layout[i]));
+        }
     }
     private String lineToString(String[] line){
         return String.join("",line);
