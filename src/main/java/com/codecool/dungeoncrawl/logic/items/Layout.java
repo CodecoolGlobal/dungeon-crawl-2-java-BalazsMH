@@ -3,7 +3,9 @@ package com.codecool.dungeoncrawl.logic.items;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Layout {
     private final int rows;
@@ -12,6 +14,7 @@ public class Layout {
     private int[] endCoord;
     private final int upperMargin;
     private final int lowerMargin;
+    List<String> pokemonList = new ArrayList<String>(List.of("C", "S", "B", "B"));
     String[][] layout;
     String filename = "./src/main/resources/map.txt";
 
@@ -22,6 +25,11 @@ public class Layout {
         lowerMargin = (int) (rows * cols * 0.6);
     }
 
+    /** Calling generateLayout creates new .txt
+     * TODO BUG fix: map generated will be used in next game (not the current one)
+     * -> program works properly when ran for the second time
+     * TODO: should be parametrized to generate differently styled layout for different levels
+     */
     public void generateLayout(){
         while (true){
             createEmptyBase();
@@ -31,6 +39,7 @@ public class Layout {
         }
         markEdges();
         markBoardEdges();
+        addPokemon();
         printToConsole(); // remove when done
         writeTxt();
     }
@@ -124,6 +133,21 @@ public class Layout {
             System.out.println(e.getMessage());
             System.exit(1);
         }
+    }
+    private void addPokemon() {
+        pokemonList.forEach(s -> {
+            while (true){
+                System.out.println("?");
+                int r = (int) (Math.random() * (rows - 1) + 1);
+                int c = (int) (Math.random() * (cols - 1) + 1);
+                System.out.println(r + "," +c);
+                System.out.println(layout[r][c]);
+                if (layout[r][c].equals(".")){
+                    layout[r][c] = s;
+                    break;
+                }
+            }
+        });
     }
     private void printToConsole() {
         for (int i = 0; i < rows; i++) {
