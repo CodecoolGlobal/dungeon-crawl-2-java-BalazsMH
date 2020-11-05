@@ -30,6 +30,7 @@ public class Layout {
             if (checkIfWithinMargin(upperMargin, lowerMargin)) break;
         }
         markEdges();
+        markBoardEdges();
         printToConsole(); // remove when done
         writeTxt();
     }
@@ -42,6 +43,7 @@ public class Layout {
             }
         }
     }
+
     private void markStartEnd(){
         startCoord = new int[]{2,4}; // needs to be randomized
         layout[startCoord[0]][startCoord[1]] = "@";
@@ -64,8 +66,7 @@ public class Layout {
         }
         String map = str.toString();
         int floorNum = rows * cols - map.replace(".", "").length();
-        if (floorNum > upper || floorNum < lower) return false;
-        return true;
+        return floorNum <= upper && floorNum >= lower;
     }
     private int[] takeRandomStep(int[] currentPosition){
         int r = currentPosition[0];
@@ -93,7 +94,14 @@ public class Layout {
             }
         }
     }
-
+    private void markBoardEdges() {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if ((r == 0 || r == rows - 1) && layout[r][c].equals(".")) layout[r][c] = "#";
+                if ((c == 0 || c == cols - 1) && layout[r][c].equals(".")) layout[r][c] = "#";
+            }
+        }
+    }
     private boolean hasNeigbour(int r, int c) {
         return layout[r][c].equals(" ") &&
                         (layout[(r + 1 < rows)? r + 1 : r][c].equals(".") ||
