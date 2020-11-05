@@ -10,18 +10,25 @@ public class Layout {
     private final int cols;
     private int[] startCoord;
     private int[] endCoord;
+    private final int upperMargin;
+    private final int lowerMargin;
     String[][] layout;
     String filename = "./src/main/resources/map.txt";
 
     public Layout(int rows, int cols){
         this.rows = rows;
         this.cols = cols;
+        upperMargin = (int) (rows * cols * 0.8);
+        lowerMargin = (int) (rows * cols * 0.6);
     }
 
     public void generateLayout(){
-        createEmptyBase();
-        markStartEnd();
-        generatePath();
+        while (true){
+            createEmptyBase();
+            markStartEnd();
+            generatePath();
+            if (checkIfWithinMargin(upperMargin, lowerMargin)) break;
+        }
         markEdges();
         printToConsole(); // remove when done
         writeTxt();
@@ -49,6 +56,16 @@ public class Layout {
                 layout[currentPosition[0]][currentPosition[1]] = ".";
             }
         }
+    }
+    private boolean checkIfWithinMargin(int upper, int lower){
+        StringBuilder str = new StringBuilder();
+        for (String[] strings : layout) {
+            str.append(String.join("",strings));
+        }
+        String map = str.toString();
+        int floorNum = rows * cols - map.replace(".", "").length();
+        if (floorNum > upper || floorNum < lower) return false;
+        return true;
     }
     private int[] takeRandomStep(int[] currentPosition){
         int r = currentPosition[0];
