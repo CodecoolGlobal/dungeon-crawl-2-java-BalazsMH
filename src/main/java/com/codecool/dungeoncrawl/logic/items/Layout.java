@@ -45,9 +45,11 @@ public class Layout {
     }
 
     private void markStartEnd(){
-        startCoord = new int[]{2,4}; // needs to be randomized
+        startCoord = new int[]{(int) ((Math.random() * (rows/3 - 1)) + 1),(int) ((Math.random() * (cols/3 - 1)) + 1)};
+        System.out.println(startCoord[0] + "," + startCoord[1]);
         layout[startCoord[0]][startCoord[1]] = "@";
-        endCoord = new int[]{rows-3, cols-5}; // needs to be randomized
+        endCoord = new int[]{(int) (Math.random() * (rows - (rows-rows/3)) + (rows-rows/3)), (int) ((Math.random() * (cols - (cols-cols/3))) + (cols - (cols-cols/3)))}; // needs to be randomized
+        System.out.println(endCoord[0] + "," + endCoord[1]);
         layout[endCoord[0]][endCoord[1]] = "#"; //we need a character to signal door
     }
     private void generatePath(){
