@@ -1,14 +1,17 @@
 package com.codecool.dungeoncrawl.logic.items;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Layout {
-    private int rows;
-    private int cols;
+    private final int rows;
+    private final int cols;
     private int[] startCoord;
     private int[] endCoord;
     String[][] layout;
-    String filename = "/new_map.txt";
+    String filename = "./src/main/resources/new_map.txt";
 
     public Layout(int rows, int cols){
         this.rows = rows;
@@ -21,6 +24,12 @@ public class Layout {
         markEdges();
         for (int i = 0; i < rows; i++) {
             System.out.println(lineToString(layout[i]));
+        }
+        try{
+            writeTxt();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
     }
     private void createEmptyBase(){
@@ -74,8 +83,19 @@ public class Layout {
     }
 
     private boolean hasNeigbour(int r, int c) {
-
-        return false;
+        return layout[r][c].equals(" ") &&
+                        (layout[(r + 1 < rows)? r + 1 : r][c].equals(".") ||
+                        layout[(r - 1 >= 0) ? r-1 : r][c].equals(".") ||
+                        layout[r][(c + 1 < cols) ? c + 1 : c].equals(".") ||
+                        layout[r][(c - 1 >= 0)? c - 1 : c].equals("."));
+    }
+    private void writeTxt() throws IOException {
+        File file = new File(filename);
+        FileWriter fw = new FileWriter(file);
+        for (String[] row: layout){
+            fw.write(String.join("", row) + System.lineSeparator());
+        }
+        fw.close();
     }
     private String lineToString(String[] line){
         return String.join("",line);
