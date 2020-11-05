@@ -57,7 +57,7 @@ public class Layout {
         startCoord = new int[]{(int) ((Math.random() * (rows/3 - 1)) + 1),(int) ((Math.random() * (cols/3 - 1)) + 1)};
         System.out.println(startCoord[0] + "," + startCoord[1]);
         layout[startCoord[0]][startCoord[1]] = "@";
-        endCoord = new int[]{(int) (Math.random() * (rows - (rows-rows/3)) + (rows-rows/3)), (int) ((Math.random() * (cols - (cols-cols/3))) + (cols - (cols-cols/3)))}; // needs to be randomized
+        endCoord = new int[]{(int) (Math.random() * (rows-1 - (rows-rows/3)) + (rows-rows/3)), (int) ((Math.random() * (cols-1 - (cols-cols/3))) + (cols-1 - (cols-cols/3)))}; // needs to be randomized
         System.out.println(endCoord[0] + "," + endCoord[1]);
         layout[endCoord[0]][endCoord[1]] = "#"; //we need a character to signal door
     }
@@ -99,7 +99,7 @@ public class Layout {
     private void markEdges() {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                if (layout[r][c].equals(" ") && hasNeigbour(r, c)){
+                if (layout[r][c].equals(" ") && (hasNeigbour(r, c, ".") || hasNeigbour(r, c, "@"))){
                     layout[r][c] = "#";
                 }
             }
@@ -113,12 +113,12 @@ public class Layout {
             }
         }
     }
-    private boolean hasNeigbour(int r, int c) {
+    private boolean hasNeigbour(int r, int c, String target) {
         return layout[r][c].equals(" ") &&
-                        (layout[(r + 1 < rows)? r + 1 : r][c].equals(".") ||
-                        layout[(r - 1 >= 0) ? r-1 : r][c].equals(".") ||
-                        layout[r][(c + 1 < cols) ? c + 1 : c].equals(".") ||
-                        layout[r][(c - 1 >= 0)? c - 1 : c].equals("."));
+                        (layout[(r + 1 < rows)? r + 1 : r][c].equals(target) ||
+                        layout[(r - 1 >= 0) ? r-1 : r][c].equals(target) ||
+                        layout[r][(c + 1 < cols) ? c + 1 : c].equals(target) ||
+                        layout[r][(c - 1 >= 0)? c - 1 : c].equals(target));
     }
     private void writeTxt() {
         try{
