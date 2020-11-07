@@ -63,10 +63,11 @@ public class Main extends Application {
                                                                 false, false, true, true)));
         mainPane.setBackground(background);
         TextField nameInput = new TextField();
-        //nameInput.setPrefSize(40, 40);
-        nameInput.setMaxSize(200,200);
-        nameInput.setPromptText("Enter your name: ");
+        nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        nameInput.setMaxSize(220,220);
+        nameInput.setPromptText("Enter your name ");
         Button submitButton = new Button("Play!");
+        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         mainPane.getChildren().addAll(nameInput, submitButton);
         mainPane.setAlignment(Pos.CENTER);
         Scene mainMenu = new Scene(mainPane);
@@ -115,9 +116,7 @@ public class Main extends Application {
 
 
         primaryStage.setScene(mainMenu);
-
         refresh();
-
         primaryStage.show();
     }
 
@@ -164,7 +163,6 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        //context.setFill(Color.GRAY);
         context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
