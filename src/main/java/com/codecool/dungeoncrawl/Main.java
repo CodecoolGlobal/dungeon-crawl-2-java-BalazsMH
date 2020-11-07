@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap("level1");
-    GameMap map2 = MapLoader.loadMap("level2");
+    GameMap map = MapLoader.loadMap("Level1");
+    GameMap map2 = MapLoader.loadMap("Level2");
     MapChanger mapChanger = new MapChanger(map, map2);
 
     Canvas canvas = new Canvas(
@@ -91,11 +91,19 @@ public class Main extends Application {
         VBox rightPane = new VBox(ui, infoBox);
         rightPane.setSpacing(100.00);
 
+        VBox levelBox = new VBox(currentLevel);
+        levelBox.setAlignment(Pos.CENTER);
+        levelBox.setPadding(new Insets(5));
+        levelBox.setMaxHeight(10);
+
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
         borderPane.setRight(rightPane);
         currentLevel.setText(map.getLevel());
-        borderPane.setTop(currentLevel);
+        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
+        borderPane.setTop(levelBox);
+        //TODO: eliminate unnecessary space between the top of the canvas and the borderpane center top
+
 
         Scene scene = new Scene(borderPane);
 
