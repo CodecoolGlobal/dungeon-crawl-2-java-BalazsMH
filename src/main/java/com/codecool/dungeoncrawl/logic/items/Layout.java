@@ -59,7 +59,7 @@ public class Layout {
         layout[startCoord[0]][startCoord[1]] = "@";
         endCoord = new int[]{(int) (Math.random() * (rows-1 - (rows-rows/3)) + (rows-rows/3)), (int) ((Math.random() * (cols-1 - (cols-cols/3))) + (cols-1 - (cols-cols/3)))}; // needs to be randomized
         System.out.println(endCoord[0] + "," + endCoord[1]);
-        layout[endCoord[0]][endCoord[1]] = "#"; //we need a character to signal door
+        layout[endCoord[0]][endCoord[1]] = "d"; //we need a character to signal door
     }
     private void generatePath(){
         int[] currentPosition = startCoord;
