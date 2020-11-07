@@ -101,6 +101,7 @@ public class Main extends Application {
         levelBox.setPadding(new Insets(5));
         levelBox.setMaxHeight(10);
 
+
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
         borderPane.setRight(rightPane);
