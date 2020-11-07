@@ -22,10 +22,6 @@ public class MapChanger {
         player.setCell(doorCell);
         doorCell.setActor(player);
 
-
         return activeLevel;
     }
-
-
-
 }
