@@ -52,7 +52,7 @@ public class Main extends Application {
     }
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
-        BorderPane mainPane = new BorderPane();
+        VBox mainPane = new VBox();
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -64,8 +64,10 @@ public class Main extends Application {
         TextField nameInput = new TextField();
         nameInput.setPromptText("Enter your name: ");
         Button submitButton = new Button("Submit");
-        VBox mainBox = new VBox(nameInput, submitButton);
-        mainPane.setCenter(mainBox);
+        //VBox mainBox = new VBox(nameInput, submitButton);
+        mainPane.getChildren().add(nameInput);
+        mainPane.getChildren().add(submitButton);
+        //mainPane.setCenter(mainBox);
         Scene mainMenu = new Scene(mainPane);
         submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, event, nameInput));
         return mainMenu;
