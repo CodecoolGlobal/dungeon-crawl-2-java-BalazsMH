@@ -190,6 +190,8 @@ public class Main extends Application {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else if(cell.getPokemon() != null){
                     Tiles.drawTile(context, cell.getPokemon(), x, y);
+                } else if(cell.getDoor() != null) {
+                    Tiles.drawTile(context, cell.getDoor(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
                 }
