@@ -28,6 +28,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,8 @@ public class Main extends Application {
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
     Boolean finishedConfig = false;
+    String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
+
 
     public Inventory inventory = new Inventory();
 
@@ -112,10 +115,11 @@ public class Main extends Application {
         System.out.println(enteredName);
         System.out.println("hello");
         map.getPlayer().setUserName(enteredName);
+        if (Arrays.asList(developers).contains(enteredName)) {
+            map.getPlayer().setSuperUser(true);
+        }
         nameLabel.setText(map.getPlayer().getUserName());
         primaryStage.setScene(gameScene);
-
-
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {

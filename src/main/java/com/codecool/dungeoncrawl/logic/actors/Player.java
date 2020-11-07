@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
@@ -12,6 +13,7 @@ import java.util.Optional;
 public class Player extends Actor {
     private String facing = "down";
     private String userName = "";
+    private boolean superUser = false;
 
     public Player(Cell cell) {
         super(cell);
@@ -21,6 +23,12 @@ public class Player extends Actor {
     public void setFacing(String facing) {
         this.facing = facing;
     }
+
+
+    public void setSuperUser(boolean superUser) {
+        this.superUser = superUser;
+    }
+
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -47,6 +55,19 @@ public class Player extends Actor {
     }
 
     public void pickupItem() {
+    }
+
+    @Override
+    public void move(int dx, int dy) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+
+        if (( superUser && nextCell.getPokemon() == null && nextCell.getActor() == null ) ||
+                (!superUser && nextCell.getType() != CellType.WALL && nextCell.getPokemon() == null && nextCell.getActor() == null)) {
+            cell.setActor(null);
+            nextCell.setActor(this);
+            cell = nextCell;
+        }
+
     }
 
     public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
