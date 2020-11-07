@@ -8,6 +8,7 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -62,13 +63,15 @@ public class Main extends Application {
                                                                 false, false, true, true)));
         mainPane.setBackground(background);
         TextField nameInput = new TextField();
+        //nameInput.setPrefSize(40, 40);
+        nameInput.setMaxSize(200,200);
         nameInput.setPromptText("Enter your name: ");
-        Button submitButton = new Button("Submit");
-        //VBox mainBox = new VBox(nameInput, submitButton);
-        mainPane.getChildren().add(nameInput);
-        mainPane.getChildren().add(submitButton);
-        //mainPane.setCenter(mainBox);
+        Button submitButton = new Button("Play!");
+        mainPane.getChildren().addAll(nameInput, submitButton);
+        mainPane.setAlignment(Pos.CENTER);
         Scene mainMenu = new Scene(mainPane);
+        mainPane.requestFocus();
+
         submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, event, nameInput));
         return mainMenu;
     }
