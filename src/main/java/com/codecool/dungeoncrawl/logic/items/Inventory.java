@@ -33,7 +33,7 @@ public class Inventory {
     }
 
     public void addKey(Cell cell){
-        key = cell.getKey();
+        key = (Key)cell.getItem();
     }
 
     @Override

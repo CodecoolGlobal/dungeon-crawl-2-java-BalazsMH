@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -150,8 +151,10 @@ public class Main extends Application {
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
             case E:
-                if (map.getPlayer().getCell().getDoor() != null){
-                    map.getPlayer().getCell().getDoor().setOpen();
+                if (map.getPlayer().getCell().getItem() instanceof Key){
+                    inventory.addKey(map.getPlayer().getCell());
+                    map.getPlayer().getCell().setItem(null);
+                    refresh();
                 }
 
         }

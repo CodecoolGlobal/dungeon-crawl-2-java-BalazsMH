@@ -43,7 +43,8 @@ public class MapLoader {
                             break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
-                            map.setKey(new Key(cell));
+                            new Key(cell);
+                            break;
                         case 's':
                             cell.setType(CellType.FLOOR);
                             new RocketGrunt(cell);

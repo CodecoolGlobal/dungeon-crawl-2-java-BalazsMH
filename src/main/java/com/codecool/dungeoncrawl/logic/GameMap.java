@@ -3,7 +3,6 @@ package com.codecool.dungeoncrawl.logic;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Door;
-import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ public class GameMap {
     private int height;
     private Cell[][] cells;
     private Door door;
-    private Key key;
 
     private Player player;
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
@@ -59,5 +57,4 @@ public class GameMap {
         return height;
     }
 
-    public void setKey(Key key) { this.key = key; }
 }
