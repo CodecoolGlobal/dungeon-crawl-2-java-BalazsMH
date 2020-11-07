@@ -43,6 +43,8 @@ public class Tiles {
         tileMap.put("empty", new Tile(0, 0));
         tileMap.put("wall", new Tile(7, 0));
         tileMap.put("floor", new Tile(1, 0));
+        tileMap.put("door", new Tile(1, 4)); // !!!
+        tileMap.put("openDoor", new Tile(4, 30)); // !!!
         tileMap.put("player_down", new Tile(0, 0, 64));
         tileMap.put("player_up", new Tile(0, 1, 64));
         tileMap.put("player_left", new Tile(1, 1, 64));
@@ -52,6 +54,7 @@ public class Tiles {
         tileMap.put("slowpoke", new Tile(22, 2, 64));
         tileMap.put("charizard", new Tile(5, 0, 64 ));
         tileMap.put("bulbasaur", new Tile(0,0, 64 ));
+        tileMap.put("key", new Tile(3,3));
 
     }
 

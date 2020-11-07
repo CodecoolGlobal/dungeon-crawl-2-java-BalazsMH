@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.logic.items;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 
@@ -12,6 +13,7 @@ public class Inventory {
     private int damageImprovementNumber = 0;
     private List<PokeBall> pokeBallList = new ArrayList<PokeBall>();
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
+    private Key key;
 
     public Inventory(){
         pokemonList.add(new Slowpoke("Slowpoke"));
@@ -29,6 +31,11 @@ public class Inventory {
     public void addPokemon(Pokemon pokemon){
         pokemonList.add(pokemon);
     }
+
+    public void addKey(Cell cell){
+        key = (Key)cell.getItem();
+    }
+    public boolean hasKey(){return key != null;}
 
     @Override
     public String toString() {

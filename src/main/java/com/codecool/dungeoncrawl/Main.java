@@ -1,10 +1,12 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -159,6 +161,18 @@ public class Main extends Application {
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+            case E:
+                if (map.getPlayer().getCell().getItem() instanceof Key){
+                    inventory.addKey(map.getPlayer().getCell());
+                    map.getPlayer().getCell().setItem(null);
+                    refresh();
+                }
+            case O:
+                if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
+                    map.getPlayer().getCell().getDoor().setOpen();
+                    refresh();
+                }
+
         }
     }
 
@@ -190,10 +204,15 @@ public class Main extends Application {
     }
 
     private void refreshInfoWindow() {
-        if (map.getPlayer().getCell().getItem() instanceof LootBox){
+        Cell standingOn = map.getPlayer().getCell();
+        if (standingOn.getDoor() != null){
+            text.append("Open door by 'O'\n\n");
+        } else if (standingOn.getItem() instanceof LootBox){
             text.append("Get content of Lootbox!\n\n");
+        } else if (standingOn.getItem() instanceof Key){
+            text.append("Pick up key by 'E'!\n\n");
         }
-        if(getPokemonInRange().isPresent()) {
+        if (getPokemonInRange().isPresent()) {
             text.append("\n\npokemon in fight range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
