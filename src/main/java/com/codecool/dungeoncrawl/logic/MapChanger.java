@@ -21,6 +21,7 @@ public class MapChanger {
         player.getCell().setActor(null);
         player.setCell(doorCell);
         doorCell.setActor(player);
+        activeLevel.getDoor().setOpen();
 
         return activeLevel;
     }
