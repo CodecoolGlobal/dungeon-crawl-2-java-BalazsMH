@@ -41,6 +41,8 @@ public class Main extends Application {
     Label nameLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
+    Boolean finishedConfig = false;
+
     public Inventory inventory = new Inventory();
 
 
@@ -60,29 +62,16 @@ public class Main extends Application {
         return mainMenu;
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        //Main menu
-        Scene mainMenu = mainMenu();
-
-
-
-
+    private Scene game() {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
-        //ui.add(new Label("Health: "), 0, 0);   seems redundant
         nameLabel.setText(map.getPlayer().getUserName());
         ui.add(nameLabel, 1, 0);
 
         VBox infoBox = createInfoBox();
         VBox rightPane = new VBox(ui, infoBox);
         rightPane.setSpacing(100.00);
-
-//        Button pickupButton = new Button("Pickup item");
-//        ui.add(pickupButton, 0, 10);
-        //pickupButton.setOnAction();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
@@ -94,10 +83,22 @@ public class Main extends Application {
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
 
+        return scene;
+    }
 
-        primaryStage.setScene(mainMenu); //change to scene
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        //Main menu
+        Scene mainMenu = mainMenu();
+
+        //Game
+        Scene game = game();
+
+        primaryStage.setScene(mainMenu); //change to game for testing
+
         refresh();
-        scene.setOnKeyPressed(this::onKeyPressed);
+        game.setOnKeyPressed(this::onKeyPressed);
 
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
