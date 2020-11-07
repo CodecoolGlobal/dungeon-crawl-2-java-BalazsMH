@@ -9,13 +9,24 @@ import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
     public static GameMap loadMap(String gameLevel) {
-        InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
+        InputStream is;
+
+        if (gameLevel.equals("Level1")) {
+            is = MapLoader.class.getResourceAsStream("/map.txt");
+        } else {
+            is = MapLoader.class.getResourceAsStream("/map2.txt");
+        }
+
         Scanner scanner = new Scanner(is);
+
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
@@ -74,6 +85,14 @@ public class MapLoader {
                     }
                 }
             }
+        }
+       try {
+            is.close();
+            //is.reset();
+            //scanner.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
         return map;
     }

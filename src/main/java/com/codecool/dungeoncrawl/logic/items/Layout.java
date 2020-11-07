@@ -18,9 +18,10 @@ public class Layout {
     String[][] layout;
     String filename = "./src/main/resources/map.txt";
 
-    public Layout(int rows, int cols){
+    public Layout(int rows, int cols, String filename){
         this.rows = rows;
         this.cols = cols;
+        this.filename = filename;
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
     }

@@ -4,7 +4,9 @@ import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.logic.MapGenerator;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,7 +34,11 @@ import java.util.Optional;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap("Level1");
+    boolean mapReady = MapGenerator.generateMap("./src/main/resources/map2.txt");
+    //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
     GameMap map2 = MapLoader.loadMap("Level2");
+
+
     MapChanger mapChanger = new MapChanger(map, map2);
 
     Canvas canvas = new Canvas(
