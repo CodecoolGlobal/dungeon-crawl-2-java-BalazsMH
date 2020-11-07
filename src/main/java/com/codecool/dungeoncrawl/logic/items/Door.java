@@ -18,6 +18,10 @@ public class Door implements Drawable {
         else return "door";
     }
 
+    public Cell getCell() {
+        return cell;
+    }
+
     public void setOpen() {
         isOpen = true;
     }

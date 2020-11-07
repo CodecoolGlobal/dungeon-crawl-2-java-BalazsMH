@@ -38,6 +38,10 @@ public class Player extends Actor {
     public String getUserName() {
         return this.userName;
     }
+    public void setCell(Cell newCell) {
+        cell = newCell;
+
+    }
 
 
     public String getTileName() {
