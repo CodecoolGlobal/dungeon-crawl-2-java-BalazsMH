@@ -1,9 +1,6 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
-import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -34,7 +31,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap();
+    GameMap map = MapLoader.loadMap("level1");
+    GameMap map2 = MapLoader.loadMap("level2");
+    MapChanger mapChanger = new MapChanger(map, map2);
+
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
@@ -170,6 +170,7 @@ public class Main extends Application {
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
                     map.getPlayer().getCell().getDoor().setOpen();
+                    map = mapChanger.changeMap(map);
                     refresh();
                 }
 

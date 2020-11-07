@@ -12,11 +12,13 @@ public class GameMap {
     private int height;
     private Cell[][] cells;
     private Door door;
+    private String gameLevel;
 
     private Player player;
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
-    public GameMap(int width, int height, CellType defaultCellType) {
+    public GameMap(int width, int height, CellType defaultCellType, String gameLevel) {
+        this.gameLevel = gameLevel;
         this.width = width;
         this.height = height;
         cells = new Cell[width][height];
@@ -57,4 +59,8 @@ public class GameMap {
         return height;
     }
 
+    public String getLevel() {
+        return this.gameLevel;
+
+    }
 }
