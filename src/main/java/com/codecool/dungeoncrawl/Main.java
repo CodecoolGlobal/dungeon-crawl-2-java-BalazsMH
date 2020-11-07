@@ -19,9 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
@@ -39,10 +37,10 @@ public class Main extends Application {
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
 
+
     Label nameLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
-    Boolean finishedConfig = false;
     String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
 
@@ -55,6 +53,12 @@ public class Main extends Application {
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
         BorderPane mainPane = new BorderPane();
+        mainPane.setPrefSize(1287/1.5,797/1.5);
+        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+        mainPane.setBackground(background);
         TextField nameInput = new TextField();
         nameInput.setPromptText("Enter your name: ");
         Button submitButton = new Button("Submit");
@@ -103,7 +107,7 @@ public class Main extends Application {
         Scene mainMenu = mainMenu(primaryStage, game);
 
 
-        primaryStage.setScene(mainMenu); //change to game for testing
+        primaryStage.setScene(mainMenu);
 
         refresh();
 
