@@ -35,6 +35,7 @@ public class Inventory {
     public void addKey(Cell cell){
         key = (Key)cell.getItem();
     }
+    public boolean hasKey(){return key != null;}
 
     @Override
     public String toString() {

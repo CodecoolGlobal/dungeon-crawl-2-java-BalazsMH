@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
@@ -156,6 +157,11 @@ public class Main extends Application {
                     map.getPlayer().getCell().setItem(null);
                     refresh();
                 }
+            case O:
+                if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
+                    map.getPlayer().getCell().getDoor().setOpen();
+                    refresh();
+                }
 
         }
     }
@@ -189,9 +195,12 @@ public class Main extends Application {
     }
 
     private void refreshInfoWindow() {
-        if (map.getPlayer().getCell().getItem() instanceof LootBox){
+        Cell standingOn = map.getPlayer().getCell();
+        if (standingOn.getDoor() != null){
+            text.append("Open door by 'O'\n\n");
+        } else if (standingOn.getItem() instanceof LootBox){
             text.append("Get content of Lootbox!\n\n");
-        } else if (map.getPlayer().getCell().getItem() instanceof Key){
+        } else if (standingOn.getItem() instanceof Key){
             text.append("Pick up key by 'E'!\n\n");
         }
         if (getPokemonInRange().isPresent()) {
