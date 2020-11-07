@@ -2,7 +2,9 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.logic.items.Key;
 
 public class Cell implements Drawable {
     private CellType type;
@@ -10,6 +12,8 @@ public class Cell implements Drawable {
     private GameMap gameMap;
     private Item item;
     private Pokemon pokemon;
+    private Door door;
+    private Key key;
     private int x, y;
 
     Cell(GameMap gameMap, int x, int y, CellType type) {
@@ -39,6 +43,14 @@ public class Cell implements Drawable {
         this.pokemon = pokemon;
     }
 
+    public Door getDoor() {
+        return door;
+    }
+
+    public void setDoor(Door door) {
+        this.door = door;
+    }
+
     public Actor getActor() {
         return actor;
     }
@@ -64,4 +76,12 @@ public class Cell implements Drawable {
     }
 
     public Pokemon getPokemon() { return pokemon; }
+
+    public Key getKey() {
+        return key;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
+    }
 }

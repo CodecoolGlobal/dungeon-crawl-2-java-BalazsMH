@@ -5,6 +5,8 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
+import com.codecool.dungeoncrawl.logic.items.Door;
+import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import java.io.InputStream;
@@ -34,10 +36,14 @@ public class MapLoader {
                             break;
                         case 'd':
                             cell.setType(CellType.DOOR);
+                            map.setDoor(new Door(cell));
                             break;
                         case '.':
                             cell.setType(CellType.FLOOR);
                             break;
+                        case 'k':
+                            cell.setType(CellType.FLOOR);
+                            map.setKey(new Key(cell));
                         case 's':
                             cell.setType(CellType.FLOOR);
                             new RocketGrunt(cell);

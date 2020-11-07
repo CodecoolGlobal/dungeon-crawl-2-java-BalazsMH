@@ -2,6 +2,8 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.items.Door;
+import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,8 @@ public class GameMap {
     private int width;
     private int height;
     private Cell[][] cells;
+    private Door door;
+    private Key key;
 
     private Player player;
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
@@ -33,6 +37,10 @@ public class GameMap {
         this.player = player;
     }
 
+    public Door getDoor() { return door; }
+
+    public void setDoor(Door door) { this.door = door; }
+
     public void addPokemon(Pokemon pokemon){this.pokemonList.add(pokemon);}
 
     public List<Pokemon> getPokemonList(){return pokemonList;}
@@ -50,4 +58,6 @@ public class GameMap {
     public int getHeight() {
         return height;
     }
+
+    public void setKey(Key key) { this.key = key; }
 }

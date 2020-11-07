@@ -149,6 +149,11 @@ public class Main extends Application {
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+            case E:
+                if (map.getPlayer().getCell().getDoor() != null){
+                    map.getPlayer().getCell().getDoor().setOpen();
+                }
+
         }
     }
 
