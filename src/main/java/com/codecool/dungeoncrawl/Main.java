@@ -81,10 +81,8 @@ public class Main extends Application {
     private void refresh() {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        moveAllPokemon();
-        skeletonPlayerDegree();
-        necessaryWallsFinder();
-        //moveSkeleton();
+        System.out.println(skeletonIsSeeingPlayer());
+
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -112,9 +110,6 @@ public class Main extends Application {
         int skeletonX = skeleton.getX();
         int skeletonY = skeleton.getY();
         skeleton.findPlayer(playerCoordinates);
-        System.out.println("xxx");
-        System.out.println(skeletonX);
-        System.out.println(skeletonY);
     }
 
     private double distanceBetweenPlayerAndSkeleton() {
@@ -161,17 +156,15 @@ public class Main extends Application {
         int playerY = (int) playerCoordinates.get(1);
         int skeletonX = skeleton.getX();
         int skeletonY = skeleton.getY();
-        //System.out.println("Player coord: " + playerX + ", " + playerY + " Skeleton coord: " + skeletonX + ", " + skeletonY);
 
         for (int i = 0; i < walls.size(); i++) {
             if (90 > degree && degree > 0) {
-                System.out.println("Skeleton - wall: "+skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)));
+                /*System.out.println("Skeleton - wall: "+skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)));
                 System.out.println("Skeleton - Player: "+degree);
                 System.out.println(walls.get(i).get(0) + " " + walls.get(i).get(1));
-                System.out.println(" ");
+                System.out.println(" ");*/
                 if ((walls.get(i).get(0) >= skeletonX && walls.get(i).get(0) <= playerX) &&
-                        (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY) &&
-                        (skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)) >= degree)) {
+                        (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY)) {
                             necessaryWalls.add(walls.get(i));
                 }
             }
@@ -182,27 +175,82 @@ public class Main extends Application {
                     }
                 }
         }
-        System.out.println("-- end --");
+//        System.out.println("-- end --");
         if (necessaryWalls.size() == 0) {return playerIsBehind;}
-        else {
-            for (int j = 0; j < necessaryWalls.size(); j++) {
 
-            }
-        }
-        System.out.println(necessaryWalls);
+//        System.out.println(necessaryWalls);
         return necessaryWalls;
     }
 
-    private double distanceBetweenSkeletonAndWalls(int x, int y) {
+
+    private List<List<Integer>> fieldsBehindWallsFinder() {
+        List<List<Integer>> walls = necessaryWallsFinder();
+        List<List<Integer>> fieldsBehindWalls = new ArrayList<>();
+        List<List<Integer>> fields = new ArrayList<>();
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        int fieldsQuantity = (Math.abs((playerX-skeletonX))+1) * (Math.abs((playerY-skeletonY))+1);
+
+        for (int i = 0; i < fieldsQuantity;i++) {
+            List<Integer> tmp = new ArrayList<>();
+            tmp.add(skeletonX);
+            tmp.add(skeletonY);
+            fields.add(tmp);
+            if (skeletonX<playerX) {
+                skeletonX++;
+            }
+            else if (skeletonX == playerX) {
+                skeletonY++;
+                skeletonX = skeleton.getX();
+            }
+        }
+
+        for (List<Integer> wall : walls) {
+            for (List<Integer> field : fields) {
+                if ((field.get(0) >= wall.get(0)) && (field.get(1) >= wall.get(1)) && !(fieldsBehindWalls.contains(field))
+                        && !(walls.contains(field))) {
+                    fieldsBehindWalls.add(field);
+                }
+            }
+        }
+
+        return fieldsBehindWalls;
+    }
+
+
+    private List<List<Integer>> fieldsCannotBeSeenBySkeletonFinder() {
+        List<List<Integer>> fieldsCannotBeSeenBySkeleton = new ArrayList<>();
+        List<List<Integer>> walls = necessaryWallsFinder();
+        List<List<Integer>> fieldsBehindWalls = fieldsBehindWallsFinder();
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+
+        for (List<Integer> wall : walls) {
+            double skeletonWallDegree = skeletonFieldsDegree(wall.get(0), wall.get(1));
+            for (List<Integer> field : fieldsBehindWalls) {
+                double skeletonFieldDegree = skeletonFieldsDegree(field.get(0), field.get(1));
+                if ((skeletonFieldDegree < skeletonWallDegree) && !(fieldsCannotBeSeenBySkeleton.contains(field)) ) {
+                    fieldsCannotBeSeenBySkeleton.add(field);
+                }
+            }
+        }
+        return fieldsCannotBeSeenBySkeleton;
+    }
+
+
+    private double distanceBetweenFields(int x, int y) {
         int skeletonX = skeleton.getX();
         int skeletonY = skeleton.getY();
         double distance = Math.sqrt(Math.pow((x - skeletonX), 2) + Math.pow((y - skeletonY), 2));
         return distance;
     }
 
-    private double skeletonWallsDegree(int x, int y) {
+    private double skeletonFieldsDegree(int x, int y) {
         double degree = 0;
-        double distance = distanceBetweenSkeletonAndWalls(x, y);
+        double distance = distanceBetweenFields(x, y);
         int skeletonX = skeleton.getX();
         int skeletonY = skeleton.getY();
         if (skeletonY == y) {
@@ -218,6 +266,18 @@ public class Main extends Application {
             degree = 999;
         }
         return degree;
+    }
+
+    private boolean skeletonIsSeeingPlayer() {
+        List<List<Integer>> fieldsCannotBeSeenBySkeleton = fieldsCannotBeSeenBySkeletonFinder();
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        List<Integer> pc = new ArrayList<>();
+        pc.add(playerX);
+        pc.add(playerY);
+        if (fieldsCannotBeSeenBySkeleton.contains(pc)) return false;
+        else return true;
     }
 
     private List<List<Integer>> returnWithMinusOne () {
