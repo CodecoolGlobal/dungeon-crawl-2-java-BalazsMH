@@ -11,14 +11,23 @@ import java.util.Optional;
 
 public class Player extends Actor {
     private String facing = "down";
+    private String userName = "";
 
-    public Player(Cell cell) {
+    public Player(Cell cell, String userName) {
         super(cell);
+        this.userName = userName;
+
     }
 
     public void setFacing(String facing) {
         this.facing = facing;
     }
+
+
+    public String getUserName() {
+        return this.userName;
+    }
+
 
     public String getTileName() {
         switch (this.facing) {
