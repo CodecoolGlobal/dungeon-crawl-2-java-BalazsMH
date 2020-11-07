@@ -43,6 +43,7 @@ public class Main extends Application {
 
     Label nameLabel = new Label();
     Label currentInfo = new Label();
+    Label currentLevel = new Label();
     StringBuilder text = new StringBuilder();
     String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
@@ -93,6 +94,8 @@ public class Main extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
         borderPane.setRight(rightPane);
+        currentLevel.setText(map.getLevel());
+        borderPane.setTop(currentLevel);
 
         Scene scene = new Scene(borderPane);
 
@@ -182,6 +185,7 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();
+        refreshLevelInfo();
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -204,6 +208,11 @@ public class Main extends Application {
     private void moveAllPokemon() {
         List<Pokemon> pokemonList= map.getPokemonList();
         pokemonList.forEach(p -> p.move());
+    }
+
+
+    private void refreshLevelInfo() {
+        currentLevel.setText(map.getLevel());
     }
 
     private void refreshInfoWindow() {
