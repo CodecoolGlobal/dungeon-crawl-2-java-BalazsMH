@@ -50,7 +50,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    private Scene mainMenu() {
+    private Scene mainMenu(Stage primaryStage, Scene game) {
         BorderPane mainPane = new BorderPane();
         TextField nameInput = new TextField();
         nameInput.setPromptText("Enter your name: ");
@@ -58,7 +58,7 @@ public class Main extends Application {
         VBox mainBox = new VBox(nameInput, submitButton);
         mainPane.setCenter(mainBox);
         Scene mainMenu = new Scene(mainPane);
-        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(event, nameInput));
+        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, event, nameInput));
         return mainMenu;
     }
 
@@ -83,33 +83,37 @@ public class Main extends Application {
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
 
+        scene.setOnKeyPressed(this::onKeyPressed);
+
         return scene;
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        //Main menu
-        Scene mainMenu = mainMenu();
+        primaryStage.setTitle("JavaMon");
+        primaryStage.getIcons().add(new Image("file:logo.png"));
 
         //Game
         Scene game = game();
 
+        //Main menu
+        Scene mainMenu = mainMenu(primaryStage, game);
+
+
         primaryStage.setScene(mainMenu); //change to game for testing
 
         refresh();
-        game.setOnKeyPressed(this::onKeyPressed);
 
-        primaryStage.setTitle("JavaMon");
-        primaryStage.getIcons().add(new Image("file:logo.png"));
         primaryStage.show();
     }
 
-    private void onSubmitPressed(MouseEvent mouseEvent, TextField nameInput) {
+    private void onSubmitPressed(Stage primaryStage, Scene gameScene, MouseEvent mouseEvent, TextField nameInput) {
         String enteredName = nameInput.getText();
         System.out.println(enteredName);
         System.out.println("hello");
         map.getPlayer().setUserName(enteredName);
+        primaryStage.setScene(gameScene);
+
 
     }
 
