@@ -12,6 +12,7 @@ public class Inventory {
     private int damageImprovementNumber = 0;
     private List<PokeBall> pokeBallList = new ArrayList<PokeBall>();
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
+    private boolean key = false;
 
     public Inventory(){
         pokemonList.add(new Slowpoke("Slowpoke"));
