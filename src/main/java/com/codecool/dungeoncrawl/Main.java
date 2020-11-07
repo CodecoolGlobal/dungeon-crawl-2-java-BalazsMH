@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -16,10 +17,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
+    List<List<Integer>> walls = MapLoader.getWalls();
+    Skeleton skeleton = map.getSkeleton();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
@@ -55,20 +59,20 @@ public class Main extends Application {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
-            case UP:
+            case W:
                 map.getPlayer().move(0, -1);
                 refresh();
                 break;
-            case DOWN:
+            case S:
                 map.getPlayer().move(0, 1);
                 refresh();
                 break;
-            case LEFT:
+            case A:
                 map.getPlayer().move(-1, 0);
                 refresh();
                 break;
-            case RIGHT:
-                map.getPlayer().move(1,0);
+            case D:
+                map.getPlayer().move(1, 0);
                 refresh();
                 break;
         }
@@ -78,14 +82,17 @@ public class Main extends Application {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
+        skeletonPlayerDegree();
+        necessaryWallsFinder();
+        //moveSkeleton();
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.getItem() != null){
+                } else if (cell.getItem() != null) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
-                } else if(cell.getPokemon() != null){
+                } else if (cell.getPokemon() != null) {
                     Tiles.drawTile(context, cell.getPokemon(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
@@ -96,7 +103,128 @@ public class Main extends Application {
     }
 
     private void moveAllPokemon() {
-        List<Pokemon> pokemonList= map.getPokemonList();
+        List<Pokemon> pokemonList = map.getPokemonList();
         pokemonList.forEach(p -> p.move());
     }
-}
+
+    private void moveSkeleton() {
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        skeleton.findPlayer(playerCoordinates);
+        System.out.println("xxx");
+        System.out.println(skeletonX);
+        System.out.println(skeletonY);
+    }
+
+    private double distanceBetweenPlayerAndSkeleton() {
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        double distance = Math.sqrt(Math.pow((playerX - skeletonX), 2) + Math.pow((playerY - skeletonY), 2));
+        return distance;
+    }
+
+    private double skeletonPlayerDegree() {
+        double degree = 0;
+        double distance = distanceBetweenPlayerAndSkeleton();
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        if (skeletonY == playerY) {
+            degree = 90;
+        }
+        if (skeletonX < playerX) {
+            degree = Math.toDegrees(Math.asin((playerY - skeletonY) / distance));
+        }
+        if (skeletonX > playerX) {
+            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((playerY - skeletonY)) / distance));
+        }
+        if (skeletonY > playerY) {
+            degree = 999;
+        }
+        return degree;
+    }
+
+    private List<List<Integer>> necessaryWallsFinder() {
+        List<List<Integer>> playerIsBehind = returnWithMinusOne();
+        double degree = skeletonPlayerDegree();
+        if (degree == 999) return playerIsBehind;
+
+        List<List<Integer>> necessaryWalls = new ArrayList<>();
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        //System.out.println("Player coord: " + playerX + ", " + playerY + " Skeleton coord: " + skeletonX + ", " + skeletonY);
+
+        for (int i = 0; i < walls.size(); i++) {
+            if (90 > degree && degree > 0) {
+                System.out.println("Skeleton - wall: "+skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)));
+                System.out.println("Skeleton - Player: "+degree);
+                System.out.println(walls.get(i).get(0) + " " + walls.get(i).get(1));
+                System.out.println(" ");
+                if ((walls.get(i).get(0) >= skeletonX && walls.get(i).get(0) <= playerX) &&
+                        (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY) &&
+                        (skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)) >= degree)) {
+                            necessaryWalls.add(walls.get(i));
+                }
+            }
+                if (degree < 0) {
+                    if ((walls.get(i).get(0) <= skeletonX && walls.get(i).get(0) >= playerX) &&
+                            (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY)) {
+                        necessaryWalls.add(walls.get(i));
+                    }
+                }
+        }
+        System.out.println("-- end --");
+        if (necessaryWalls.size() == 0) {return playerIsBehind;}
+        else {
+            for (int j = 0; j < necessaryWalls.size(); j++) {
+
+            }
+        }
+        System.out.println(necessaryWalls);
+        return necessaryWalls;
+    }
+
+    private double distanceBetweenSkeletonAndWalls(int x, int y) {
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        double distance = Math.sqrt(Math.pow((x - skeletonX), 2) + Math.pow((y - skeletonY), 2));
+        return distance;
+    }
+
+    private double skeletonWallsDegree(int x, int y) {
+        double degree = 0;
+        double distance = distanceBetweenSkeletonAndWalls(x, y);
+        int skeletonX = skeleton.getX();
+        int skeletonY = skeleton.getY();
+        if (skeletonY == y) {
+            degree = 90;
+        }
+        if (skeletonX < x) {
+            degree = Math.toDegrees(Math.asin((y - skeletonY) / distance));
+        }
+        if (skeletonX > x) {
+            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((y - skeletonY)) / distance));
+        }
+        if (skeletonY > y) {
+            degree = 999;
+        }
+        return degree;
+    }
+
+    private List<List<Integer>> returnWithMinusOne () {
+        List<List<Integer>> playerIsBehind = new ArrayList<>();
+        List<Integer> minusOne = new ArrayList<>();
+        minusOne.add(-1);
+        playerIsBehind.add(minusOne);
+        return playerIsBehind;
+    }
+    }

@@ -8,14 +8,19 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MapLoader {
+    private static List<List<Integer>> walls;
     public static GameMap loadMap() {
         InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();
+
+        walls = new ArrayList<>();
 
         scanner.nextLine(); // empty line
 
@@ -31,13 +36,17 @@ public class MapLoader {
                             break;
                         case '#':
                             cell.setType(CellType.WALL);
+                            List<Integer> tmp = new ArrayList<>();
+                            tmp.add(x);
+                            tmp.add(y);
+                            walls.add(tmp);
                             break;
                         case '.':
                             cell.setType(CellType.FLOOR);
                             break;
                         case 's':
                             cell.setType(CellType.FLOOR);
-                            new Skeleton(cell);
+                            map.setSkeleton(new Skeleton(cell));
                             break;
                         case '@':
                             cell.setType(CellType.FLOOR);
@@ -65,7 +74,12 @@ public class MapLoader {
                 }
             }
         }
+
         return map;
+    }
+
+    public static List<List<Integer>> getWalls() {
+        return walls;
     }
 
 }

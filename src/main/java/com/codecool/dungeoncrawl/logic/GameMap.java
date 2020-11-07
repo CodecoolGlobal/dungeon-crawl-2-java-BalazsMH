@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class GameMap {
     private Cell[][] cells;
 
     private Player player;
+    private Skeleton skeleton;
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
     public GameMap(int width, int height, CellType defaultCellType) {
@@ -23,6 +25,13 @@ public class GameMap {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
             }
         }
+    }
+
+    public List<Integer> returnPlayerCoordinates() {
+        List<Integer> cellList = new ArrayList<Integer>();
+        cellList.add(this.player.getX());
+        cellList.add(this.player.getY());
+        return cellList;
     }
 
     public Cell getCell(int x, int y) {
@@ -48,4 +57,11 @@ public class GameMap {
     public int getHeight() {
         return height;
     }
+
+    public void setSkeleton(Skeleton skeleton) {
+        this.skeleton = skeleton;
+    }
+
+    public Skeleton getSkeleton() {return this.skeleton;}
+
 }
