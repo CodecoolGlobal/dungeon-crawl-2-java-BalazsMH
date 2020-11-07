@@ -191,8 +191,10 @@ public class Main extends Application {
     private void refreshInfoWindow() {
         if (map.getPlayer().getCell().getItem() instanceof LootBox){
             text.append("Get content of Lootbox!\n\n");
+        } else if (map.getPlayer().getCell().getItem() instanceof Key){
+            text.append("Pick up key by 'E'!\n\n");
         }
-        if(getPokemonInRange().isPresent()) {
+        if (getPokemonInRange().isPresent()) {
             text.append("\n\npokemon in fight range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
