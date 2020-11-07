@@ -67,7 +67,7 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
         nameLabel.setText(map.getPlayer().getUserName());
-        ui.add(nameLabel, 1, 0);
+        ui.add(nameLabel, 0, 0);
 
         VBox infoBox = createInfoBox();
         VBox rightPane = new VBox(ui, infoBox);
@@ -93,7 +93,7 @@ public class Main extends Application {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
-        //Game
+        //Create Game
         Scene game = game();
 
         //Main menu
@@ -112,6 +112,7 @@ public class Main extends Application {
         System.out.println(enteredName);
         System.out.println("hello");
         map.getPlayer().setUserName(enteredName);
+        nameLabel.setText(map.getPlayer().getUserName());
         primaryStage.setScene(gameScene);
 
 
@@ -167,7 +168,7 @@ public class Main extends Application {
                 }
             }
         }
-        nameLabel.setText("Health:" + map.getPlayer().getHealth());
+        //nameLabel.setText("Health:" + map.getPlayer().getHealth()); player health is unused.
     }
 
     private void moveAllPokemon() {
