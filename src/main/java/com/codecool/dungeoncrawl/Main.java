@@ -57,7 +57,9 @@ public class Main extends Application {
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                                                              BackgroundSize.AUTO,
+                                                                false, false, true, true)));
         mainPane.setBackground(background);
         TextField nameInput = new TextField();
         nameInput.setPromptText("Enter your name: ");
