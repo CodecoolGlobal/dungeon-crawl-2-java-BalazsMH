@@ -22,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
@@ -39,7 +38,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
 
-    Label healthLabel = new Label();
+    Label nameLabel = new Label();
     Label currentInfo = new Label();
     StringBuilder text = new StringBuilder();
     public Inventory inventory = new Inventory();
@@ -49,14 +48,33 @@ public class Main extends Application {
         launch(args);
     }
 
+    private Scene mainMenu() {
+        BorderPane mainPane = new BorderPane();
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your name: ");
+        Button submitButton = new Button("Submit");
+        VBox mainBox = new VBox(nameInput, submitButton);
+        mainPane.setCenter(mainBox);
+        Scene mainMenu = new Scene(mainPane);
+        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(event, nameInput));
+        return mainMenu;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        //Main menu
+        Scene mainMenu = mainMenu();
+
+
+
 
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
         //ui.add(new Label("Health: "), 0, 0);   seems redundant
-        ui.add(healthLabel, 1, 0);
+        nameLabel.setText(map.getPlayer().getUserName());
+        ui.add(nameLabel, 1, 0);
 
         VBox infoBox = createInfoBox();
         VBox rightPane = new VBox(ui, infoBox);
@@ -67,27 +85,12 @@ public class Main extends Application {
         //pickupButton.setOnAction();
 
         BorderPane borderPane = new BorderPane();
-
-
-        BorderPane mainPane = new BorderPane();
-        //mainPane.setPrefWidth(200);
-
-        TextField nameInput = new TextField();
-        nameInput.setPromptText("Enter your name: ");
-        Button submitButton = new Button("Submit");
-        VBox mainBox = new VBox(nameInput, submitButton);
-        mainPane.setCenter(mainBox);
-        Scene mainMenu = new Scene(mainPane);
-        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(event, nameInput));
-
-
         borderPane.setCenter(canvas);
         borderPane.setRight(rightPane);
 
         Scene scene = new Scene(borderPane);
 
-        //scene.getStylesheets().add(getClass().getResource("/fontstyle.css").toExternalForm());
-        healthLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
 
@@ -98,7 +101,6 @@ public class Main extends Application {
 
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
-
         primaryStage.show();
     }
 
@@ -106,6 +108,8 @@ public class Main extends Application {
         String enteredName = nameInput.getText();
         System.out.println(enteredName);
         System.out.println("hello");
+        map.getPlayer().setUserName(enteredName);
+
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -158,7 +162,7 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("Health:" + map.getPlayer().getHealth());
+        nameLabel.setText("Health:" + map.getPlayer().getHealth());
     }
 
     private void moveAllPokemon() {

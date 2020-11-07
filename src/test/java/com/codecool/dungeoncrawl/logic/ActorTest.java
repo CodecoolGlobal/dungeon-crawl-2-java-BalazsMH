@@ -11,7 +11,7 @@ class ActorTest {
 
     @Test
     void moveUpdatesCells() {
-        Player player = new Player(gameMap.getCell(1, 1), "Random name");
+        Player player = new Player(gameMap.getCell(1, 1));
         player.move(1, 0);
 
         assertEquals(2, player.getX());
@@ -23,7 +23,7 @@ class ActorTest {
     @Test
     void cannotMoveIntoWall() {
         gameMap.getCell(2, 1).setType(CellType.WALL);
-        Player player = new Player(gameMap.getCell(1, 1), "Random name");
+        Player player = new Player(gameMap.getCell(1, 1));
         player.move(1, 0);
 
         assertEquals(1, player.getX());
@@ -32,7 +32,7 @@ class ActorTest {
 
     @Test
     void cannotMoveOutOfMap() {
-        Player player = new Player(gameMap.getCell(2, 1), "Random name");
+        Player player = new Player(gameMap.getCell(2, 1));
         player.move(1, 0);
 
         assertEquals(2, player.getX());
@@ -41,7 +41,7 @@ class ActorTest {
 
     @Test
     void cannotMoveIntoAnotherActor() {
-        Player player = new Player(gameMap.getCell(1, 1), "Random name");
+        Player player = new Player(gameMap.getCell(1, 1));
         RocketGrunt rocketGrunt = new RocketGrunt(gameMap.getCell(2, 1));
         player.move(1, 0);
 

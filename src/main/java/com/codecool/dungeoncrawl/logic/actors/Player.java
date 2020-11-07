@@ -13,14 +13,17 @@ public class Player extends Actor {
     private String facing = "down";
     private String userName = "";
 
-    public Player(Cell cell, String userName) {
+    public Player(Cell cell) {
         super(cell);
-        this.userName = userName;
 
     }
 
     public void setFacing(String facing) {
         this.facing = facing;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 
