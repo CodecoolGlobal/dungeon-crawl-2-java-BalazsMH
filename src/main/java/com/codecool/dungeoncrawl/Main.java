@@ -20,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
@@ -82,7 +81,7 @@ public class Main extends Application {
         Scene mainMenu = new Scene(mainPane);
         mainPane.requestFocus();
 
-        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, event, nameInput));
+        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
         return mainMenu;
     }
 
@@ -123,7 +122,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
@@ -139,7 +138,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void onSubmitPressed(Stage primaryStage, Scene gameScene, MouseEvent mouseEvent, TextField nameInput) {
+    private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
         String enteredName = nameInput.getText();
         System.out.println(enteredName);
         System.out.println("hello");
