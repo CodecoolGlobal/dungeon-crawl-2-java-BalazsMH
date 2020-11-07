@@ -11,11 +11,14 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -65,6 +68,19 @@ public class Main extends Application {
 
         BorderPane borderPane = new BorderPane();
 
+
+        BorderPane mainPane = new BorderPane();
+        //mainPane.setPrefWidth(200);
+
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your name: ");
+        Button submitButton = new Button("Submit");
+        VBox mainBox = new VBox(nameInput, submitButton);
+        mainPane.setCenter(mainBox);
+        Scene mainMenu = new Scene(mainPane);
+        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(event, nameInput));
+
+
         borderPane.setCenter(canvas);
         borderPane.setRight(rightPane);
 
@@ -76,7 +92,7 @@ public class Main extends Application {
         currentInfo.setWrapText(true);
 
 
-        primaryStage.setScene(scene);
+        primaryStage.setScene(mainMenu); //change to scene
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
 
@@ -84,6 +100,12 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
         primaryStage.show();
+    }
+
+    private void onSubmitPressed(MouseEvent mouseEvent, TextField nameInput) {
+        String enteredName = nameInput.getText();
+        System.out.println(enteredName);
+        System.out.println("hello");
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
