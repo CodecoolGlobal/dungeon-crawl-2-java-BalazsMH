@@ -40,6 +40,7 @@ public class Layout {
         markEdges();
         markBoardEdges();
         addPokemon();
+        addItems();
         printToConsole(); // remove when done
         writeTxt();
     }
@@ -61,6 +62,7 @@ public class Layout {
         System.out.println(endCoord[0] + "," + endCoord[1]);
         layout[endCoord[0]][endCoord[1]] = "d"; //we need a character to signal door
     }
+
     private void generatePath(){
         int[] currentPosition = startCoord;
         while (! Arrays.equals(currentPosition, endCoord)){
@@ -137,17 +139,24 @@ public class Layout {
     private void addPokemon() {
         pokemonList.forEach(s -> {
             while (true){
-                System.out.println("?");
                 int r = (int) (Math.random() * (rows - 1) + 1);
                 int c = (int) (Math.random() * (cols - 1) + 1);
-                System.out.println(r + "," +c);
-                System.out.println(layout[r][c]);
                 if (layout[r][c].equals(".")){
                     layout[r][c] = s;
                     break;
                 }
             }
         });
+    }
+    private void addItems() {
+        while (true){
+            int r = (int) (Math.random() * rows);
+            int c = (int) (Math.random() * cols);
+            if (layout[r][c].equals(".")) {
+                layout[r][c] = "k";
+                break;
+            }
+        }
     }
     private void printToConsole() {
         for (int i = 0; i < rows; i++) {
