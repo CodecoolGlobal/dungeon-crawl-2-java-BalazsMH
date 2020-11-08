@@ -20,7 +20,11 @@ public class Skeleton extends Actor {
         return super.getCell();
     }
 
-    public void findPlayer(List<Cell> cell) {
-        System.out.println(cell);
+
+    public void findPlayer(List<List<Integer>> mapWalls, List playerCoordinate, int npcX, int npcY) {
+
+            boolean isSeeing = npcIsSeeingPlayer(mapWalls, playerCoordinate, npcX, npcY);
+            System.out.println(isSeeing);
+
     }
 }
