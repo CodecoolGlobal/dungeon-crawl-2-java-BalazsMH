@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.items.PokeBall;
 
 import java.util.List;
@@ -58,7 +59,12 @@ public class Player extends Actor {
 
     }
 
-    public void pickupItem() {
+    public void pickupItem(Inventory inventory, StringBuilder text) {
+        if (cell.getItem() instanceof LootBox) {
+            text.append("You're standing on it\n");
+        } else {
+            text.append("Nothing to pick up here");
+        }
     }
 
     @Override

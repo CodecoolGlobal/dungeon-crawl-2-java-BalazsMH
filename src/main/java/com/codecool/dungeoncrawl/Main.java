@@ -178,6 +178,9 @@ public class Main extends Application {
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+            case R:
+                map.getPlayer().pickupItem(inventory, text);
+                refresh();
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
