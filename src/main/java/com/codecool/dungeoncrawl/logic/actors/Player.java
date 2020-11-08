@@ -71,6 +71,7 @@ public class Player extends Actor {
                     .append(" potions, and")
                     .append(pickedUpPokeBalls.size())
                     .append(" pokeballs added.");
+            cell.setItem(null);
         } else {
             text.append("Nothing to pick up here");
         }
