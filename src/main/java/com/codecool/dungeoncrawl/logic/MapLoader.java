@@ -17,6 +17,7 @@ public class MapLoader {
     public static GameMap loadMap(String gameLevel) {
         InputStream is;
 
+        //TODO: map should not be part of the resources folder
         if (gameLevel.equals("Level1")) {
             is = MapLoader.class.getResourceAsStream("/map.txt");
         } else {
