@@ -78,6 +78,17 @@ public class Player extends Actor {
 
     }
 
+    public void fightPokemon(Pokemon activePokemon, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+        if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
+        else {
+            Pokemon fightWith = pokemonInRange.get().get(0); // player should be able to decide which pokemon to fight if multiple in range
+            fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.getPokeDamage());
+            if (fightWith.getPokeHealth() > 5) {
+                activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.getPokeDamage());
+            }
+        }
+    }
+
     public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
 
         if(pokemonInRange.isEmpty()){

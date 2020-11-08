@@ -196,6 +196,10 @@ public class Main extends Application {
             case A:
                 inventory.changeActivePokemon();
                 break;
+            case F:
+                map.getPlayer().fightPokemon(inventory.getActivePokemon(), text, getPokemonInRange(), map);
+                refresh();
+                break;
         }
     }
 

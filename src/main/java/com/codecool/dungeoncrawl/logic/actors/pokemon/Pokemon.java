@@ -42,6 +42,14 @@ public abstract class Pokemon implements Drawable {
     public abstract void move();
     public abstract void fight();
 
+    public int getPokeHealth() { return pokeHealth; }
+
+    public void setPokeHealth(int pokeHealth) { this.pokeHealth = pokeHealth; }
+
+    public int getPokeDamage() { return pokeDamage; }
+
+    public void setPokeDamage(int pokeDamage) { this.pokeDamage = pokeDamage; }
+
     /***
      * Aim: make sure that info is updated everywhere it needs to be updated
      * @param moveTo this Cell has to be determined for each pokemon depending on their moving patterns (e.g. chasing, random...)
