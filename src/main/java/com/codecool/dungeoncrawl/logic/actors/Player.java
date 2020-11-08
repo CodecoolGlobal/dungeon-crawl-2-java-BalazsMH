@@ -106,21 +106,13 @@ public class Player extends Actor {
                 text.append("\nNo PokeBalls available!");
             } else {
                 List<Pokemon> pokemons = pokemonInRange.get();
-                Pokemon toCatch = pokemons.stream().min(Comparator.comparing(p -> p.getPokeHealth())).get();
+                Pokemon toCatch = pokemons.stream().min(Comparator.comparing(Pokemon::getPokeHealth)).get();
                 PokeBall PB = currentPB.get();
-
-                if (toCatch.getPokeHealth() <= 0) {
+                if (PB.hasCaught(toCatch)){
                     pokemonFromBoardToInventory(map, inventory, toCatch);
                     text.append("\nPokemon caught!");
-                }
-                else {
-                    text.append(String.format("\nPokeBall thrown (catch rate: %.1f)", PB.getCatchRate()/10.0));
-                    if (Math.random() <= PB.getCatchRate()/10.0){
-                        text.append("\nPokemon caught!");
-                        pokemonFromBoardToInventory(map, inventory, toCatch);
-                    } else {
-                        text.append("\nCatch unsuccessful");
-                    }
+                } else {
+                    text.append("\nCatch unsuccessful");
                 }
             }
         }
