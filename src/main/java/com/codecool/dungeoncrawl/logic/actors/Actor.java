@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Actor implements Drawable {
@@ -45,6 +46,79 @@ public abstract class Actor implements Drawable {
         return cell.getY();
     }
 
+    public void takeStep(Cell moveTo){
+        cell.setActor(null);
+        moveTo.setActor(this);
+        cell = moveTo;
+    }
+
+    protected Cell getEmptyCellCloserToPlayer(List playerCoordinates, int npcX, int npcY) {
+        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
+        double distanceNpcPlayer = distanceBetweenPlayerAndNpc(playerCoordinates, npcX, npcY);
+        double distance;
+        if (90 > degree && degree >= 0) {
+            int count = 0;
+            while (true) {
+                int dx = 0;
+                int dy = 0;
+                if (count == 0) {
+                    dx = 1;
+                    dy = 0;
+                }
+                else if (count == 1) {
+                    dx = 0;
+                    dy = 1;
+                }
+                else {
+                    dx = 1;
+                    dy = 1;
+                }
+                Cell neighbour = cell.getNeighbor(dx, dy);
+                distance = distanceBetweenFields(neighbour.getX(),neighbour.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
+                if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
+                        && neighbour.getTileName().equals(CellType.FLOOR.getTileName()) && distance < distanceNpcPlayer) {
+                    return neighbour;
+                }
+                else {count++;}
+                if (count == 3) {
+                    neighbour = cell.getNeighbor(0, 0);
+                    return neighbour;
+                }
+            }
+        }
+        else {
+            int count = 0;
+            while (true) {
+                int dx = 0;
+                int dy = 0;
+                if (count == 0) {
+                    dx = -1;
+                    dy = 0;
+                }
+                else if (count == 1) {
+                    dx = 0;
+                    dy = -1;
+                }
+                else {
+                    dx = -1;
+                    dy = -1;
+                }
+                Cell neighbour = cell.getNeighbor(dx, dy);
+                distance = distanceBetweenFields(neighbour.getX(),neighbour.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
+                if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
+                        && neighbour.getTileName().equals(CellType.FLOOR.getTileName()) && distance < distanceNpcPlayer) {
+                    return neighbour;
+                }
+                else {count++;}
+                if (count == 3) {
+                    neighbour = cell.getNeighbor(0, 0);
+                    return neighbour;
+                }
+            }
+        }
+    }
+
+
     private double distanceBetweenPlayerAndNpc(List playerCoordinates, int npcX, int npcY) {
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
@@ -52,7 +126,7 @@ public abstract class Actor implements Drawable {
         return distance;
     }
 
-    private double npcPlayerDegree(List playerCoordinates, int npcX, int npcY) {
+    protected double npcPlayerDegree(List playerCoordinates, int npcX, int npcY) {
         double degree = 0;
         double distance = distanceBetweenPlayerAndNpc(playerCoordinates, npcX, npcY);
         int playerX = (int) playerCoordinates.get(0);
@@ -64,22 +138,16 @@ public abstract class Actor implements Drawable {
             degree = Math.toDegrees(Math.asin((playerY - npcY) / distance));
         }
         if (npcX > playerX) {
-            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((playerY - npcY)) / distance));
+            degree = -1.00 * (Math.toDegrees(Math.asin(Math.abs((playerY - npcY)) / distance))+0.001);
         }
         if (npcY > playerY) {
             degree = 999;
         }
-        if (degree == -0.0) {
-            degree = 0;
-        }
         return degree;
     }
 
-    private List<List<Integer>> necessaryWallsFinder(List<List<Integer>> walls, List playerCoordinates, int npcX, int npcY) {
-        List<List<Integer>> playerIsBehind = returnWithMinusOne();
+    protected List<List<Integer>> necessaryWallsFinder(List<List<Integer>> walls, List playerCoordinates, int npcX, int npcY) {
         double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
-        if (degree == 999) return playerIsBehind;
-
         List<List<Integer>> necessaryWalls = new ArrayList<>();
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
@@ -91,14 +159,13 @@ public abstract class Actor implements Drawable {
                     necessaryWalls.add(walls.get(i));
                 }
             }
-            if (degree < 0) {
+            if (degree < 0 || degree == -0.0) {
                 if ((walls.get(i).get(0) <= npcX && walls.get(i).get(0) >= playerX) &&
                         (walls.get(i).get(1) >= npcY && walls.get(i).get(1) <= playerY)) {
                     necessaryWalls.add(walls.get(i));
                 }
             }
         }
-        if (necessaryWalls.size() == 0) {return playerIsBehind;}
         return necessaryWalls;
     }
 
@@ -112,7 +179,7 @@ public abstract class Actor implements Drawable {
         int fieldsQuantity = (Math.abs((playerX-npcX))+1) * (Math.abs((playerY-npcY))+1);
         double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
 
-        if (90 > degree && degree >= 0 ) {
+        if (90 > degree && degree >= 0) {
             for (int i = 0; i < fieldsQuantity;i++) {
                 List<Integer> tmp = new ArrayList<>();
                 tmp.add(npcX);
@@ -137,7 +204,7 @@ public abstract class Actor implements Drawable {
             }
         }
 
-        else if (degree <= 0) {
+        else if (degree < 0) {
             for (int i = 0; i < fieldsQuantity;i++) {
                 List<Integer> tmp = new ArrayList<>();
                 tmp.add(npcX);
@@ -228,14 +295,6 @@ public abstract class Actor implements Drawable {
         pc.add(playerY);
         if (fieldsCannotBeSeenByNpc.contains(pc)) return false;
         else return true;
-    }
-
-    private List<List<Integer>> returnWithMinusOne () {
-        List<List<Integer>> playerIsBehind = new ArrayList<>();
-        List<Integer> minusOne = new ArrayList<>();
-        minusOne.add(-1);
-        playerIsBehind.add(minusOne);
-        return playerIsBehind;
     }
 }
 

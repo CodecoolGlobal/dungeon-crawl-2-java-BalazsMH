@@ -109,6 +109,6 @@ public class Main extends Application {
         List playerCoordinates = map.returnPlayerCoordinates();
         int npcX = npc.getX();
         int npcY = npc.getY();
-        npc.findPlayer(mapWalls, playerCoordinates, npcX, npcY);
+        npc.move(playerCoordinates, npcX, npcY, npc.npcCanSeePlayer(mapWalls, playerCoordinates, npcX, npcY));
     }
 }
