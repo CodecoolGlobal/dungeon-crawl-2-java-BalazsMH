@@ -158,6 +158,16 @@ public class Layout {
                 break;
             }
         }
+        for (int i = 0; i < 3; i++) {
+            while (true){
+                int r = (int) (Math.random() * rows);
+                int c = (int) (Math.random() * cols);
+                if (layout[r][c].equals(".")) {
+                    layout[r][c] = "L";
+                    break;
+                }
+            }
+        }
     }
     private void printToConsole() {
         for (int i = 0; i < rows; i++) {
