@@ -237,7 +237,7 @@ public class Main extends Application {
         if (standingOn.getDoor() != null){
             text.append("Open door by 'O'\n\n");
         } else if (standingOn.getItem() instanceof LootBox){
-            text.append("Get content of Lootbox!\n\n");
+            text.append("Pick up lootbox by 'R'!\n\n");
         } else if (standingOn.getItem() instanceof Key){
             text.append("Pick up key by 'E'!\n\n");
         }
