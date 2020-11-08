@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,70 +53,87 @@ public abstract class Actor implements Drawable {
         cell = moveTo;
     }
 
-    protected Cell getEmptyCellCloserToPlayer(List playerCoordinates, int npcX, int npcY) {
-        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
-        double distanceNpcPlayer = distanceBetweenPlayerAndNpc(playerCoordinates, npcX, npcY);
-        double distance;
+    public List<List<Integer>> getClosestCellsAsc(List playerCoordinates, int npcX, int npcY, double degree) {
+        double distanceSide;
+        double distanceDown;
+        double distanceDiag;
+        List<List<Integer>> closestCellsAsc = new ArrayList<>();
+        List<Integer> side;
+        List<Integer> down;
+        List<Integer> diag;
+
         if (90 > degree && degree >= 0) {
-            int count = 0;
-            while (true) {
-                int dx = 0;
-                int dy = 0;
-                if (count == 0) {
-                    dx = 1;
-                    dy = 0;
-                }
-                else if (count == 1) {
-                    dx = 0;
-                    dy = 1;
-                }
-                else {
-                    dx = 1;
-                    dy = 1;
-                }
-                Cell neighbour = cell.getNeighbor(dx, dy);
-                distance = distanceBetweenFields(neighbour.getX(),neighbour.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
-                if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
-                        && neighbour.getTileName().equals(CellType.FLOOR.getTileName()) && distance < distanceNpcPlayer) {
-                    return neighbour;
-                }
-                else {count++;}
-                if (count == 3) {
-                    neighbour = cell.getNeighbor(0, 0);
-                    return neighbour;
-                }
-            }
+            side = Arrays.asList(1, 0);
+            down = Arrays.asList(0, 1);
+            diag = Arrays.asList(1, 1);
         }
         else {
-            int count = 0;
-            while (true) {
-                int dx = 0;
-                int dy = 0;
-                if (count == 0) {
-                    dx = -1;
-                    dy = 0;
-                }
-                else if (count == 1) {
-                    dx = 0;
-                    dy = -1;
-                }
-                else {
-                    dx = -1;
-                    dy = -1;
-                }
-                Cell neighbour = cell.getNeighbor(dx, dy);
-                distance = distanceBetweenFields(neighbour.getX(),neighbour.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
-                if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
-                        && neighbour.getTileName().equals(CellType.FLOOR.getTileName()) && distance < distanceNpcPlayer) {
-                    return neighbour;
-                }
-                else {count++;}
-                if (count == 3) {
-                    neighbour = cell.getNeighbor(0, 0);
-                    return neighbour;
-                }
+            side = Arrays.asList(-1, 0);
+            down = Arrays.asList(0, 1);
+            diag = Arrays.asList(-1, -1);
+        }
+
+        List<Integer> tmp;
+        Cell neighbourSide = cell.getNeighbor(side.get(0), side.get(1));
+        Cell neighbourDown = cell.getNeighbor(down.get(0), down.get(1));
+        Cell neighbourDiag = cell.getNeighbor(diag.get(0), diag.get(1));
+        distanceSide = distanceBetweenFields(neighbourSide.getX(),neighbourSide.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
+        distanceDown = distanceBetweenFields(neighbourDown.getX(),neighbourDown.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
+        distanceDiag = distanceBetweenFields(neighbourDiag.getX(),neighbourDiag.getY(), (int) playerCoordinates.get(0), (int) playerCoordinates.get(1));
+        if (distanceSide < distanceDown) {
+            tmp = new ArrayList<>();
+            tmp.add(side.get(0));
+            tmp.add(side.get(1));
+            closestCellsAsc.add(tmp);
+            tmp = new ArrayList<>();
+            tmp.add(down.get(0));
+            tmp.add(down.get(1));
+            closestCellsAsc.add(tmp);
+        }
+        else {
+            tmp = new ArrayList<>();
+            tmp.add(down.get(0));
+            tmp.add(down.get(1));
+            closestCellsAsc.add(tmp);
+            tmp = new ArrayList<>();
+            tmp.add(side.get(0));
+            tmp.add(side.get(1));
+            closestCellsAsc.add(tmp);
+        }
+        if (distanceDiag < distanceSide && distanceDiag < distanceDown) {
+            tmp = new ArrayList<>();
+            tmp.add(diag.get(0));
+            tmp.add(diag.get(1));
+            closestCellsAsc.add(0,tmp);
+        }
+
+        else if (distanceDiag > distanceSide && distanceDiag > distanceDown) {
+            tmp = new ArrayList<>();
+            tmp.add(diag.get(0));
+            tmp.add(diag.get(1));
+            closestCellsAsc.add(tmp);
+        }
+        else {
+            tmp = new ArrayList<>();
+            tmp.add(diag.get(0));
+            tmp.add(diag.get(1));
+            closestCellsAsc.add(1,tmp);
+        }
+        return closestCellsAsc;
+    }
+
+    protected Cell getEmptyCellCloserToPlayer(List playerCoordinates, int npcX, int npcY) {
+        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
+        List<List<Integer>> closestCellsAsc = getClosestCellsAsc(playerCoordinates, npcX, npcY, degree);
+        Cell neighbour;
+        for (List<Integer> field : closestCellsAsc) {
+            neighbour = cell.getNeighbor(field.get(0), field.get(1));
+            if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
+                    && neighbour.getTileName().equals(CellType.FLOOR.getTileName())) {
+                return neighbour;
             }
         }
+        return cell.getNeighbor(npcX, npcY);
     }
 
 
