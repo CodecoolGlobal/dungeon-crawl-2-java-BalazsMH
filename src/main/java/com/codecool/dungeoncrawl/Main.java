@@ -22,8 +22,8 @@ import java.util.List;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
-    List<List<Integer>> walls = MapLoader.getWalls();
-    Skeleton skeleton = map.getSkeleton();
+    List<List<Integer>> mapWalls = MapLoader.getWalls();
+    Skeleton npc = map.getSkeleton();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
@@ -81,7 +81,7 @@ public class Main extends Application {
     private void refresh() {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        System.out.println(skeletonIsSeeingPlayer());
+        moveNpc();
 
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
@@ -105,114 +105,129 @@ public class Main extends Application {
         pokemonList.forEach(p -> p.move());
     }
 
-    private void moveSkeleton() {
+    private void moveNpc() {
         List playerCoordinates = map.returnPlayerCoordinates();
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        skeleton.findPlayer(playerCoordinates);
+        int npcX = npc.getX();
+        int npcY = npc.getY();
+        boolean isSeeing = npcIsSeeingPlayer(playerCoordinates, npcX, npcY);
+        System.out.println(isSeeing);
+
+        npc.findPlayer(playerCoordinates);
     }
 
-    private double distanceBetweenPlayerAndSkeleton() {
-        List playerCoordinates = map.returnPlayerCoordinates();
+
+    private double distanceBetweenPlayerAndNpc(List playerCoordinates, int npcX, int npcY) {
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        double distance = Math.sqrt(Math.pow((playerX - skeletonX), 2) + Math.pow((playerY - skeletonY), 2));
+        double distance = Math.sqrt(Math.pow((playerX - npcX), 2) + Math.pow((playerY - npcY), 2));
         return distance;
     }
 
-    private double skeletonPlayerDegree() {
+    private double npcPlayerDegree(List playerCoordinates, int npcX, int npcY) {
         double degree = 0;
-        double distance = distanceBetweenPlayerAndSkeleton();
-        List playerCoordinates = map.returnPlayerCoordinates();
+        double distance = distanceBetweenPlayerAndNpc(playerCoordinates, npcX, npcY);
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        if (skeletonY == playerY) {
+        if (npcY == playerY) {
             degree = 90;
         }
-        if (skeletonX < playerX) {
-            degree = Math.toDegrees(Math.asin((playerY - skeletonY) / distance));
+        if (npcX < playerX) {
+            degree = Math.toDegrees(Math.asin((playerY - npcY) / distance));
         }
-        if (skeletonX > playerX) {
-            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((playerY - skeletonY)) / distance));
+        if (npcX > playerX) {
+            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((playerY - npcY)) / distance));
         }
-        if (skeletonY > playerY) {
+        if (npcY > playerY) {
             degree = 999;
+        }
+        if (degree == -0.0) {
+            degree = 0;
         }
         return degree;
     }
 
-    private List<List<Integer>> necessaryWallsFinder() {
+    private List<List<Integer>> necessaryWallsFinder(List<List<Integer>> walls, List playerCoordinates, int npcX, int npcY) {
         List<List<Integer>> playerIsBehind = returnWithMinusOne();
-        double degree = skeletonPlayerDegree();
+        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
         if (degree == 999) return playerIsBehind;
 
         List<List<Integer>> necessaryWalls = new ArrayList<>();
-        List playerCoordinates = map.returnPlayerCoordinates();
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
 
         for (int i = 0; i < walls.size(); i++) {
-            if (90 > degree && degree > 0) {
-                /*System.out.println("Skeleton - wall: "+skeletonWallsDegree(walls.get(i).get(0), walls.get(i).get(1)));
-                System.out.println("Skeleton - Player: "+degree);
-                System.out.println(walls.get(i).get(0) + " " + walls.get(i).get(1));
-                System.out.println(" ");*/
-                if ((walls.get(i).get(0) >= skeletonX && walls.get(i).get(0) <= playerX) &&
-                        (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY)) {
+            if (90 > degree && degree >= 0) {
+                if ((walls.get(i).get(0) >= npcX && walls.get(i).get(0) <= playerX) &&
+                        (walls.get(i).get(1) >= npcY && walls.get(i).get(1) <= playerY)) {
                             necessaryWalls.add(walls.get(i));
                 }
             }
                 if (degree < 0) {
-                    if ((walls.get(i).get(0) <= skeletonX && walls.get(i).get(0) >= playerX) &&
-                            (walls.get(i).get(1) >= skeletonY && walls.get(i).get(1) <= playerY)) {
+                    if ((walls.get(i).get(0) <= npcX && walls.get(i).get(0) >= playerX) &&
+                            (walls.get(i).get(1) >= npcY && walls.get(i).get(1) <= playerY)) {
                         necessaryWalls.add(walls.get(i));
                     }
                 }
         }
-//        System.out.println("-- end --");
         if (necessaryWalls.size() == 0) {return playerIsBehind;}
-
-//        System.out.println(necessaryWalls);
         return necessaryWalls;
     }
 
 
-    private List<List<Integer>> fieldsBehindWallsFinder() {
-        List<List<Integer>> walls = necessaryWallsFinder();
+    private List<List<Integer>> fieldsBehindWallsFinder(List<List<Integer>> walls, List playerCoordinates, int npcX, int npcY) {
+        List<List<Integer>> mapWalls = necessaryWallsFinder(walls, playerCoordinates, npcX, npcY);
         List<List<Integer>> fieldsBehindWalls = new ArrayList<>();
         List<List<Integer>> fields = new ArrayList<>();
-        List playerCoordinates = map.returnPlayerCoordinates();
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        int fieldsQuantity = (Math.abs((playerX-skeletonX))+1) * (Math.abs((playerY-skeletonY))+1);
+        int fieldsQuantity = (Math.abs((playerX-npcX))+1) * (Math.abs((playerY-npcY))+1);
+        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
 
-        for (int i = 0; i < fieldsQuantity;i++) {
-            List<Integer> tmp = new ArrayList<>();
-            tmp.add(skeletonX);
-            tmp.add(skeletonY);
-            fields.add(tmp);
-            if (skeletonX<playerX) {
-                skeletonX++;
+        if (90 > degree && degree >= 0 ) {
+            for (int i = 0; i < fieldsQuantity;i++) {
+                List<Integer> tmp = new ArrayList<>();
+                tmp.add(npcX);
+                tmp.add(npcY);
+                fields.add(tmp);
+                if (npcX<playerX) {
+                    npcX++;
+                }
+                else if (npcX == playerX) {
+                    npcY++;
+                    npcX = npc.getX();
+                }
             }
-            else if (skeletonX == playerX) {
-                skeletonY++;
-                skeletonX = skeleton.getX();
+
+            for (List<Integer> wall : mapWalls) {
+                for (List<Integer> field : fields) {
+                    if ((field.get(0) >= wall.get(0)) && (field.get(1) >= wall.get(1)) && !(fieldsBehindWalls.contains(field))
+                            && !(walls.contains(field))) {
+                        fieldsBehindWalls.add(field);
+                    }
+                }
             }
         }
 
-        for (List<Integer> wall : walls) {
-            for (List<Integer> field : fields) {
-                if ((field.get(0) >= wall.get(0)) && (field.get(1) >= wall.get(1)) && !(fieldsBehindWalls.contains(field))
-                        && !(walls.contains(field))) {
-                    fieldsBehindWalls.add(field);
+        else if (degree <= 0) {
+            for (int i = 0; i < fieldsQuantity;i++) {
+                List<Integer> tmp = new ArrayList<>();
+                tmp.add(npcX);
+                tmp.add(npcY);
+                fields.add(tmp);
+                if (npcX > playerX) {
+                    npcX--;
+                }
+                else if (npcX == playerX) {
+                    npcY++;
+                    npcX = npc.getX();
+                }
+            }
+            for (List<Integer> wall : mapWalls) {
+                for (List<Integer> field : fields) {
+                    if ((field.get(0) <= wall.get(0)) && (field.get(1) >= wall.get(1)) && !(fieldsBehindWalls.contains(field))
+                            && !(walls.contains(field))) {
+                        fieldsBehindWalls.add(field);
+                    }
                 }
             }
         }
@@ -221,62 +236,68 @@ public class Main extends Application {
     }
 
 
-    private List<List<Integer>> fieldsCannotBeSeenBySkeletonFinder() {
-        List<List<Integer>> fieldsCannotBeSeenBySkeleton = new ArrayList<>();
-        List<List<Integer>> walls = necessaryWallsFinder();
-        List<List<Integer>> fieldsBehindWalls = fieldsBehindWallsFinder();
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
+    private List<List<Integer>> fieldsCannotBeSeenByNpcFinder(List<List<Integer>> walls, List playerCoordinates, int npcX, int npcY) {
+        List<List<Integer>> fieldsCannotBeSeenByNpc = new ArrayList<>();
+        List<List<Integer>> mapWalls = necessaryWallsFinder(walls, playerCoordinates, npcX, npcY);
+        List<List<Integer>> fieldsBehindWalls = fieldsBehindWallsFinder(walls, playerCoordinates, npcX, npcY);
+        double degree = npcPlayerDegree(playerCoordinates, npcX, npcY);
 
-        for (List<Integer> wall : walls) {
-            double skeletonWallDegree = skeletonFieldsDegree(wall.get(0), wall.get(1));
+        for (List<Integer> wall : mapWalls) {
+            double npcWallDegree = npcFieldsDegree(wall.get(0), wall.get(1), npcX, npcY);
             for (List<Integer> field : fieldsBehindWalls) {
-                double skeletonFieldDegree = skeletonFieldsDegree(field.get(0), field.get(1));
-                if ((skeletonFieldDegree < skeletonWallDegree) && !(fieldsCannotBeSeenBySkeleton.contains(field)) ) {
-                    fieldsCannotBeSeenBySkeleton.add(field);
+                if (90 > degree && degree >= 0 ) {
+                    double npcFieldDegree = npcFieldsDegree(field.get(0), field.get(1), npcX, npcY);
+                    if ((npcFieldDegree <= npcWallDegree+2) && !(fieldsCannotBeSeenByNpc.contains(field)) ) {
+                        fieldsCannotBeSeenByNpc.add(field);
+                    }
+                }
+                if (degree <= 0) {
+                    double npcFieldDegree = npcFieldsDegree(field.get(0), field.get(1), npcX, npcY);
+                    if ((npcFieldDegree >= npcWallDegree-2) && !(fieldsCannotBeSeenByNpc.contains(field)) ) {
+                        fieldsCannotBeSeenByNpc.add(field);
+                    }
                 }
             }
         }
-        return fieldsCannotBeSeenBySkeleton;
+        return fieldsCannotBeSeenByNpc;
     }
 
 
-    private double distanceBetweenFields(int x, int y) {
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        double distance = Math.sqrt(Math.pow((x - skeletonX), 2) + Math.pow((y - skeletonY), 2));
+    private double distanceBetweenFields(int x, int y, int npcX, int npcY) {
+        double distance = Math.sqrt(Math.pow((x - npcX), 2) + Math.pow((y - npcY), 2));
         return distance;
     }
 
-    private double skeletonFieldsDegree(int x, int y) {
+    private double npcFieldsDegree(int x, int y, int npcX, int npcY) {
         double degree = 0;
-        double distance = distanceBetweenFields(x, y);
-        int skeletonX = skeleton.getX();
-        int skeletonY = skeleton.getY();
-        if (skeletonY == y) {
+        double distance = distanceBetweenFields(x, y, npcX, npcY);
+
+        if (npcY == y) {
             degree = 90;
         }
-        if (skeletonX < x) {
-            degree = Math.toDegrees(Math.asin((y - skeletonY) / distance));
+        if (npcX < x) {
+            degree = Math.toDegrees(Math.asin((y - npcY) / distance));
         }
-        if (skeletonX > x) {
-            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((y - skeletonY)) / distance));
+        if (npcX > x) {
+            degree = -1.00 * Math.toDegrees(Math.asin(Math.abs((y - npcY)) / distance));
         }
-        if (skeletonY > y) {
+        if (npcY > y) {
             degree = 999;
+        }
+        if (degree == -0.0) {
+            degree = 0;
         }
         return degree;
     }
 
-    private boolean skeletonIsSeeingPlayer() {
-        List<List<Integer>> fieldsCannotBeSeenBySkeleton = fieldsCannotBeSeenBySkeletonFinder();
-        List playerCoordinates = map.returnPlayerCoordinates();
+    private boolean npcIsSeeingPlayer(List playerCoordinates, int npcX, int npcY) {
+        List<List<Integer>> fieldsCannotBeSeenByNpc = fieldsCannotBeSeenByNpcFinder(playerCoordinates,npcX, npcY);
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
         List<Integer> pc = new ArrayList<>();
         pc.add(playerX);
         pc.add(playerY);
-        if (fieldsCannotBeSeenBySkeleton.contains(pc)) return false;
+        if (fieldsCannotBeSeenByNpc.contains(pc)) return false;
         else return true;
     }
 
@@ -286,5 +307,5 @@ public class Main extends Application {
         minusOne.add(-1);
         playerIsBehind.add(minusOne);
         return playerIsBehind;
-    }
+        }
     }
