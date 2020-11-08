@@ -248,7 +248,7 @@ public class Main extends Application {
             text.append("Pick up key by 'E'!\n\n");
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("\n\npokemon in fight range:\n");
+            text.append("\n\nPokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());

@@ -121,6 +121,7 @@ public class Player extends Actor {
     private void pokemonFromBoardToInventory(GameMap map, Inventory inventory, Pokemon toCatch){
         map.removePokemon(toCatch);
         toCatch.removePokemonFromCell();
+        toCatch.setPokeHealth(3);
         inventory.addPokemon(toCatch);
     }
 }
