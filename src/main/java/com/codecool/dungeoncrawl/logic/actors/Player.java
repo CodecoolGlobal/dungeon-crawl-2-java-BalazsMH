@@ -85,13 +85,21 @@ public class Player extends Actor {
             Pokemon activePokemon = inventory.getActivePokemon();
             Pokemon fightWith = pokemonInRange.get().get(0); // player should be able to decide which pokemon to fight if multiple in range
             fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.getPokeDamage());
-            if (fightWith.getPokeHealth() > 3) {
+            if (fightWith.getPokeHealth() > 1) {
                 activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.getPokeDamage());
             }
             if (fightWith.getPokeHealth() <= 0){
                 text.append("Pokemon defeated, catch by 'T'!");
-                activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() * 1.5));
+                activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 2));
                 System.out.println(activePokemon.toString());
+            }
+            if (activePokemon.getPokeHealth() <= 0){
+                map.removePokemon(activePokemon);
+                inventory.activePokemonDies();
+                if (inventory.newActivePokemonOrIsGameOver()){
+                    text.setLength(0);
+                    text.append("GAME OVER!");
+                }
             }
         }
     }

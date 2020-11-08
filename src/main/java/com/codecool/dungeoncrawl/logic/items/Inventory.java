@@ -34,6 +34,18 @@ public class Inventory {
         pokemonList.add(pokemon);
     }
 
+    public void activePokemonDies(){
+        pokemonList.remove(activePokemon);
+        activePokemon = null;
+    }
+    public boolean newActivePokemonOrIsGameOver(){
+        if (pokemonList.size() > 0) {
+            activePokemon = pokemonList.get(0);
+            return false;
+        }
+        return true;
+    }
+
     public void addKey(Cell cell){
         key = (Key)cell.getItem();
     }
