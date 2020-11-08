@@ -28,6 +28,14 @@ public class Inventory {
         } else return Optional.empty();
     }
 
+    public void increaseHealthPotionNumber(int potionNumber) {
+        this.healthPotionNumber += potionNumber;
+    }
+
+    public void addPokeBalls(ArrayList<PokeBall> newPokeBallList) {
+        pokeBallList.addAll(newPokeBallList);
+    }
+
     public void addPokemon(Pokemon pokemon){
         pokemonList.add(pokemon);
     }
