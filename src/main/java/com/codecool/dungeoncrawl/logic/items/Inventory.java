@@ -32,7 +32,7 @@ public class Inventory {
         this.healthPotionNumber += potionNumber;
     }
 
-    public void addPokeBalls(ArrayList<PokeBall> newPokeBallList) {
+    public void addPokeBalls(List<PokeBall> newPokeBallList) {
         pokeBallList.addAll(newPokeBallList);
     }
 

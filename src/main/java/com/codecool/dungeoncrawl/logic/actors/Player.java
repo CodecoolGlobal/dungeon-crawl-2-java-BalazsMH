@@ -61,7 +61,16 @@ public class Player extends Actor {
 
     public void pickupItem(Inventory inventory, StringBuilder text) {
         if (cell.getItem() instanceof LootBox) {
-            text.append("You're standing on it\n");
+            LootBox lootbox = (LootBox) cell.getItem();
+            int pickedUpPotions = lootbox.getPotionNumber();
+            List<PokeBall> pickedUpPokeBalls = lootbox.getPokeBallList();
+            inventory.increaseHealthPotionNumber(pickedUpPotions);
+            inventory.addPokeBalls(pickedUpPokeBalls);
+            text.append("Lootbox picked up successfully.\n")
+                    .append(pickedUpPotions)
+                    .append(" potions, and")
+                    .append(pickedUpPokeBalls.size())
+                    .append(" pokeballs added.");
         } else {
             text.append("Nothing to pick up here");
         }
