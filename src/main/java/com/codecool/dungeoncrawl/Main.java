@@ -263,6 +263,16 @@ public class Main extends Application {
         }
     }
 
+    public void checkIfGameEnds(){
+        if (inventory.getActivePokemon() == null){
+            // popup with game over message, quit game on click
+            System.out.println("GAME OVER");
+        } else {
+            // if (map.getRocketGrunt.getPokemons.size() == 0)
+            // popup with win message, quit game on click
+        }
+    }
+
 
     private void refreshLevelInfo() {
         currentLevel.setText(map.getLevel());
