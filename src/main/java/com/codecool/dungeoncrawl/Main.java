@@ -36,7 +36,9 @@ public class Main extends Application {
     boolean mapReady = MapGenerator.generateMap("./src/main/resources/map2.txt");
     //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
     GameMap map2 = MapLoader.loadMap("Level2");
+    List<List<Integer>> mapWalls = MapLoader.getWalls();
 
+    Pokemon bulbasaur = map.getPokemonList().get(2);
 
     MapChanger mapChanger = new MapChanger(map, map2);
 
@@ -178,19 +180,32 @@ public class Main extends Application {
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+            case R:
+                map.getPlayer().pickupItem(inventory, text);
+                refresh();
+                break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
                     map.getPlayer().getCell().setItem(null);
                     refresh();
                 }
+                break;
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
                     map.getPlayer().getCell().getDoor().setOpen();
                     map = mapChanger.changeMap(map);
                     refresh();
                 }
-
+                break;
+            case A:
+                inventory.changeActivePokemon();
+                break;
+            case F:
+                map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
+                refresh();
+                checkIfGameEnds();
+                break;
         }
     }
 
@@ -198,6 +213,7 @@ public class Main extends Application {
         context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
+        //moveBulbasaur();
         refreshInfoWindow();
         refreshLevelInfo();
         for (int x = 0; x < map.getWidth(); x++) {
@@ -220,8 +236,31 @@ public class Main extends Application {
     }
 
     private void moveAllPokemon() {
+        for (List<Integer> cell : mapWalls) {
+            System.out.println(cell.get(0)+" - "+cell.get(1));
+        }
         List<Pokemon> pokemonList= map.getPokemonList();
-        pokemonList.forEach(p -> p.move());
+        List playerCoordinates = map.returnPlayerCoordinates();
+        int count = 0;
+        for (Pokemon pokemon : pokemonList) {
+            int x = pokemon.getX();
+            int y = pokemon.getY();
+            if (count == 0) {
+                pokemon.attackMove(mapWalls, playerCoordinates, x, y);
+            }
+            count++;
+        }
+    }
+
+
+    public void checkIfGameEnds(){
+        if (inventory.getActivePokemon() == null){
+            // popup with game over message, quit game on click
+            System.out.println("GAME OVER");
+        } else {
+            // if (map.getRocketGrunt.getPokemons.size() == 0)
+            // popup with win message, quit game on click
+        }
     }
 
 
@@ -234,12 +273,12 @@ public class Main extends Application {
         if (standingOn.getDoor() != null){
             text.append("Open door by 'O'\n\n");
         } else if (standingOn.getItem() instanceof LootBox){
-            text.append("Get content of Lootbox!\n\n");
+            text.append("Pick up lootbox by 'R'!\n\n");
         } else if (standingOn.getItem() instanceof Key){
             text.append("Pick up key by 'E'!\n\n");
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("\n\npokemon in fight range:\n");
+            text.append("\n\nPokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());

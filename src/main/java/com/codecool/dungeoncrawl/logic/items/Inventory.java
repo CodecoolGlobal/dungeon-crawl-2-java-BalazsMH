@@ -14,9 +14,11 @@ public class Inventory {
     private List<PokeBall> pokeBallList = new ArrayList<PokeBall>();
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
     private Key key;
+    private Pokemon activePokemon;
 
     public Inventory(){
         pokemonList.add(new Slowpoke("Slowpoke"));
+        activePokemon = pokemonList.get(0);
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
@@ -28,14 +30,36 @@ public class Inventory {
         } else return Optional.empty();
     }
 
+    public void increaseHealthPotionNumber(int potionNumber) {
+        this.healthPotionNumber += potionNumber;
+    }
+
+    public void addPokeBalls(List<PokeBall> newPokeBallList) {
+        pokeBallList.addAll(newPokeBallList);
+    }
+
     public void addPokemon(Pokemon pokemon){
         pokemonList.add(pokemon);
+    }
+
+    public void activePokemonDies(){
+        pokemonList.remove(activePokemon);
+        if (pokemonList.size() > 0) {
+            activePokemon = pokemonList.get(0);
+        }
+        else activePokemon = null;
     }
 
     public void addKey(Cell cell){
         key = (Key)cell.getItem();
     }
     public boolean hasKey(){return key != null;}
+
+    public void changeActivePokemon(){
+        int idx = (pokemonList.indexOf(activePokemon) + 1 < pokemonList.size()) ? pokemonList.indexOf(activePokemon) + 1 : 0;
+        activePokemon = pokemonList.get(idx);
+    }
+    public Pokemon getActivePokemon(){return activePokemon;}
 
     @Override
     public String toString() {

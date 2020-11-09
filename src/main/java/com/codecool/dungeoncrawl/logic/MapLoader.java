@@ -11,12 +11,16 @@ import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MapLoader {
+    private static List<List<Integer>> walls;
     public static GameMap loadMap(String gameLevel) {
         InputStream is;
-
+        walls = new ArrayList<>();
+        //TODO: map should not be part of the resources folder
         if (gameLevel.equals("Level1")) {
             is = MapLoader.class.getResourceAsStream("/map.txt");
         } else {
@@ -42,6 +46,10 @@ public class MapLoader {
                             break;
                         case '#':
                             cell.setType(CellType.WALL);
+                            List<Integer> tmp = new ArrayList<>();
+                            tmp.add(x);
+                            tmp.add(y);
+                            walls.add(tmp);
                             break;
                         case 'd':
                             cell.setType(CellType.DOOR);
@@ -93,6 +101,9 @@ public class MapLoader {
             System.exit(1);
         }
         return map;
+    }
+    public static List<List<Integer>> getWalls() {
+        return walls;
     }
 
 }

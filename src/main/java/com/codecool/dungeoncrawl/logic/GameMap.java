@@ -51,6 +51,13 @@ public class GameMap {
         return player;
     }
 
+    public List<Integer> returnPlayerCoordinates() {
+        List<Integer> cellList = new ArrayList<Integer>();
+        cellList.add(this.player.getX());
+        cellList.add(this.player.getY());
+        return cellList;
+    }
+
     public int getWidth() {
         return width;
     }

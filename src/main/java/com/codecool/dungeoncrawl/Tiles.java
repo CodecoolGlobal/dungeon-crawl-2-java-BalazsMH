@@ -50,7 +50,7 @@ public class Tiles {
         tileMap.put("player_left", new Tile(1, 1, 64));
         tileMap.put("player_right", new Tile(1, 0, 64));
         tileMap.put("rocketGrunt", new Tile(5, 4, 64));
-        tileMap.put("lootbox", new Tile(20, 58));
+        tileMap.put("lootbox", new Tile(18, 17, 64));
         tileMap.put("slowpoke", new Tile(22, 2, 64));
         tileMap.put("charizard", new Tile(5, 0, 64 ));
         tileMap.put("bulbasaur", new Tile(0,0, 64 ));
@@ -66,7 +66,7 @@ public class Tiles {
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
             //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));
 
-        } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur")){
+        } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur|lootbox")){
             context.drawImage(pokeTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
         } else {
