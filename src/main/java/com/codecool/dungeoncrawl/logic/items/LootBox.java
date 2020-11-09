@@ -11,7 +11,6 @@ public class LootBox extends Item {
     private List<PokeBall> pokeBallList;
     private Cell cell;
 
-
     public LootBox(Cell cell) {
         super(cell);
         this.potionNumber = (int) Math.floor(Math.random()*10.00);
