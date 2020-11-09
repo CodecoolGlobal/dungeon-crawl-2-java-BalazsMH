@@ -14,16 +14,22 @@ public class Layout {
     private int[] endCoord;
     private final int upperMargin;
     private final int lowerMargin;
-    List<String> pokemonList = new ArrayList<String>(List.of("C", "S", "B", "B"));
+    List<String> pokemonAndItemList = new ArrayList<String>();
     String[][] layout;
-    String filename = "./src/main/resources/map.txt";
+    String filename;
 
-    public Layout(int rows, int cols, String filename){
+    public Layout(int rows, int cols, int level){
         this.rows = rows;
         this.cols = cols;
-        this.filename = filename;
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
+        if (level == 1){
+            this.filename = "./src/main/resources/map.txt";
+            this.pokemonAndItemList.addAll(List.of("C", "S", "B", "B", "k", "L", "L"));
+        } else if (level == 2){
+            this.filename = "./src/main/resources/map2.txt";
+            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L"));
+        }
     }
 
     /** Calling generateLayout creates new .txt
@@ -40,8 +46,7 @@ public class Layout {
         }
         markEdges();
         markBoardEdges();
-        addPokemon();
-        addItems();
+        addPokemonAndItems();
         printToConsole(); // remove when done
         writeTxt();
     }
@@ -137,8 +142,8 @@ public class Layout {
             System.exit(1);
         }
     }
-    private void addPokemon() {
-        pokemonList.forEach(s -> {
+    private void addPokemonAndItems() {
+        pokemonAndItemList.forEach(s -> {
             while (true){
                 int r = (int) (Math.random() * (rows - 1) + 1);
                 int c = (int) (Math.random() * (cols - 1) + 1);
@@ -149,26 +154,7 @@ public class Layout {
             }
         });
     }
-    private void addItems() {
-        while (true){
-            int r = (int) (Math.random() * rows);
-            int c = (int) (Math.random() * cols);
-            if (layout[r][c].equals(".")) {
-                layout[r][c] = "k";
-                break;
-            }
-        }
-        for (int i = 0; i < 3; i++) {
-            while (true){
-                int r = (int) (Math.random() * rows);
-                int c = (int) (Math.random() * cols);
-                if (layout[r][c].equals(".")) {
-                    layout[r][c] = "L";
-                    break;
-                }
-            }
-        }
-    }
+
     private void printToConsole() {
         for (int i = 0; i < rows; i++) {
             System.out.println(lineToString(layout[i]));
