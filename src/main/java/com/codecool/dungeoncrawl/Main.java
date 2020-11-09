@@ -236,21 +236,22 @@ public class Main extends Application {
     }
 
     private void moveAllPokemon() {
+        for (List<Integer> cell : mapWalls) {
+            System.out.println(cell.get(0)+" - "+cell.get(1));
+        }
         List<Pokemon> pokemonList= map.getPokemonList();
         List playerCoordinates = map.returnPlayerCoordinates();
+        int count = 0;
         for (Pokemon pokemon : pokemonList) {
             int x = pokemon.getX();
             int y = pokemon.getY();
-            pokemon.attackMove(mapWalls, playerCoordinates, x, y);
+            if (count == 0) {
+                pokemon.attackMove(mapWalls, playerCoordinates, x, y);
+            }
+            count++;
         }
     }
 
-    private void moveBulbasaur() {
-        List playerCoordinates = map.returnPlayerCoordinates();
-        int npcX = bulbasaur.getX();
-        int npcY = bulbasaur.getY();
-        bulbasaur.attackMove(mapWalls, playerCoordinates, npcX, npcY);
-    }
 
     public void checkIfGameEnds(){
         if (inventory.getActivePokemon() == null){
