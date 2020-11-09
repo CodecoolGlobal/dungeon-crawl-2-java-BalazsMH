@@ -22,7 +22,13 @@ public class LootBox extends Item {
         }
     }
 
+    public int getPotionNumber(){
+        return potionNumber;
+    }
 
+    public List<PokeBall> getPokeBallList(){
+        return pokeBallList;
+    }
 
     @Override
     public String getTileName() {
