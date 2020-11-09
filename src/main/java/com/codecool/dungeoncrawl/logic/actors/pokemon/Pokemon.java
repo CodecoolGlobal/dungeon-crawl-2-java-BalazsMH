@@ -50,6 +50,8 @@ public abstract class Pokemon implements Drawable {
 
     public void setPokeDamage(int pokeDamage) { this.pokeDamage = pokeDamage; }
 
+    public String getPokeName(){ return this.pokeName; }
+
     /***
      * Aim: make sure that info is updated everywhere it needs to be updated
      * @param moveTo this Cell has to be determined for each pokemon depending on their moving patterns (e.g. chasing, random...)

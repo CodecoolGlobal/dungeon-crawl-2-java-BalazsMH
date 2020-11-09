@@ -199,6 +199,7 @@ public class Main extends Application {
             case F:
                 map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
                 refresh();
+                checkIfGameEnds();
                 break;
         }
     }
@@ -231,6 +232,16 @@ public class Main extends Application {
     private void moveAllPokemon() {
         List<Pokemon> pokemonList= map.getPokemonList();
         pokemonList.forEach(p -> p.move());
+    }
+
+    public void checkIfGameEnds(){
+        if (inventory.getActivePokemon() == null){
+            // popup with game over message, quit game on click
+            System.out.println("GAME OVER");
+        } else {
+            // if (map.getRocketGrunt.getPokemons.size() == 0)
+            // popup with win message, quit game on click
+        }
     }
 
 
