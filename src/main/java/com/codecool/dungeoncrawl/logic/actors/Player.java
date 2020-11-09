@@ -8,6 +8,7 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.items.PokeBall;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,9 +95,34 @@ public class Player extends Actor {
 
     }
 
+    public void fightPokemon(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+        if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
+        else {
+            Pokemon activePokemon = inventory.getActivePokemon();
+            Pokemon fightWith = pokemonInRange.get().stream().min(Comparator.comparing(Pokemon::getPokeHealth)).get();
+            // player attacks first
+            fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.getPokeDamage());
+            if (fightWith.getPokeHealth() > 1) {
+                // pokemon doesn't fight back if health below treshold
+                activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.getPokeDamage());
+            }
+            if (fightWith.getPokeHealth() <= 0){
+                text.append("Pokemon defeated, catch by 'T'!");
+                activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 1));
+                System.out.println(activePokemon.toString());
+            }
+            if (activePokemon.getPokeHealth() <= 0){
+                map.removePokemon(activePokemon);
+                inventory.activePokemonDies();
+                text.setLength(0);
+                text.append(String.format("Your %s is defeated\n", activePokemon.getPokeName()));
+            }
+        }
+    }
+
     public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
 
-        if(pokemonInRange.isEmpty()){
+        if (pokemonInRange.isEmpty()){
             text.append("\nNothing to catch here");
         } else {
             Optional<PokeBall> currentPB = inventory.takePokeBall();
@@ -104,18 +130,22 @@ public class Player extends Actor {
                 text.append("\nNo PokeBalls available!");
             } else {
                 List<Pokemon> pokemons = pokemonInRange.get();
+                Pokemon toCatch = pokemons.stream().min(Comparator.comparing(Pokemon::getPokeHealth)).get();
                 PokeBall PB = currentPB.get();
-                text.append(String.format("\nPokeBall thrown (catch rate: %.1f)", PB.getCatchRate()/10.0));
-                if (Math.random() <= PB.getCatchRate()/10.0){
+                if (PB.hasCaught(toCatch)){
+                    pokemonFromBoardToInventory(map, inventory, toCatch);
                     text.append("\nPokemon caught!");
-                    Pokemon caught = pokemons.get(0);
-                    map.removePokemon(caught);
-                    caught.removePokemonFromCell();
-                    inventory.addPokemon(pokemons.get(0));
                 } else {
                     text.append("\nCatch unsuccessful");
                 }
             }
         }
+    }
+
+    private void pokemonFromBoardToInventory(GameMap map, Inventory inventory, Pokemon toCatch){
+        map.removePokemon(toCatch);
+        toCatch.removePokemonFromCell();
+        toCatch.setPokeHealth(3);
+        inventory.addPokemon(toCatch);
     }
 }

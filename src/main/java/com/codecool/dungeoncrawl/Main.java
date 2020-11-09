@@ -181,19 +181,29 @@ public class Main extends Application {
             case R:
                 map.getPlayer().pickupItem(inventory, text);
                 refresh();
+                break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
                     map.getPlayer().getCell().setItem(null);
                     refresh();
                 }
+                break;
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
                     map.getPlayer().getCell().getDoor().setOpen();
                     map = mapChanger.changeMap(map);
                     refresh();
                 }
-
+                break;
+            case A:
+                inventory.changeActivePokemon();
+                break;
+            case F:
+                map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
+                refresh();
+                checkIfGameEnds();
+                break;
         }
     }
 
@@ -227,6 +237,16 @@ public class Main extends Application {
         pokemonList.forEach(p -> p.move());
     }
 
+    public void checkIfGameEnds(){
+        if (inventory.getActivePokemon() == null){
+            // popup with game over message, quit game on click
+            System.out.println("GAME OVER");
+        } else {
+            // if (map.getRocketGrunt.getPokemons.size() == 0)
+            // popup with win message, quit game on click
+        }
+    }
+
 
     private void refreshLevelInfo() {
         currentLevel.setText(map.getLevel());
@@ -242,7 +262,7 @@ public class Main extends Application {
             text.append("Pick up key by 'E'!\n\n");
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("\n\npokemon in fight range:\n");
+            text.append("\n\nPokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
