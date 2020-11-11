@@ -98,24 +98,32 @@ public class Player extends Actor {
     public void fightPokemon(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
         if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
         else {
-            Pokemon activePokemon = inventory.getActivePokemon();
-            Pokemon fightWith = pokemonInRange.get().stream().min(Comparator.comparing(Pokemon::getPokeHealth)).get();
-            // player attacks first
-            fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.getPokeDamage());
-            if (fightWith.getPokeHealth() > 1) {
-                // pokemon doesn't fight back if health below treshold
-                activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.getPokeDamage());
-            }
-            if (fightWith.getPokeHealth() <= 0){
-                text.append("Pokemon defeated, catch by 'T'!");
-                activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 1));
-                System.out.println(activePokemon.toString());
-            }
-            if (activePokemon.getPokeHealth() <= 0){
-                map.removePokemon(activePokemon);
-                inventory.activePokemonDies();
-                text.setLength(0);
-                text.append(String.format("Your %s is defeated\n", activePokemon.getPokeName()));
+            Optional<Pokemon> aliveInRange = pokemonInRange.get().stream()
+                                .filter(p -> p.getPokeHealth()>0)
+                                .min(Comparator.comparing(Pokemon::getPokeHealth));
+            if (aliveInRange.isEmpty()) {
+                text.append("\nPokemon already defeated. Catch it don't fight!");
+                return;
+            } else {
+                Pokemon activePokemon = inventory.getActivePokemon();
+                Pokemon fightWith = aliveInRange.get();
+                // player attacks first
+                fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.getPokeDamage());
+                if (fightWith.getPokeHealth() > 1) {
+                    // pokemon doesn't fight back if health below threshold
+                    activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.getPokeDamage());
+                }
+                if (fightWith.getPokeHealth() <= 0){
+                    text.append(String.format("%s defeated, catch by 'T'!", fightWith.getPokeName()));
+                    activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 1));
+                    System.out.println(activePokemon.toString());
+                }
+                if (activePokemon.getPokeHealth() <= 0){
+                    map.removePokemon(activePokemon);
+                    inventory.activePokemonDies();
+                    text.setLength(0);
+                    text.append(String.format("Your %s is defeated\n", activePokemon.getPokeName()));
+                }
             }
         }
     }
