@@ -268,15 +268,15 @@ public class Main extends Application {
         Stage endPopup = new Stage();
         endPopup.initModality(Modality.WINDOW_MODAL);
         endPopup.initOwner(getpStage());
-
         VBox endContent = new VBox();
         Scene endScene = new Scene(endContent);
         Text winText = new Text("Congratulations! You won!");
         Text loseText = new Text("You lost. Try again!");
         Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
-
         Button closeWindow = new Button("Quit game");
         closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
+        endContent.setAlignment(Pos.CENTER);
 
         closeWindow.setOnAction((event)-> {
             try {
@@ -286,13 +286,8 @@ public class Main extends Application {
             }
         });
 
-        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
-        endContent.setAlignment(Pos.CENTER);
-
 
         endContent.getChildren().addAll(displayedText, closeWindow);
-
-        endPopup.setScene(endScene);
         endContent.setPrefSize(800.0/2,761.0/2);
         Background background = new Background(new BackgroundImage(
                 new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
@@ -301,6 +296,8 @@ public class Main extends Application {
                 BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
                 BackgroundSize.AUTO,
                 false, false, true, true)));
+
+        endPopup.setScene(endScene);
         endContent.setBackground(background);
         endPopup.show();
     }
