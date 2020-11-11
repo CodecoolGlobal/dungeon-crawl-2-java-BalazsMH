@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.*;
+import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -176,9 +177,14 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
+            case R:
+                map.getRocketGrunt().releasePokemon(map);
+                refresh();
+                break;
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+                checkIfGameEnds();
                 break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
@@ -241,9 +247,9 @@ public class Main extends Application {
         if (inventory.getActivePokemon() == null){
             // popup with game over message, quit game on click
             System.out.println("GAME OVER");
-        } else {
-            // if (map.getRocketGrunt.getPokemons.size() == 0)
+        } else if (map.getRocketGrunt().getRocketPokemonList().size() == 0){
             // popup with win message, quit game on click
+            System.out.println("GAME OVER");
         }
     }
 

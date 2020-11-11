@@ -67,4 +67,6 @@ public class GameMap {
     }
 
     public void setRocketGrunt(RocketGrunt rocketGrunt) { this.rocketGrunt = rocketGrunt; }
+
+    public RocketGrunt getRocketGrunt(){ return rocketGrunt;}
 }
