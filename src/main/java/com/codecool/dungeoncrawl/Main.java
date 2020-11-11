@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -23,6 +24,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -77,6 +80,7 @@ public class Main extends Application {
         nameInput.setPromptText("Enter your name ");
         Button submitButton = new Button("Play!");
         submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+
         mainPane.getChildren().addAll(nameInput, submitButton);
         mainPane.setAlignment(Pos.CENTER);
         Scene mainMenu = new Scene(mainPane);
@@ -102,9 +106,14 @@ public class Main extends Application {
         levelBox.setPadding(new Insets(5));
         levelBox.setMaxHeight(10);
 
+        Text movementInfo = new Text("Hint: Use the arrow keys to move the character on the map");
+        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
+        movementInfo.setTextAlignment(TextAlignment.CENTER);
+
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
+        borderPane.setBottom(movementInfo);
         borderPane.setRight(rightPane);
         currentLevel.setText(map.getLevel());
         currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
