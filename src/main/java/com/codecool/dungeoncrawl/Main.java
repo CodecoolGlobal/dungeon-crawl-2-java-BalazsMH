@@ -180,16 +180,14 @@ public class Main extends Application {
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
                 break;
-            case R:
-                map.getPlayer().pickupItem(inventory, text);
-                refresh();
-                break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
                     map.getPlayer().getCell().setItem(null);
-                    refresh();
+                } else {
+                    map.getPlayer().pickupItem(inventory, text);
                 }
+                refresh();
                 break;
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
