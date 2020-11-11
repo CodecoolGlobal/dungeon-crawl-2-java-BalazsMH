@@ -21,7 +21,4 @@ public class Slowpoke extends Pokemon {
         }
         shouldMove = ! shouldMove;
     }
-    @Override
-    public void fight(){}
-
 }

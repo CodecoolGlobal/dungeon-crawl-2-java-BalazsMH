@@ -18,10 +18,4 @@ public class Charizard extends Pokemon {
         takeStep(moveTo);
     }
 
-    @Override
-    public void fight(){}
-
-
-
-
 }

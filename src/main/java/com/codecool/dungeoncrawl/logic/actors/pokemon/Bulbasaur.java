@@ -19,6 +19,4 @@ public class Bulbasaur extends Pokemon{
         takeStep(moveTo);
     }
 
-    @Override
-    public void fight(){}
 }
