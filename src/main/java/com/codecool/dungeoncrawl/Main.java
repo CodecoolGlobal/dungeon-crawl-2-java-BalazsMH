@@ -256,10 +256,8 @@ public class Main extends Application {
         Cell standingOn = map.getPlayer().getCell();
         if (standingOn.getDoor() != null){
             text.append("Open door by 'O'\n\n");
-        } else if (standingOn.getItem() instanceof LootBox){
-            text.append("Pick up lootbox by 'R'!\n\n");
-        } else if (standingOn.getItem() instanceof Key){
-            text.append("Pick up key by 'E'!\n\n");
+        } else if (standingOn.getItem() != null){
+            text.append(String.format("Pick up %s by 'E'!\n\n", standingOn.getItem().getTileName()));
         }
         if (getPokemonInRange().isPresent()) {
             text.append("\n\nPokemon in range:\n");
