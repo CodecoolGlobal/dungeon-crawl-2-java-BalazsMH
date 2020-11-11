@@ -55,10 +55,6 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Key(cell);
                             break;
-                        case 's':
-                            cell.setType(CellType.FLOOR);
-                            new RocketGrunt(cell);
-                            break;
                         case '@':
                             cell.setType(CellType.FLOOR);
                             map.setPlayer(new Player(cell));
