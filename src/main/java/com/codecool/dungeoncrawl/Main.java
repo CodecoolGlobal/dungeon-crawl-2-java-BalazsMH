@@ -32,8 +32,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
+    boolean m = MapGenerator.generateMap(1);
     GameMap map = MapLoader.loadMap("Level1");
-    boolean mapReady = MapGenerator.generateMap("./src/main/resources/map2.txt");
+    boolean mapReady = MapGenerator.generateMap(2);
     //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
     GameMap map2 = MapLoader.loadMap("Level2");
 
@@ -178,6 +179,7 @@ public class Main extends Application {
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
+                break;
             case R:
                 map.getPlayer().pickupItem(inventory, text);
                 refresh();
