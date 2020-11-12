@@ -1,12 +1,10 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.*;
-import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.MapGenerator;
-import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -16,7 +14,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,10 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -94,44 +88,21 @@ public class Main extends Application {
     }
 
     private Scene game() {
-        GridPane ui = new GridPane();
-        ui.setPrefWidth(200);
-        ui.setPadding(new Insets(10));
-        nameLabel.setText(map.getPlayer().getUserName());
-        ui.add(nameLabel, 0, 0);
+        setLabels();
 
-        VBox infoBox = createInfoBox();
-        VBox rightPane = new VBox(ui, infoBox);
-        rightPane.setSpacing(100.00);
-
-        VBox levelBox = new VBox(currentLevel);
-        levelBox.setAlignment(Pos.CENTER);
-        levelBox.setPadding(new Insets(5));
-        levelBox.setMaxHeight(10);
-
-        Text movementInfo = new Text("Hint: Use the arrow keys to move the character on the map");
-        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
-        movementInfo.setTextAlignment(TextAlignment.CENTER);
-
+        VBox rightPane = createRightPane();
+        VBox levelBox = createLevelBox();
+        VBox bottom = createBottomBox();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
-        borderPane.setBottom(movementInfo);
+        borderPane.setBottom(bottom);
         borderPane.setRight(rightPane);
-        currentLevel.setText(map.getLevel());
-        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         borderPane.setTop(levelBox);
         //TODO: eliminate unnecessary space between the top of the canvas and the borderpane center top
 
-
         Scene scene = new Scene(borderPane);
-
-        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-        currentInfo.setWrapText(true);
-
         scene.setOnKeyPressed(this::onKeyPressed);
-
         return scene;
     }
 
@@ -159,8 +130,6 @@ public class Main extends Application {
 
     private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
         String enteredName = nameInput.getText();
-        System.out.println(enteredName);
-        System.out.println("hello");
         map.getPlayer().setUserName(enteredName);
         if (Arrays.asList(developers).contains(enteredName)) {
             map.getPlayer().setSuperUser(true);
@@ -223,7 +192,6 @@ public class Main extends Application {
                 break;
             case F:
                 map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
-                System.out.println(inventory.getActivePokemon().toString());
                 refresh();
                 checkIfGameEnds();
                 break;
@@ -256,7 +224,6 @@ public class Main extends Application {
                 }
             }
         }
-        //nameLabel.setText("Health:" + map.getPlayer().getHealth()); player health is unused.
     }
 
     private void moveAllPokemon() {
@@ -323,7 +290,7 @@ public class Main extends Application {
             text.append(String.format("Pick up %s by 'E'!\n\n", standingOn.getItem().getTileName()));
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("\n\nPokemon in range:\n");
+            text.append("Pokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
@@ -345,10 +312,24 @@ public class Main extends Application {
         return toReturn;
     }
 
+
+    private VBox createRightPane() {
+        GridPane ui = new GridPane();
+        ui.setPrefWidth(300);
+        ui.setPadding(new Insets(10));
+        nameLabel.setText(map.getPlayer().getUserName());
+        ui.add(nameLabel, 0, 0);
+
+        VBox infoBox = createInfoBox();
+        VBox rightPane = new VBox(ui, infoBox);
+        rightPane.setSpacing(20.00);
+        return rightPane;
+    }
+
     private VBox createInfoBox(){
 
         currentInfo.setWrapText(false);
-        currentInfo.setPrefWidth(200);
+        currentInfo.setPrefWidth(300);
         TextFlow textFlow = new TextFlow();
         textFlow.setPrefWidth(200);
         textFlow.getChildren().add(currentInfo);
@@ -358,12 +339,41 @@ public class Main extends Application {
         infoTitle.setGraphic(new ImageView(infoImage));
 
         VBox infoBox = new VBox(infoTitle, textFlow);
-//        infoBox.setAlignment(Pos.BASELINE_CENTER);
-//        infoBox.setStyle("-fx-border-color: blue;-fx-padding: 10px;");
+        infoBox.setStyle("-fx-padding: 10px;");
         infoBox.setPrefHeight(600);
         infoBox.setPrefWidth(200);
 
         infoBox.setSpacing(20);
         return infoBox;
+    }
+
+    private VBox createBottomBox() {
+        Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
+                "Press 'F' to fight and 'T' to catch pokemon\n" +
+                "Pick things up by 'E'\n" +
+                "Engage Rocket Grunt by 'R'\n");
+        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
+        movementInfo.setTextAlignment(TextAlignment.CENTER);
+        movementInfo.setLineSpacing(1.5);
+
+        VBox bottom = new VBox(movementInfo);
+        bottom.setAlignment(Pos.CENTER);
+        return bottom;
+    }
+
+    private VBox createLevelBox() {
+        VBox levelBox = new VBox(currentLevel);
+        levelBox.setAlignment(Pos.CENTER);
+        levelBox.setPadding(new Insets(5));
+        levelBox.setMaxHeight(10);
+        return levelBox;
+    }
+
+    private void setLabels() {
+        currentLevel.setText(map.getLevel());
+        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
+        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
+        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+        currentInfo.setWrapText(true);
     }
 }
