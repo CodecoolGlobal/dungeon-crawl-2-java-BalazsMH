@@ -211,6 +211,10 @@ public class Main extends Application {
                 refresh();
                 checkIfGameEnds();
                 break;
+            case H:
+                inventory.heal();
+                refresh();
+                break;
         }
     }
 
