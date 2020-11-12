@@ -45,6 +45,8 @@ public abstract class Pokemon implements Drawable {
 
     public abstract void move();
 
+    public int damage(){return (int)(Math.random() * pokeDamage + 1);}
+
     public int getPokeHealth() { return pokeHealth; }
 
     public void setPokeHealth(int pokeHealth) { this.pokeHealth = pokeHealth; }
