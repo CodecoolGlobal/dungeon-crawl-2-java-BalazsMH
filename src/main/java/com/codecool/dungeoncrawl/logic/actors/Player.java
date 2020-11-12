@@ -115,7 +115,10 @@ public class Player extends Actor {
                 }
                 if (fightWith.getPokeHealth() <= 0){
                     text.append(String.format("%s defeated, catch by 'T'!", fightWith.getPokeName()));
-                    activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 1));
+                    activePokemon.setPokeDamage((int)Math.ceil(activePokemon.getPokeDamage() + 1)); //!!!
+                    if (map.getRocketGrunt().getRocketPokemonOnBoard().contains(fightWith)) {
+                        map.getRocketGrunt().getRocketPokemonOnBoard().remove(fightWith);
+                    }
                     System.out.println(activePokemon.toString());
                 }
                 if (activePokemon.getPokeHealth() <= 0){

@@ -207,6 +207,7 @@ public class Main extends Application {
                 break;
             case F:
                 map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
+                System.out.println(inventory.getActivePokemon().toString());
                 refresh();
                 checkIfGameEnds();
                 break;
@@ -247,9 +248,9 @@ public class Main extends Application {
         if (inventory.getActivePokemon() == null){
             // popup with game over message, quit game on click
             System.out.println("GAME OVER");
-        } else if (map.getRocketGrunt().getRocketPokemonList().size() == 0){
+        } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
             // popup with win message, quit game on click
-            System.out.println("GAME OVER");
+            System.out.println("YOU WON!");
         }
     }
 
