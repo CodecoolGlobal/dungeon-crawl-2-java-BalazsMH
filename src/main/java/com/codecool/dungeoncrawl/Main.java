@@ -16,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,7 +25,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -33,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
+    private static Stage pStage;
     boolean m = MapGenerator.generateMap(1);
     GameMap map = MapLoader.loadMap("Level1");
     boolean mapReady = MapGenerator.generateMap(2);
@@ -78,6 +83,7 @@ public class Main extends Application {
         nameInput.setPromptText("Enter your name ");
         Button submitButton = new Button("Play!");
         submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+
         mainPane.getChildren().addAll(nameInput, submitButton);
         mainPane.setAlignment(Pos.CENTER);
         Scene mainMenu = new Scene(mainPane);
@@ -103,9 +109,14 @@ public class Main extends Application {
         levelBox.setPadding(new Insets(5));
         levelBox.setMaxHeight(10);
 
+        Text movementInfo = new Text("Hint: Use the arrow keys to move the character on the map");
+        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
+        movementInfo.setTextAlignment(TextAlignment.CENTER);
+
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
+        borderPane.setBottom(movementInfo);
         borderPane.setRight(rightPane);
         currentLevel.setText(map.getLevel());
         currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
@@ -126,6 +137,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        pStage = primaryStage;
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
@@ -139,6 +151,10 @@ public class Main extends Application {
         primaryStage.setScene(mainMenu);
         refresh();
         primaryStage.show();
+    }
+
+    public static Stage getpStage() {
+        return pStage;
     }
 
     private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
@@ -250,12 +266,48 @@ public class Main extends Application {
 
     public void checkIfGameEnds(){
         if (inventory.getActivePokemon() == null){
-            // popup with game over message, quit game on click
-            System.out.println("GAME OVER");
+            gameEndWindow(EndCondition.LOSE);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            // popup with win message, quit game on click
-            System.out.println("YOU WON!");
+            gameEndWindow(EndCondition.WIN);
         }
+    }
+
+    protected void gameEndWindow(EndCondition endCondition) {
+        Stage endPopup = new Stage();
+        endPopup.initModality(Modality.WINDOW_MODAL);
+        endPopup.initOwner(getpStage());
+        VBox endContent = new VBox();
+        Scene endScene = new Scene(endContent);
+        Text winText = new Text("Congratulations! You won!");
+        Text loseText = new Text("You lost. Try again!");
+        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
+        Button closeWindow = new Button("Quit game");
+        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
+        endContent.setAlignment(Pos.CENTER);
+
+        closeWindow.setOnAction((event)-> {
+            try {
+                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        endContent.getChildren().addAll(displayedText, closeWindow);
+        endContent.setPrefSize(800.0/2,761.0/2);
+        Background background = new Background(new BackgroundImage(
+                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+
+        endPopup.setScene(endScene);
+        endContent.setBackground(background);
+        endPopup.show();
     }
 
 
