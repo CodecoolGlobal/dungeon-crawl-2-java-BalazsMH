@@ -161,6 +161,7 @@ public class Player extends Actor {
     private void removeFromRocketInventory(GameMap map, Pokemon pokemon) {
         if (map.getRocketGrunt() != null && map.getRocketGrunt().getRocketPokemonOnBoard().contains(pokemon)) {
             map.getRocketGrunt().getRocketPokemonOnBoard().remove(pokemon);
+            map.getRocketGrunt().releasePokemon(map);
         }
     }
 }
