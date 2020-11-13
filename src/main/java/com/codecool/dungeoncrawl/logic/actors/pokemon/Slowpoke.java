@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Slowpoke extends Pokemon {
     private boolean shouldMove = true;
+    double seeingDistance = 5.0;
 
     public Slowpoke(Cell cell, String name){ super(cell, name); }
     public Slowpoke(String name){ super(name); }
@@ -27,7 +28,8 @@ public class Slowpoke extends Pokemon {
     @Override
     public void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY) {
         Cell moveTo;
-        if (npcCanSeePlayer(mapWalls, playerCoordinates, npcX, npcY)) {
+        double distance = distanceBetweenPlayerAndNpc(playerCoordinates, npcX, npcY);
+        if (npcCanSeePlayer(mapWalls, playerCoordinates, npcX, npcY) && distance < this.seeingDistance) {
             moveTo = getEmptyCellCloserToPlayer(playerCoordinates, npcX, npcY);
         }
         else {

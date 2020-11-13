@@ -98,6 +98,22 @@ public abstract class Pokemon implements Drawable {
         }
     }
 
+    public Cell getCellCloserToPlayer(List playerCoordinates, int npcX, int npcY) {
+        int playerX = (int) playerCoordinates.get(0);
+        int playerY = (int) playerCoordinates.get(1);
+        int dx;
+        int dy;
+        dx = (playerX > npcX) ? 1 : (playerX < npcX) ? -1 : 0;
+        dy = (playerY > npcY) ? 1 : (playerY < npcY) ? -1 : 0;
+        Cell neighbour = cell.getNeighbor(dx, dy);
+        if (neighbour.getActor() == null && neighbour.getItem() == null && neighbour.getPokemon() == null
+                && neighbour.getTileName().equals(CellType.FLOOR.getTileName())) {
+            return neighbour;
+        }
+
+        return null;
+    }
+
     public List<List<Integer>> getClosestCellsAsc(List playerCoordinates, int npcX, int npcY, double degree) {
         double distanceSide;
         double distanceDown;
@@ -182,7 +198,7 @@ public abstract class Pokemon implements Drawable {
     }
 
 
-    private double distanceBetweenPlayerAndNpc(List playerCoordinates, int npcX, int npcY) {
+    protected double distanceBetweenPlayerAndNpc(List playerCoordinates, int npcX, int npcY) {
         int playerX = (int) playerCoordinates.get(0);
         int playerY = (int) playerCoordinates.get(1);
         double distance = Math.sqrt(Math.pow((playerX - npcX), 2) + Math.pow((playerY - npcY), 2));

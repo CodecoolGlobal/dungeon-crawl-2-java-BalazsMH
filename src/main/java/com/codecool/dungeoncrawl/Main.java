@@ -34,10 +34,11 @@ public class Main extends Application {
     private static Stage pStage;
     boolean m = MapGenerator.generateMap(1);
     GameMap map = MapLoader.loadMap("Level1");
+    List<List<Integer>> mapWallsLevel1 = MapLoader.getWalls();
     boolean mapReady = MapGenerator.generateMap(2);
     //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
     GameMap map2 = MapLoader.loadMap("Level2");
-    List<List<Integer>> mapWalls = MapLoader.getWalls();
+    List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
 
     Pokemon bulbasaur = map.getPokemonList().get(2);
 
@@ -230,19 +231,14 @@ public class Main extends Application {
     }
 
     private void moveAllPokemon() {
-        for (List<Integer> cell : mapWalls) {
-            System.out.println(cell.get(0)+" - "+cell.get(1));
-        }
+        int level = mapChanger.getLevel();
+        List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
         List<Pokemon> pokemonList= map.getPokemonList();
         List playerCoordinates = map.returnPlayerCoordinates();
-        int count = 0;
         for (Pokemon pokemon : pokemonList) {
             int x = pokemon.getX();
             int y = pokemon.getY();
-            if (count == 0) {
-                pokemon.attackMove(mapWalls, playerCoordinates, x, y);
-            }
-            count++;
+            pokemon.attackMove(mapWalls, playerCoordinates, x, y);
         }
     }
 

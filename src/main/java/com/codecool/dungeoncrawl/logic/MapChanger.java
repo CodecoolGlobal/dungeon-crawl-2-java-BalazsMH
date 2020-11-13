@@ -7,6 +7,7 @@ import java.util.Arrays;
 public class MapChanger {
     private GameMap activeLevel;
     private GameMap storedLevel;
+    private int level = 1;
 
     public MapChanger(GameMap map, GameMap map2) {
         this.activeLevel = map;
@@ -14,6 +15,7 @@ public class MapChanger {
     }
 
     public GameMap changeMap(GameMap currentMap) {
+        level = (level == 1) ? 2 : 1;
         GameMap temp = storedLevel;
         this.storedLevel = currentMap;
         this.activeLevel = temp;
@@ -31,5 +33,9 @@ public class MapChanger {
         activeLevel.getDoor().setOpen();
 
         return activeLevel;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
