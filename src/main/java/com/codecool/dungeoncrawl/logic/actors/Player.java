@@ -102,7 +102,7 @@ public class Player extends Actor {
                                 .filter(p -> p.getPokeHealth()>0)
                                 .min(Comparator.comparing(Pokemon::getPokeHealth));
             if (aliveInRange.isEmpty()) {
-                text.append("\nPokemon already defeated. Catch it don't fight!");
+                text.append("\nPokemon already defeated. Catch it!");
                 return;
             } else {
                 Pokemon activePokemon = inventory.getActivePokemon();
@@ -115,7 +115,7 @@ public class Player extends Actor {
                     activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.damage());
                 }
                 if (fightWith.getPokeHealth() <= 0){
-                    text.append(String.format("\n%s defeated, catch by 'T'!", fightWith.getPokeName()));
+                    text.append(String.format("\n%s defeated!", fightWith.getPokeName()));
                     activePokemon.setPokeDamage(activePokemon.getPokeDamage() + 1);
                     removeFromRocketInventory(map, fightWith);
                 }
