@@ -298,12 +298,12 @@ public class Main extends Application {
     private void refreshInfoWindow() {
         Cell standingOn = map.getPlayer().getCell();
         if (standingOn.getDoor() != null){
-            text.append("Open door by 'O'\n\n");
+            text.append("\nOpen door by 'O'\n");
         } else if (standingOn.getItem() != null){
-            text.append(String.format("Pick up %s by 'E'!\n\n", standingOn.getItem().getTileName()));
+            text.append(String.format("\nPick up %s by 'E'!\n", standingOn.getItem().getTileName()));
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("Pokemon in range:\n");
+            text.append("\n\nPokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
@@ -341,7 +341,7 @@ public class Main extends Application {
 
     private VBox createInfoBox(){
 
-        currentInfo.setWrapText(false);
+        currentInfo.setWrapText(true);
         currentInfo.setPrefWidth(300);
         TextFlow textFlow = new TextFlow();
         textFlow.setPrefWidth(200);
@@ -362,6 +362,7 @@ public class Main extends Application {
 
     private VBox createBottomBox() {
         Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
+                "Press 'A' to change active pokemon and 'H' to heal it\n" +
                 "Press 'F' to fight and 'T' to catch pokemon\n" +
                 "Pick things up by 'E'\n" +
                 "Engage Rocket Grunt by 'R'\n");

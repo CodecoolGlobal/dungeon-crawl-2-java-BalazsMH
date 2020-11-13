@@ -67,14 +67,14 @@ public class Player extends Actor {
             List<PokeBall> pickedUpPokeBalls = lootbox.getPokeBallList();
             inventory.increaseHealthPotionNumber(pickedUpPotions);
             inventory.addPokeBalls(pickedUpPokeBalls);
-            text.append("Lootbox picked up successfully.\n")
+            text.append("\nLootbox picked up successfully.\n")
                     .append(pickedUpPotions)
-                    .append(" potions, and")
+                    .append(" potions, and ")
                     .append(pickedUpPokeBalls.size())
                     .append(" pokeballs added.");
             cell.setItem(null);
         } else {
-            text.append("Nothing to pick up here");
+            text.append("\nNothing to pick up here");
         }
     }
 
@@ -114,7 +114,7 @@ public class Player extends Actor {
                     activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.damage());
                 }
                 if (fightWith.getPokeHealth() <= 0){
-                    text.append(String.format("%s defeated, catch by 'T'!", fightWith.getPokeName()));
+                    text.append(String.format("\n%s defeated, catch by 'T'!", fightWith.getPokeName()));
                     activePokemon.setPokeDamage(activePokemon.getPokeDamage() + 1);
                     removeFromRocketInventory(map, fightWith);
                 }
@@ -122,7 +122,7 @@ public class Player extends Actor {
                     map.removePokemon(activePokemon);
                     inventory.activePokemonDies();
                     text.setLength(0);
-                    text.append(String.format("Your %s is defeated\n", activePokemon.getPokeName()));
+                    text.append(String.format("\nYour %s is defeated", activePokemon.getPokeName()));
                 }
             }
         }
