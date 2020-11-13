@@ -10,38 +10,39 @@ import java.util.List;
 public class Layout {
     private final int rows;
     private final int cols;
-    private int[] startCoord;
-    private int[] endCoord;
     private final int upperMargin;
     private final int lowerMargin;
-    List<String> pokemonList = new ArrayList<String>(List.of("C", "S", "B", "B"));
+    List<String> pokemonAndItemList = new ArrayList<String>();
     String[][] layout;
-    String filename = "./src/main/resources/map.txt";
+    String filename;
 
-    public Layout(int rows, int cols, String filename){
+    public Layout(int rows, int cols, int level){
         this.rows = rows;
         this.cols = cols;
-        this.filename = filename;
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
+        if (level == 1){
+            this.filename = "./src/main/resources/map.txt";
+            this.pokemonAndItemList.addAll(List.of("C", "S", "B", "B", "k", "L", "L", "@", "d"));
+        } else if (level == 2){
+            this.filename = "./src/main/resources/map2.txt";
+            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d", "@"));
+        }
     }
 
     /** Calling generateLayout creates new .txt
      * TODO BUG fix: map generated will be used in next game (not the current one)
      * -> program works properly when ran for the second time
-     * TODO: should be parametrized to generate differently styled layout for different levels
      */
     public void generateLayout(){
         while (true){
             createEmptyBase();
-            markStartEnd();
             generatePath();
             if (checkIfWithinMargin(upperMargin, lowerMargin)) break;
         }
         markEdges();
         markBoardEdges();
-        addPokemon();
-        addItems();
+        addPokemonAndItems();
         printToConsole(); // remove when done
         writeTxt();
     }
@@ -54,24 +55,15 @@ public class Layout {
             }
         }
     }
-
-    private void markStartEnd(){
-        startCoord = new int[]{(int) ((Math.random() * (rows/3 - 1)) + 1),(int) ((Math.random() * (cols/3 - 1)) + 1)};
-        System.out.println(startCoord[0] + "," + startCoord[1]);
-        layout[startCoord[0]][startCoord[1]] = "@";
-        endCoord = new int[]{(int) (Math.random() * (rows-1 - (rows-rows/3)) + (rows-rows/3)), (int) ((Math.random() * (cols-1 - (cols-cols/3))) + (cols-1 - (cols-cols/3)))}; // needs to be randomized
-        System.out.println(endCoord[0] + "," + endCoord[1]);
-        layout[endCoord[0]][endCoord[1]] = "d"; //we need a character to signal door
-    }
-
     private void generatePath(){
+        int[] startCoord = new int[]{(int) ((Math.random() * (rows/3 - 1)) + 1),(int) ((Math.random() * (cols/3 - 1)) + 1)};
+        int[] endCoord = new int[]{(int) (Math.random() * (rows-1 - (rows-rows/3)) + (rows-rows/3)),
+                             (int) ((Math.random() * (cols-1 - (cols-cols/3))) + (cols-1 - (cols-cols/3)))};
         int[] currentPosition = startCoord;
         while (! Arrays.equals(currentPosition, endCoord)){
             currentPosition = takeRandomStep(currentPosition);
-            if (! Arrays.equals(currentPosition, startCoord) && ! Arrays.equals(currentPosition, endCoord)){
-                layout[currentPosition[0]][currentPosition[1]] = ".";
+            layout[currentPosition[0]][currentPosition[1]] = ".";
             }
-        }
     }
     private boolean checkIfWithinMargin(int upper, int lower){
         StringBuilder str = new StringBuilder();
@@ -137,8 +129,8 @@ public class Layout {
             System.exit(1);
         }
     }
-    private void addPokemon() {
-        pokemonList.forEach(s -> {
+    private void addPokemonAndItems() {
+        pokemonAndItemList.forEach(s -> {
             while (true){
                 int r = (int) (Math.random() * (rows - 1) + 1);
                 int c = (int) (Math.random() * (cols - 1) + 1);
@@ -149,26 +141,7 @@ public class Layout {
             }
         });
     }
-    private void addItems() {
-        while (true){
-            int r = (int) (Math.random() * rows);
-            int c = (int) (Math.random() * cols);
-            if (layout[r][c].equals(".")) {
-                layout[r][c] = "k";
-                break;
-            }
-        }
-        for (int i = 0; i < 3; i++) {
-            while (true){
-                int r = (int) (Math.random() * rows);
-                int c = (int) (Math.random() * cols);
-                if (layout[r][c].equals(".")) {
-                    layout[r][c] = "L";
-                    break;
-                }
-            }
-        }
-    }
+
     private void printToConsole() {
         for (int i = 0; i < rows; i++) {
             System.out.println(lineToString(layout[i]));

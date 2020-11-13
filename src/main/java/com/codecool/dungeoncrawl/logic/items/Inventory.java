@@ -68,4 +68,8 @@ public class Inventory {
                 "Pokeball number = " + pokeBallList.size() + "\n" +
                 "pokemon number = " + pokemonList.size() + "\n";
     }
+
+    public void heal() {
+        if (healthPotionNumber > 0) activePokemon.setPokeHealth(activePokemon.getPokeHealth() + 1);
+    }
 }

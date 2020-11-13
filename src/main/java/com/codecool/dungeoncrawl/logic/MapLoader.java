@@ -62,10 +62,6 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Key(cell);
                             break;
-                        case 's':
-                            cell.setType(CellType.FLOOR);
-                            new RocketGrunt(cell);
-                            break;
                         case '@':
                             cell.setType(CellType.FLOOR);
                             map.setPlayer(new Player(cell));
@@ -85,6 +81,10 @@ public class MapLoader {
                         case 'B':
                             cell.setType(CellType.FLOOR);
                             map.addPokemon(new Bulbasaur(cell, "Bulbasaur"));
+                            break;
+                        case 'R':
+                            cell.setType(CellType.FLOOR);
+                            map.setRocketGrunt(new RocketGrunt(cell));
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

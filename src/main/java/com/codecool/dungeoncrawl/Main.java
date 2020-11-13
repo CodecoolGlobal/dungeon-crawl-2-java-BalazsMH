@@ -5,7 +5,6 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.MapGenerator;
-import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -22,8 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -32,8 +31,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
+    private static Stage pStage;
+    boolean m = MapGenerator.generateMap(1);
     GameMap map = MapLoader.loadMap("Level1");
-    boolean mapReady = MapGenerator.generateMap("./src/main/resources/map2.txt");
+    boolean mapReady = MapGenerator.generateMap(2);
     //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
     GameMap map2 = MapLoader.loadMap("Level2");
     List<List<Integer>> mapWalls = MapLoader.getWalls();
@@ -78,6 +79,7 @@ public class Main extends Application {
         nameInput.setPromptText("Enter your name ");
         Button submitButton = new Button("Play!");
         submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+
         mainPane.getChildren().addAll(nameInput, submitButton);
         mainPane.setAlignment(Pos.CENTER);
         Scene mainMenu = new Scene(mainPane);
@@ -88,44 +90,27 @@ public class Main extends Application {
     }
 
     private Scene game() {
-        GridPane ui = new GridPane();
-        ui.setPrefWidth(200);
-        ui.setPadding(new Insets(10));
-        nameLabel.setText(map.getPlayer().getUserName());
-        ui.add(nameLabel, 0, 0);
+        setLabels();
 
-        VBox infoBox = createInfoBox();
-        VBox rightPane = new VBox(ui, infoBox);
-        rightPane.setSpacing(100.00);
-
-        VBox levelBox = new VBox(currentLevel);
-        levelBox.setAlignment(Pos.CENTER);
-        levelBox.setPadding(new Insets(5));
-        levelBox.setMaxHeight(10);
-
+        VBox rightPane = createRightPane();
+        VBox levelBox = createLevelBox();
+        VBox bottom = createBottomBox();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
+        borderPane.setBottom(bottom);
         borderPane.setRight(rightPane);
-        currentLevel.setText(map.getLevel());
-        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         borderPane.setTop(levelBox);
         //TODO: eliminate unnecessary space between the top of the canvas and the borderpane center top
 
-
         Scene scene = new Scene(borderPane);
-
-        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-        currentInfo.setWrapText(true);
-
         scene.setOnKeyPressed(this::onKeyPressed);
-
         return scene;
     }
 
     @Override
     public void start(Stage primaryStage) {
+        pStage = primaryStage;
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
@@ -141,10 +126,12 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public static Stage getpStage() {
+        return pStage;
+    }
+
     private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
         String enteredName = nameInput.getText();
-        System.out.println(enteredName);
-        System.out.println("hello");
         map.getPlayer().setUserName(enteredName);
         if (Arrays.asList(developers).contains(enteredName)) {
             map.getPlayer().setSuperUser(true);
@@ -177,19 +164,23 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
+            case R:
+                map.getRocketGrunt().releasePokemon(map);
+                refresh();
+                break;
             case T:
                 map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
                 refresh();
-            case R:
-                map.getPlayer().pickupItem(inventory, text);
-                refresh();
+                checkIfGameEnds();
                 break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
                     map.getPlayer().getCell().setItem(null);
-                    refresh();
+                } else {
+                    map.getPlayer().pickupItem(inventory, text);
                 }
+                refresh();
                 break;
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
@@ -205,6 +196,10 @@ public class Main extends Application {
                 map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
                 refresh();
                 checkIfGameEnds();
+                break;
+            case H:
+                inventory.heal();
+                refresh();
                 break;
         }
     }
@@ -232,7 +227,6 @@ public class Main extends Application {
                 }
             }
         }
-        //nameLabel.setText("Health:" + map.getPlayer().getHealth()); player health is unused.
     }
 
     private void moveAllPokemon() {
@@ -255,12 +249,48 @@ public class Main extends Application {
 
     public void checkIfGameEnds(){
         if (inventory.getActivePokemon() == null){
-            // popup with game over message, quit game on click
-            System.out.println("GAME OVER");
-        } else {
-            // if (map.getRocketGrunt.getPokemons.size() == 0)
-            // popup with win message, quit game on click
+            gameEndWindow(EndCondition.LOSE);
+        } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
+            gameEndWindow(EndCondition.WIN);
         }
+    }
+
+    protected void gameEndWindow(EndCondition endCondition) {
+        Stage endPopup = new Stage();
+        endPopup.initModality(Modality.WINDOW_MODAL);
+        endPopup.initOwner(getpStage());
+        VBox endContent = new VBox();
+        Scene endScene = new Scene(endContent);
+        Text winText = new Text("Congratulations! You won!");
+        Text loseText = new Text("You lost. Try again!");
+        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
+        Button closeWindow = new Button("Quit game");
+        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
+        endContent.setAlignment(Pos.CENTER);
+
+        closeWindow.setOnAction((event)-> {
+            try {
+                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        endContent.getChildren().addAll(displayedText, closeWindow);
+        endContent.setPrefSize(800.0/2,761.0/2);
+        Background background = new Background(new BackgroundImage(
+                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+
+        endPopup.setScene(endScene);
+        endContent.setBackground(background);
+        endPopup.show();
     }
 
 
@@ -273,13 +303,11 @@ public class Main extends Application {
         Cell standingOn = map.getPlayer().getCell();
         if (standingOn.getDoor() != null){
             text.append("Open door by 'O'\n\n");
-        } else if (standingOn.getItem() instanceof LootBox){
-            text.append("Pick up lootbox by 'R'!\n\n");
-        } else if (standingOn.getItem() instanceof Key){
-            text.append("Pick up key by 'E'!\n\n");
+        } else if (standingOn.getItem() != null){
+            text.append(String.format("Pick up %s by 'E'!\n\n", standingOn.getItem().getTileName()));
         }
         if (getPokemonInRange().isPresent()) {
-            text.append("\n\nPokemon in range:\n");
+            text.append("Pokemon in range:\n");
             getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
@@ -301,10 +329,24 @@ public class Main extends Application {
         return toReturn;
     }
 
+
+    private VBox createRightPane() {
+        GridPane ui = new GridPane();
+        ui.setPrefWidth(300);
+        ui.setPadding(new Insets(10));
+        nameLabel.setText(map.getPlayer().getUserName());
+        ui.add(nameLabel, 0, 0);
+
+        VBox infoBox = createInfoBox();
+        VBox rightPane = new VBox(ui, infoBox);
+        rightPane.setSpacing(20.00);
+        return rightPane;
+    }
+
     private VBox createInfoBox(){
 
         currentInfo.setWrapText(false);
-        currentInfo.setPrefWidth(200);
+        currentInfo.setPrefWidth(300);
         TextFlow textFlow = new TextFlow();
         textFlow.setPrefWidth(200);
         textFlow.getChildren().add(currentInfo);
@@ -314,12 +356,41 @@ public class Main extends Application {
         infoTitle.setGraphic(new ImageView(infoImage));
 
         VBox infoBox = new VBox(infoTitle, textFlow);
-//        infoBox.setAlignment(Pos.BASELINE_CENTER);
-//        infoBox.setStyle("-fx-border-color: blue;-fx-padding: 10px;");
+        infoBox.setStyle("-fx-padding: 10px;");
         infoBox.setPrefHeight(600);
         infoBox.setPrefWidth(200);
 
         infoBox.setSpacing(20);
         return infoBox;
+    }
+
+    private VBox createBottomBox() {
+        Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
+                "Press 'F' to fight and 'T' to catch pokemon\n" +
+                "Pick things up by 'E'\n" +
+                "Engage Rocket Grunt by 'R'\n");
+        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
+        movementInfo.setTextAlignment(TextAlignment.CENTER);
+        movementInfo.setLineSpacing(1.5);
+
+        VBox bottom = new VBox(movementInfo);
+        bottom.setAlignment(Pos.CENTER);
+        return bottom;
+    }
+
+    private VBox createLevelBox() {
+        VBox levelBox = new VBox(currentLevel);
+        levelBox.setAlignment(Pos.CENTER);
+        levelBox.setPadding(new Insets(5));
+        levelBox.setMaxHeight(10);
+        return levelBox;
+    }
+
+    private void setLabels() {
+        currentLevel.setText(map.getLevel());
+        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
+        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
+        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+        currentInfo.setWrapText(true);
     }
 }

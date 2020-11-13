@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Door;
 
@@ -15,6 +16,7 @@ public class GameMap {
     private String gameLevel;
 
     private Player player;
+    private RocketGrunt rocketGrunt;
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
     public GameMap(int width, int height, CellType defaultCellType, String gameLevel) {
@@ -70,4 +72,8 @@ public class GameMap {
         return this.gameLevel;
 
     }
+
+    public void setRocketGrunt(RocketGrunt rocketGrunt) { this.rocketGrunt = rocketGrunt; }
+
+    public RocketGrunt getRocketGrunt(){ return rocketGrunt;}
 }

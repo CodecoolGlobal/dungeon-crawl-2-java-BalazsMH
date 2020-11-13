@@ -38,12 +38,18 @@ public abstract class Pokemon implements Drawable {
         return cell;
     }
 
+    public void setCell(Cell cell){
+        this.cell = cell;
+    }
+
     public void removePokemonFromCell(){
         cell.setPokemon(null);
         cell = null;
     }
 
     public abstract void move();
+
+    public int damage(){return (int)(Math.random() * pokeDamage + 1);}
     public abstract void fight();
     public abstract void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY);
     public abstract boolean npcCanSeePlayer(List<List<Integer>> mapWalls, List playerCoordinate, int npcX, int npcY);
