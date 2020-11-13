@@ -13,9 +13,9 @@ public class LootBox extends Item {
 
     public LootBox(Cell cell) {
         super(cell);
-        this.potionNumber = (int) Math.floor(Math.random()*10.00);
+        this.potionNumber = (int) Math.floor(Math.random()*(8.00 - 2.00) + 2.00);
         this.pokeBallList = new ArrayList<PokeBall>();
-        int pokeBallCount = (int) Math.floor(Math.random()*10.00);
+        int pokeBallCount = (int) Math.floor(Math.random()*(8.00 - 2.00) + 2.00);
         for (int i = 0; i < pokeBallCount; i++) {
             this.pokeBallList.add(new PokeBall());
         }

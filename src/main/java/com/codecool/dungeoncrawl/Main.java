@@ -182,7 +182,6 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        System.out.println(inventory.toString());
         context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
@@ -310,20 +309,17 @@ public class Main extends Application {
 
         currentInfo.setWrapText(true);
         currentInfo.setPrefWidth(300);
-        TextFlow textFlow = new TextFlow();
-        textFlow.setPrefWidth(200);
-        textFlow.getChildren().add(currentInfo);
 
-        Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
-        Label infoTitle = new Label();
-        infoTitle.setGraphic(new ImageView(infoImage));
+//        Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
+//        Label infoTitle = new Label();
+//        infoTitle.setGraphic(new ImageView(infoImage));
 
-        VBox infoBox = new VBox(infoTitle, textFlow);
+        VBox infoBox = new VBox(currentInfo);
         infoBox.setStyle("-fx-padding: 10px;");
         infoBox.setPrefHeight(600);
-        infoBox.setPrefWidth(200);
+        infoBox.setPrefWidth(300);
 
-        infoBox.setSpacing(20);
+        infoBox.setSpacing(10);
         return infoBox;
     }
 

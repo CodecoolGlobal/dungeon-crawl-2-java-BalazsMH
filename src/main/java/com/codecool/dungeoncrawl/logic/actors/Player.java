@@ -67,8 +67,7 @@ public class Player extends Actor {
             List<PokeBall> pickedUpPokeBalls = lootbox.getPokeBallList();
             inventory.increaseHealthPotionNumber(pickedUpPotions);
             inventory.addPokeBalls(pickedUpPokeBalls);
-            text.append("\nLootbox picked up successfully.\n")
-                    .append(pickedUpPotions)
+            text.append(pickedUpPotions)
                     .append(" potions, and ")
                     .append(pickedUpPokeBalls.size())
                     .append(" pokeballs added.");

@@ -65,13 +65,16 @@ public class Inventory {
     public String toString() {
         StringBuilder str = new StringBuilder(",");
         String list = String.join(", ", pokemonList.stream().filter(p -> p != activePokemon).map(p -> p.getPokeName()).collect(Collectors.toList()));
-        return "Active: " + activePokemon.toString() + "\n" +
+        return activePokemon.toString() + "\n" +
                 "Health potion: " + healthPotionNumber + "\n" +
                 "Pokeball number: " + pokeBallList.size() + "\n" +
                 "Other Pokemons: " + list + "\n";
     }
 
     public void heal() {
-        if (healthPotionNumber > 0) activePokemon.setPokeHealth(activePokemon.getPokeHealth() + 1);
+        if (healthPotionNumber > 0) {
+            activePokemon.setPokeHealth(activePokemon.getPokeHealth() + 1);
+            healthPotionNumber--;
+        }
     }
 }
