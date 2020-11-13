@@ -7,10 +7,10 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Inventory {
     private int healthPotionNumber = 0;
-    private int damageImprovementNumber = 0;
     private List<PokeBall> pokeBallList = new ArrayList<PokeBall>();
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
     private Key key;
@@ -63,10 +63,12 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return "health potion = " + healthPotionNumber + "\n" +
-                "damage improvement = " + damageImprovementNumber + "\n" +
-                "Pokeball number = " + pokeBallList.size() + "\n" +
-                "pokemon number = " + pokemonList.size() + "\n";
+        StringBuilder str = new StringBuilder(",");
+        String list = String.join(", ", pokemonList.stream().filter(p -> p != activePokemon).map(p -> p.getPokeName()).collect(Collectors.toList()));
+        return "Active: " + activePokemon.toString() + "\n" +
+                "Health potion: " + healthPotionNumber + "\n" +
+                "Pokeball number: " + pokeBallList.size() + "\n" +
+                "Other Pokemons: " + list + "\n";
     }
 
     public void heal() {

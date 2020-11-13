@@ -180,6 +180,7 @@ public class Main extends Application {
     }
 
     private void refresh() {
+        System.out.println(inventory.toString());
         context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();

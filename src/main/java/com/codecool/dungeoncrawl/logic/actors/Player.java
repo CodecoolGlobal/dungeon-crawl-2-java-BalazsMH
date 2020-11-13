@@ -109,6 +109,7 @@ public class Player extends Actor {
                 Pokemon fightWith = aliveInRange.get();
                 // player attacks first
                 fightWith.setPokeHealth(fightWith.getPokeHealth() - activePokemon.damage());
+                text.append(String.format("\n%s attacks %s!", activePokemon.getPokeName(), fightWith.getPokeName()));
                 if (fightWith.getPokeHealth() > 1) {
                     // pokemon doesn't fight back if health below threshold
                     activePokemon.setPokeHealth(activePokemon.getPokeHealth() - fightWith.damage());
