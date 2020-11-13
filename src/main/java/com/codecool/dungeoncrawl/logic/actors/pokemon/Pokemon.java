@@ -66,15 +66,6 @@ public abstract class Pokemon implements Drawable {
 
     public String getPokeName(){ return this.pokeName; }
 
-    public int getPokeHealth() { return pokeHealth; }
-
-    public void setPokeHealth(int pokeHealth) { this.pokeHealth = pokeHealth; }
-
-    public int getPokeDamage() { return pokeDamage; }
-
-    public void setPokeDamage(int pokeDamage) { this.pokeDamage = pokeDamage; }
-
-    public String getPokeName(){ return this.pokeName; }
 
     /***
      * Aim: make sure that info is updated everywhere it needs to be updated
