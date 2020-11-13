@@ -209,9 +209,10 @@ public class Main extends Application {
         List<Pokemon> pokemonList= map.getPokemonList();
         List playerCoordinates = map.returnPlayerCoordinates();
         for (Pokemon pokemon : pokemonList) {
-            int x = pokemon.getX();
-            int y = pokemon.getY();
-            pokemon.attackMove(mapWalls, playerCoordinates, x, y);
+            if (map.getRocketGrunt() != null && map.getRocketGrunt().getRocketPokemonOnBoard().contains(pokemon)) pokemon.move();
+            else {
+                pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
+            }
         }
     }
 
