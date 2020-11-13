@@ -50,6 +50,7 @@ public class Main extends Application {
 
 
     Label nameLabel = new Label();
+    Label inv = new Label();
     Label currentInfo = new Label();
     Label currentLevel = new Label();
     StringBuilder text = new StringBuilder();
@@ -166,6 +167,7 @@ public class Main extends Application {
                 break;
             case A:
                 inventory.changeActivePokemon();
+                refresh();
                 break;
             case F:
                 map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
@@ -185,7 +187,7 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();
-        refreshLevelInfo();
+        refreshLevelAndInventory();
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -225,7 +227,8 @@ public class Main extends Application {
         }
     }
 
-    private void refreshLevelInfo() {
+    private void refreshLevelAndInventory() {
+        inv.setText(inventory.toString());
         currentLevel.setText(map.getLevel());
     }
 
@@ -289,14 +292,16 @@ public class Main extends Application {
     }
 
     private VBox createRightPane() {
-        GridPane ui = new GridPane();
-        ui.setPrefWidth(300);
-        ui.setPadding(new Insets(10));
         nameLabel.setText(map.getPlayer().getUserName());
-        ui.add(nameLabel, 0, 0);
+        inv.setText(inventory.toString());
+        inv.setWrapText(true);
+        VBox inventory = new VBox(nameLabel, inv);
+        inventory.setPrefWidth(300);
+        inventory.setPrefHeight(500);
+        inventory.setPadding(new Insets(10));
 
         VBox infoBox = createInfoBox();
-        VBox rightPane = new VBox(ui, infoBox);
+        VBox rightPane = new VBox(inventory, infoBox);
         rightPane.setSpacing(20.00);
         return rightPane;
     }
@@ -351,6 +356,8 @@ public class Main extends Application {
         nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
+        inv.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+//        inv.setWrapText(true);
     }
 
     protected void gameEndWindow(EndCondition endCondition) {
