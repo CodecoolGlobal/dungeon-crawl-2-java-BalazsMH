@@ -84,6 +84,7 @@ public abstract class Pokemon implements Drawable {
     }
 
     public Cell findRandomEmptyNeighbouringCell() {
+        int counter = 0;
         int[] newCoordinates = new int[2];
         while (true) {
             int changes = (int) Math.round(Math.random());
@@ -95,6 +96,8 @@ public abstract class Pokemon implements Drawable {
                     && neighbour.getTileName().equals(CellType.FLOOR.getTileName())) {
                 return neighbour;
             }
+            counter++;
+            if (counter == 8) { return cell.getNeighbor(0, 0); }
         }
     }
 
