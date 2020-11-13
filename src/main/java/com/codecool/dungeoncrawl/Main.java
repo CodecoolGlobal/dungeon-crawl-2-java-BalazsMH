@@ -40,7 +40,6 @@ public class Main extends Application {
     GameMap map2 = MapLoader.loadMap("Level2");
     List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
 
-    Pokemon bulbasaur = map.getPokemonList().get(2);
 
     MapChanger mapChanger = new MapChanger(map, map2);
 
@@ -64,29 +63,27 @@ public class Main extends Application {
         launch(args);
     }
 
+    @Override
+    public void start(Stage primaryStage) {
+        pStage = primaryStage;
+        primaryStage.setTitle("JavaMon");
+        primaryStage.getIcons().add(new Image("file:logo.png"));
+
+        Scene game = game();
+        Scene mainMenu = mainMenu(primaryStage, game);
+
+        primaryStage.setScene(mainMenu);
+        refresh();
+        primaryStage.show();
+    }
+
     private Scene mainMenu(Stage primaryStage, Scene game) {
-        VBox mainPane = new VBox();
-        mainPane.setPrefSize(1287/1.5,797/1.5);
-        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                                                              BackgroundSize.AUTO,
-                                                                false, false, true, true)));
-        mainPane.setBackground(background);
-        TextField nameInput = new TextField();
-        nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        nameInput.setMaxSize(220,220);
-        nameInput.setPromptText("Enter your name ");
-        Button submitButton = new Button("Play!");
-        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-
-        mainPane.getChildren().addAll(nameInput, submitButton);
-        mainPane.setAlignment(Pos.CENTER);
-        Scene mainMenu = new Scene(mainPane);
-        mainPane.requestFocus();
-
+        TextField nameInput = createNameInput();
+        Button submitButton = createSubmitButton();
         submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
+        VBox mainPane = createMainPane(nameInput, submitButton);
+        Scene mainMenu = new Scene(mainPane);
+
         return mainMenu;
     }
 
@@ -102,33 +99,10 @@ public class Main extends Application {
         borderPane.setBottom(bottom);
         borderPane.setRight(rightPane);
         borderPane.setTop(levelBox);
-        //TODO: eliminate unnecessary space between the top of the canvas and the borderpane center top
 
         Scene scene = new Scene(borderPane);
         scene.setOnKeyPressed(this::onKeyPressed);
         return scene;
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        pStage = primaryStage;
-        primaryStage.setTitle("JavaMon");
-        primaryStage.getIcons().add(new Image("file:logo.png"));
-
-        //Create Game
-        Scene game = game();
-
-        //Main menu
-        Scene mainMenu = mainMenu(primaryStage, game);
-
-
-        primaryStage.setScene(mainMenu);
-        refresh();
-        primaryStage.show();
-    }
-
-    public static Stage getpStage() {
-        return pStage;
     }
 
     private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
@@ -209,7 +183,6 @@ public class Main extends Application {
         context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
-        //moveBulbasaur();
         refreshInfoWindow();
         refreshLevelInfo();
         for (int x = 0; x < map.getWidth(); x++) {
@@ -242,7 +215,6 @@ public class Main extends Application {
         }
     }
 
-
     public void checkIfGameEnds(){
         if (inventory.getActivePokemon() == null){
             gameEndWindow(EndCondition.LOSE);
@@ -250,46 +222,6 @@ public class Main extends Application {
             gameEndWindow(EndCondition.WIN);
         }
     }
-
-    protected void gameEndWindow(EndCondition endCondition) {
-        Stage endPopup = new Stage();
-        endPopup.initModality(Modality.WINDOW_MODAL);
-        endPopup.initOwner(getpStage());
-        VBox endContent = new VBox();
-        Scene endScene = new Scene(endContent);
-        Text winText = new Text("Congratulations! You won!");
-        Text loseText = new Text("You lost. Try again!");
-        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
-        Button closeWindow = new Button("Quit game");
-        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
-        endContent.setAlignment(Pos.CENTER);
-
-        closeWindow.setOnAction((event)-> {
-            try {
-                System.exit(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        endContent.getChildren().addAll(displayedText, closeWindow);
-        endContent.setPrefSize(800.0/2,761.0/2);
-        Background background = new Background(new BackgroundImage(
-                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
-
-        endPopup.setScene(endScene);
-        endContent.setBackground(background);
-        endPopup.show();
-    }
-
-
 
     private void refreshLevelInfo() {
         currentLevel.setText(map.getLevel());
@@ -325,6 +257,34 @@ public class Main extends Application {
         return toReturn;
     }
 
+    private VBox createMainPane(TextField nameInput, Button submitButton) {
+        VBox mainPane = new VBox(nameInput, submitButton);
+        mainPane.setPrefSize(1287/1.5,797/1.5);
+        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+        mainPane.setBackground(background);
+        mainPane.setAlignment(Pos.CENTER);
+        mainPane.requestFocus();
+        return mainPane;
+    }
+
+    private Button createSubmitButton() {
+        Button submitButton = new Button("Play!");
+        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        return submitButton;
+    }
+
+    private TextField createNameInput() {
+        TextField nameInput = new TextField();
+        nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        nameInput.setMaxSize(220,220);
+        nameInput.setPromptText("Enter your name ");
+        return nameInput;
+    }
 
     private VBox createRightPane() {
         GridPane ui = new GridPane();
@@ -389,5 +349,43 @@ public class Main extends Application {
         nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
+    }
+
+    protected void gameEndWindow(EndCondition endCondition) {
+        Stage endPopup = new Stage();
+        endPopup.initModality(Modality.WINDOW_MODAL);
+        endPopup.initOwner(pStage);
+        VBox endContent = new VBox();
+        Scene endScene = new Scene(endContent);
+        Text winText = new Text("Congratulations! You won!");
+        Text loseText = new Text("You lost. Try again!");
+        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
+        Button closeWindow = new Button("Quit game");
+        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
+        endContent.setAlignment(Pos.CENTER);
+
+        closeWindow.setOnAction((event)-> {
+            try {
+                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        endContent.getChildren().addAll(displayedText, closeWindow);
+        endContent.setPrefSize(800.0/2,761.0/2);
+        Background background = new Background(new BackgroundImage(
+                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+
+        endPopup.setScene(endScene);
+        endContent.setBackground(background);
+        endPopup.show();
     }
 }
