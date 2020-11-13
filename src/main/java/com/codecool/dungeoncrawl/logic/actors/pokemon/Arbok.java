@@ -20,14 +20,7 @@ public class Arbok extends Pokemon {
     }
 
     @Override
-    public void fight() {
-
-    }
-
-    @Override
-    public void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY) {
-
-    }
+    public void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY) { }
 
     @Override
     public boolean npcCanSeePlayer(List<List<Integer>> mapWalls, List playerCoordinate, int npcX, int npcY) {

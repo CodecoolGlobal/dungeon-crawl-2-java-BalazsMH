@@ -14,11 +14,7 @@ public class Charizard extends Pokemon {
     public String getTileName(){return "charizard";}
 
     @Override
-    public void move(){
-        /***This pokemon takes one random step every time the player moves  */
-        Cell moveTo = findRandomEmptyNeighbouringCell();
-        takeStep(moveTo);
-    }
+    public void move(){ }
 
     @Override
     public void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY) {
@@ -45,11 +41,5 @@ public class Charizard extends Pokemon {
             return npcIsSeeingPlayer(mapWalls, playerCoordinate, npcX, npcY);
         }
     }
-
-    @Override
-    public void fight(){}
-
-
-
 
 }

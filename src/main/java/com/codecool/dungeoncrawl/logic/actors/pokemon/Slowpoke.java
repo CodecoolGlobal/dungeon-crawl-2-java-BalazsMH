@@ -16,14 +16,7 @@ public class Slowpoke extends Pokemon {
     public String getTileName(){return "slowpoke";}
 
     @Override
-    public void move(){
-        /***This pokemon takes one random step every second time the player moves  */
-        if (shouldMove) {
-            Cell moveTo = findRandomEmptyNeighbouringCell();
-            takeStep(moveTo);
-        }
-        shouldMove = ! shouldMove;
-    }
+    public void move(){ }
 
     @Override
     public void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY) {
@@ -50,8 +43,4 @@ public class Slowpoke extends Pokemon {
             return npcIsSeeingPlayer(mapWalls, playerCoordinate, npcX, npcY);
         }
     }
-
-    @Override
-    public void fight(){}
-
 }
