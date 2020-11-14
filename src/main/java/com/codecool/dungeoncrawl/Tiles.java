@@ -78,4 +78,28 @@ public class Tiles {
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
         }
     }
+
+    public static void drawTerrain(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
+
+    public static void drawObjects(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
+
+    public static void drawCharacters(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
+
+    public static void drawVegetation(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
+
+    public static void drawBuildings(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
+
+    public static void drawMeta(GraphicsContext context, Drawable d, int x, int y) {
+
+    }
 }
