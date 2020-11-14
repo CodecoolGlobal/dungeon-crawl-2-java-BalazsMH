@@ -20,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.*;
 import javafx.stage.Modality;
@@ -182,7 +183,8 @@ public class Main extends Application {
     }
 
     private void refresh() {
-        context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
+        //context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
+        context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();
@@ -190,6 +192,8 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
+                Tiles.drawTile(context, cell, x, y);
+
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
                 } else if (cell.getItem() != null){
@@ -198,8 +202,6 @@ public class Main extends Application {
                     Tiles.drawTile(context, cell.getPokemon(), x, y);
                 } else if(cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
-                } else {
-                    Tiles.drawTile(context, cell, x, y);
                 }
             }
         }
