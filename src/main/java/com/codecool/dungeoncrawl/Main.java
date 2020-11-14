@@ -194,15 +194,20 @@ public class Main extends Application {
                 Cell cell = map.getCell(x, y);
                 Tiles.drawTile(context, cell, x, y);
 
-                if (cell.getActor() != null) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.getItem() != null){
+                if (cell.getItem() != null){
                     Tiles.drawTile(context, cell.getItem(), x, y);
-                } else if(cell.getPokemon() != null){
-                    Tiles.drawTile(context, cell.getPokemon(), x, y);
-                } else if(cell.getDoor() != null) {
+                }
+                if(cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
                 }
+                if (cell.getActor() != null) {
+                    Tiles.drawTile(context, cell.getActor(), x, y);
+                }
+
+                if(cell.getPokemon() != null){
+                    Tiles.drawTile(context, cell.getPokemon(), x, y);
+                }
+
             }
         }
     }

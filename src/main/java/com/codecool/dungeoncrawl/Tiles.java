@@ -80,26 +80,33 @@ public class Tiles {
     }
 
     public static void drawTerrain(GraphicsContext context, Drawable d, int x, int y) {
+        //implement
 
     }
 
     public static void drawObjects(GraphicsContext context, Drawable d, int x, int y) {
+        //implement
 
     }
 
     public static void drawCharacters(GraphicsContext context, Drawable d, int x, int y) {
+        //implement
 
     }
 
     public static void drawVegetation(GraphicsContext context, Drawable d, int x, int y) {
+        //implement
 
     }
 
     public static void drawBuildings(GraphicsContext context, Drawable d, int x, int y) {
+        //optional
 
     }
 
     public static void drawMeta(GraphicsContext context, Drawable d, int x, int y) {
+
+        //optional
 
     }
 }
