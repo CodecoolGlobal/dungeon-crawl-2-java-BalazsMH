@@ -2,9 +2,10 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
-import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.items.PokeBall;
 
@@ -16,22 +17,22 @@ public class Player extends Actor {
     private String facing = "down";
     private String userName = "";
     private boolean superUser = false;
+    private Inventory inventory;
+    private int onLevel;
 
     public Player(Cell cell) {
         super(cell);
-
+        this.inventory = new Inventory();
+        this.onLevel = 1;
     }
-
-    public void setFacing(String facing) {
-        this.facing = facing;
-    }
-
 
     public void setSuperUser(boolean superUser) {
         this.superUser = superUser;
     }
 
-
+    public void setLevel(int level){
+        onLevel = level;
+    }
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -44,7 +45,19 @@ public class Player extends Actor {
         cell = newCell;
 
     }
+    public Item whatAmIStandingOn(){
+        return cell.getItem();
+    }
+    public void openDoor(){
+        cell.getDoor().setOpen();
+    }
+    public boolean standingOnDoor(){
+        return cell.getType() == CellType.DOOR;
+    }
 
+    public boolean hasKey(){
+        return inventory.hasKey();
+    }
 
     public String getTileName() {
         switch (this.facing) {
@@ -60,7 +73,7 @@ public class Player extends Actor {
 
     }
 
-    public void pickupItem(Inventory inventory, StringBuilder text) {
+    public void pickupItem(StringBuilder text) {
         if (cell.getItem() instanceof LootBox) {
             LootBox lootbox = (LootBox) cell.getItem();
             int pickedUpPotions = lootbox.getPotionNumber();
@@ -77,16 +90,15 @@ public class Player extends Actor {
         }
     }
 
-    @Override
-    public void move(int dx, int dy) {
+    public void move(int dx, int dy, String facing) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-
+        this.facing = facing;
         if (( superUser && nextCell.getPokemon() == null
-                        && nextCell.getActor() == null) ||
+                && nextCell.getActor() == null) ||
                 (!superUser && nextCell.getType() != CellType.EMPTY
-                            && nextCell.getType() != CellType.WALL
-                            && nextCell.getPokemon() == null
-                            && nextCell.getActor() == null)) {
+                        && nextCell.getType() != CellType.WALL
+                        && nextCell.getPokemon() == null
+                        && nextCell.getActor() == null)) {
             cell.setActor(null);
             nextCell.setActor(this);
             cell = nextCell;
@@ -94,7 +106,7 @@ public class Player extends Actor {
 
     }
 
-    public void fightPokemon(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+    public void fightPokemon(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
         if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
         else {
             Optional<Pokemon> aliveInRange = pokemonInRange.get().stream()
@@ -128,7 +140,7 @@ public class Player extends Actor {
         }
     }
 
-    public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+    public void throwPokeBall(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
 
         if (pokemonInRange.isEmpty()){
             text.append("\nNothing to catch here");
@@ -164,4 +176,6 @@ public class Player extends Actor {
             map.getRocketGrunt().releasePokemon(map);
         }
     }
+
+    public Inventory getInventory() {return inventory;}
 }

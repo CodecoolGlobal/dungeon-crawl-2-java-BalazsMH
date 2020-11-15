@@ -1,5 +1,7 @@
-package com.codecool.dungeoncrawl.logic;
+package com.codecool.dungeoncrawl.logic.map;
 
+import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
@@ -9,7 +11,6 @@ import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,7 @@ public class MapLoader {
                             break;
                         case '#':
                             cell.setType(CellType.WALL);
-                            List<Integer> tmp = new ArrayList<>();
-                            tmp.add(x);
-                            tmp.add(y);
+                            List<Integer> tmp = new ArrayList<>(List.of(x, y));
                             walls.add(tmp);
                             break;
                         case 'd':
@@ -91,14 +90,6 @@ public class MapLoader {
                     }
                 }
             }
-        }
-       try {
-            is.close();
-            //is.reset();
-            //scanner.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
         }
         return map;
     }

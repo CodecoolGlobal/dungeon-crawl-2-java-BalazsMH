@@ -1,35 +1,36 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.*;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.MapGenerator;
+import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import com.codecool.dungeoncrawl.logic.map.GameMap;
+import com.codecool.dungeoncrawl.logic.map.MapChanger;
+import com.codecool.dungeoncrawl.logic.map.MapLoader;
+import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 public class Main extends Application {
     private static Stage pStage;
@@ -41,6 +42,7 @@ public class Main extends Application {
     GameMap map2 = MapLoader.loadMap("Level2");
     List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
 
+    Timeline enemyMove;
 
     MapChanger mapChanger = new MapChanger(map, map2);
 
@@ -57,10 +59,6 @@ public class Main extends Application {
     StringBuilder text = new StringBuilder();
     String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
-
-    public Inventory inventory = new Inventory();
-
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -75,26 +73,29 @@ public class Main extends Application {
         Scene mainMenu = mainMenu(primaryStage, game);
 
         primaryStage.setScene(mainMenu);
-        refresh();
+        addEnemyMoveHandler();
+        refresh(map.getPlayer().getInventory());
         primaryStage.show();
     }
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
-        TextField nameInput = createNameInput();
-        Button submitButton = createSubmitButton();
-        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
-        VBox mainPane = createMainPane(nameInput, submitButton);
+        TextField nameInput = WindowElement.createNameInput();
+        Button newGameButton = WindowElement.createNewGameButton();
+        Button loadGameButton = WindowElement.createLoadGameButton();
+        //TODO: implement functionality for load game button.
+        newGameButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
+        VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton);
         Scene mainMenu = new Scene(mainPane);
 
         return mainMenu;
     }
 
     private Scene game() {
-        setLabels();
+        WindowElement.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
 
-        VBox rightPane = createRightPane();
-        VBox levelBox = createLevelBox();
-        VBox bottom = createBottomBox();
+        VBox rightPane = WindowElement.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
+        VBox levelBox = WindowElement.createLevelBox(currentLevel);
+        VBox bottom = WindowElement.createBottomBox();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
@@ -119,76 +120,62 @@ public class Main extends Application {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         text.setLength(0);
+        Inventory inventory = map.getPlayer().getInventory();
+        Player player = map.getPlayer();
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
-                map.getPlayer().setFacing("up");
-                map.getPlayer().move(0, -1);
-                refresh();
+                player.move(0, -1, "up");
                 break;
             case DOWN:
-                map.getPlayer().setFacing("down");
-                map.getPlayer().move(0, 1);
-                refresh();
+                player.move(0, 1, "down");
                 break;
             case LEFT:
-                map.getPlayer().setFacing("left");
-                map.getPlayer().move(-1, 0);
-                refresh();
+                player.move(-1, 0, "left");
                 break;
             case RIGHT:
-                map.getPlayer().setFacing("right");
-                map.getPlayer().move(1,0);
-                refresh();
+                player.move(1,0, "right");
                 break;
             case R:
                 map.getRocketGrunt().releasePokemon(map);
-                refresh();
                 break;
             case T:
-                map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
-                refresh();
-                checkIfGameEnds();
+                player.throwPokeBall(text, map.getPokemonInRange(currentInfo), map);
+                checkIfGameEnds(inventory);
                 break;
             case E:
-                if (map.getPlayer().getCell().getItem() instanceof Key){
-                    inventory.addKey(map.getPlayer().getCell());
-                    map.getPlayer().getCell().setItem(null);
+                if (player.whatAmIStandingOn() instanceof Key){
+                    inventory.addKey(player.getCell());
+                    player.getCell().setItem(null);
                 } else {
-                    map.getPlayer().pickupItem(inventory, text);
+                    player.pickupItem(text);
                 }
-                refresh();
                 break;
             case O:
-                if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
-                    map.getPlayer().getCell().getDoor().setOpen();
+                if (player.hasKey() && player.standingOnDoor()){
+                    player.openDoor();
                     map = mapChanger.changeMap(map);
-                    refresh();
                 }
                 break;
             case A:
                 inventory.changeActivePokemon();
-                refresh();
                 break;
             case F:
-                map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
-                refresh();
-                checkIfGameEnds();
+                player.fightPokemon(text, map.getPokemonInRange(currentInfo), map);
+                checkIfGameEnds(inventory);
                 break;
             case H:
                 inventory.heal();
-                refresh();
                 break;
         }
+        refresh(inventory);
     }
 
-    private void refresh() {
-        //context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
+    private void refresh(Inventory inventory) {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        moveAllPokemon();
-        refreshInfoWindow();
-        refreshLevelAndInventory();
+        WindowElement.refreshInfoWindow(text, currentInfo, map);
+        WindowElement.refreshLevelAndInventory(inventory, inv, currentLevel, map);
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -212,192 +199,19 @@ public class Main extends Application {
         }
     }
 
-    private void moveAllPokemon() {
-        int level = mapChanger.getLevel();
-        List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
-        List<Pokemon> pokemonList= map.getPokemonList();
-        List playerCoordinates = map.returnPlayerCoordinates();
-        for (Pokemon pokemon : pokemonList) {
-            if (map.getRocketGrunt() != null && map.getRocketGrunt().getRocketPokemonOnBoard().contains(pokemon)) pokemon.move();
-            else {
-                pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
-            }
-        }
-    }
-
-    public void checkIfGameEnds(){
+    public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
-            gameEndWindow(EndCondition.LOSE);
+            WindowElement.gameEndWindow(EndCondition.LOSE, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            gameEndWindow(EndCondition.WIN);
+            WindowElement.gameEndWindow(EndCondition.WIN, pStage);
         }
     }
-
-    private void refreshLevelAndInventory() {
-        inv.setText(inventory.toString());
-        currentLevel.setText(map.getLevel());
-    }
-
-    private void refreshInfoWindow() {
-        Cell standingOn = map.getPlayer().getCell();
-        if (standingOn.getDoor() != null){
-            text.append("\nOpen door by 'O'\n");
-        } else if (standingOn.getItem() != null){
-            text.append(String.format("\nPick up %s by 'E'!\n", standingOn.getItem().getTileName()));
-        }
-        if (getPokemonInRange().isPresent()) {
-            text.append("\n\nPokemon in range:\n");
-            getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
-        }
-        currentInfo.setText(text.toString());
-    }
-
-    private Optional<List<Pokemon>> getPokemonInRange() {
-        Optional<List<Pokemon>> toReturn = Optional.empty();
-        List<Pokemon> pokemonInRange = new ArrayList<Pokemon>();
-        int playerX = map.getPlayer().getCell().getX();
-        int playerY = map.getPlayer().getCell().getY();
-        List<Pokemon> pokemonList= map.getPokemonList();
-        pokemonList.forEach(p -> {
-            if (Math.abs(p.getCell().getX() - playerX) + Math.abs(p.getCell().getY() - playerY) <= 3){
-                pokemonInRange.add(p);
-                currentInfo.setText(p.toString());
-            }
-        });
-        if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
-        return toReturn;
-    }
-
-    private VBox createMainPane(TextField nameInput, Button submitButton) {
-        VBox mainPane = new VBox(nameInput, submitButton);
-        mainPane.setPrefSize(1287/1.5,797/1.5);
-        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
-        mainPane.setBackground(background);
-        mainPane.setAlignment(Pos.CENTER);
-        mainPane.requestFocus();
-        return mainPane;
-    }
-
-    private Button createSubmitButton() {
-        Button submitButton = new Button("Play!");
-        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return submitButton;
-    }
-
-    private TextField createNameInput() {
-        TextField nameInput = new TextField();
-        nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        nameInput.setMaxSize(220,220);
-        nameInput.setPromptText("Enter your name ");
-        return nameInput;
-    }
-
-    private VBox createRightPane() {
-        nameLabel.setText(map.getPlayer().getUserName());
-        inv.setText(inventory.toString());
-        inv.setWrapText(true);
-        VBox inventory = new VBox(nameLabel, inv);
-        inventory.setPrefWidth(300);
-        inventory.setPrefHeight(500);
-        inventory.setPadding(new Insets(10));
-
-        VBox infoBox = createInfoBox();
-        VBox rightPane = new VBox(inventory, infoBox);
-        rightPane.setSpacing(20.00);
-        return rightPane;
-    }
-
-    private VBox createInfoBox(){
-
-        currentInfo.setWrapText(true);
-        currentInfo.setPrefWidth(300);
-
-//        Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
-//        Label infoTitle = new Label();
-//        infoTitle.setGraphic(new ImageView(infoImage));
-
-        VBox infoBox = new VBox(currentInfo);
-        infoBox.setStyle("-fx-padding: 10px;");
-        infoBox.setPrefHeight(600);
-        infoBox.setPrefWidth(300);
-
-        infoBox.setSpacing(10);
-        return infoBox;
-    }
-
-    private VBox createBottomBox() {
-        Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
-                "Press 'A' to change active pokemon and 'H' to heal it\n" +
-                "Press 'F' to fight and 'T' to catch pokemon\n" +
-                "Pick things up by 'E'\n" +
-                "Engage Rocket Grunt by 'R'\n");
-        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
-        movementInfo.setTextAlignment(TextAlignment.CENTER);
-        movementInfo.setLineSpacing(1.5);
-
-        VBox bottom = new VBox(movementInfo);
-        bottom.setAlignment(Pos.CENTER);
-        return bottom;
-    }
-
-    private VBox createLevelBox() {
-        VBox levelBox = new VBox(currentLevel);
-        levelBox.setAlignment(Pos.CENTER);
-        levelBox.setPadding(new Insets(5));
-        levelBox.setMaxHeight(10);
-        return levelBox;
-    }
-
-    private void setLabels() {
-        currentLevel.setText(map.getLevel());
-        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
-        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
-        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-        currentInfo.setWrapText(true);
-        inv.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-//        inv.setWrapText(true);
-    }
-
-    protected void gameEndWindow(EndCondition endCondition) {
-        Stage endPopup = new Stage();
-        endPopup.initModality(Modality.WINDOW_MODAL);
-        endPopup.initOwner(pStage);
-        VBox endContent = new VBox();
-        Scene endScene = new Scene(endContent);
-        Text winText = new Text("Congratulations! You won!");
-        Text loseText = new Text("You lost. Try again!");
-        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
-        Button closeWindow = new Button("Quit game");
-        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
-        endContent.setAlignment(Pos.CENTER);
-
-        closeWindow.setOnAction((event)-> {
-            try {
-                System.exit(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        endContent.getChildren().addAll(displayedText, closeWindow);
-        endContent.setPrefSize(800.0/2,761.0/2);
-        Background background = new Background(new BackgroundImage(
-                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
-
-        endPopup.setScene(endScene);
-        endContent.setBackground(background);
-        endPopup.show();
+    private void addEnemyMoveHandler() {
+        enemyMove = new Timeline(
+                new KeyFrame(Duration.seconds(1), (event) -> {
+                    map.moveAllPokemon(mapChanger, mapWallsLevel1,  mapWallsLevel2);
+                    refresh(map.getPlayer().getInventory()); }));
+        enemyMove.setCycleCount(Timeline.INDEFINITE);
+        enemyMove.play();
     }
 }

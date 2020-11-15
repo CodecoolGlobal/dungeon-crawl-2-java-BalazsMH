@@ -1,6 +1,4 @@
-package com.codecool.dungeoncrawl.logic;
-
-import com.codecool.dungeoncrawl.logic.items.Layout;
+package com.codecool.dungeoncrawl.logic.map;
 
 public class MapGenerator {
 
