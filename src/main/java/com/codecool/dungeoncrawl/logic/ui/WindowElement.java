@@ -20,8 +20,8 @@ import javafx.stage.Stage;
 
 public class WindowElement {
 
-    public static VBox createMainPane(TextField nameInput, Button submitButton) {
-        VBox mainPane = new VBox(nameInput, submitButton);
+    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton ) {
+        VBox mainPane = new VBox(nameInput, newGameButton, loadGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -35,10 +35,16 @@ public class WindowElement {
         return mainPane;
     }
 
-    public static Button createSubmitButton() {
-        Button submitButton = new Button("Play!");
-        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return submitButton;
+    public static Button createNewGameButton() {
+        Button newGameButton = new Button("Start a new Game!");
+        newGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        return newGameButton;
+    }
+
+    public static Button createLoadGameButton() {
+        Button loadGameButton = new Button("Load Game");
+        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        return loadGameButton;
     }
 
     public static TextField createNameInput() {

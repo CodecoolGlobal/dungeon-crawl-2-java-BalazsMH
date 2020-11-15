@@ -80,9 +80,11 @@ public class Main extends Application {
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
         TextField nameInput = WindowElement.createNameInput();
-        Button submitButton = WindowElement.createSubmitButton();
-        submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
-        VBox mainPane = WindowElement.createMainPane(nameInput, submitButton);
+        Button newGameButton = WindowElement.createNewGameButton();
+        Button loadGameButton = WindowElement.createLoadGameButton();
+        //TODO: implement functionality for load game button.
+        newGameButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
+        VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton);
         Scene mainMenu = new Scene(mainPane);
 
         return mainMenu;
