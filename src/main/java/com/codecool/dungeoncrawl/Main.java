@@ -2,34 +2,30 @@ package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.MapGenerator;
-
-import com.codecool.dungeoncrawl.logic.ui.LayoutItem;
+import com.codecool.dungeoncrawl.logic.map.GameMap;
+import com.codecool.dungeoncrawl.logic.map.MapChanger;
+import com.codecool.dungeoncrawl.logic.map.MapGenerator;
+import com.codecool.dungeoncrawl.logic.map.MapLoader;
+import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 
 public class Main extends Application {
@@ -77,21 +73,21 @@ public class Main extends Application {
     }
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
-        TextField nameInput = LayoutItem.createNameInput();
-        Button submitButton = LayoutItem.createSubmitButton();
+        TextField nameInput = WindowElement.createNameInput();
+        Button submitButton = WindowElement.createSubmitButton();
         submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
-        VBox mainPane = LayoutItem.createMainPane(nameInput, submitButton);
+        VBox mainPane = WindowElement.createMainPane(nameInput, submitButton);
         Scene mainMenu = new Scene(mainPane);
 
         return mainMenu;
     }
 
     private Scene game() {
-        LayoutItem.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
+        WindowElement.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
 
-        VBox rightPane = LayoutItem.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
-        VBox levelBox = LayoutItem.createLevelBox(currentLevel);
-        VBox bottom = LayoutItem.createBottomBox();
+        VBox rightPane = WindowElement.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
+        VBox levelBox = WindowElement.createLevelBox(currentLevel);
+        VBox bottom = WindowElement.createBottomBox();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
@@ -171,8 +167,8 @@ public class Main extends Application {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         map.moveAllPokemon(mapChanger, mapWallsLevel1,  mapWallsLevel2);
-        LayoutItem.refreshInfoWindow(text, currentInfo, map);
-        refreshLevelAndInventory(inventory);
+        WindowElement.refreshInfoWindow(text, currentInfo, map);
+        WindowElement.refreshLevelAndInventory(inventory, inv, currentLevel, map);
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -198,15 +194,10 @@ public class Main extends Application {
 
     public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
-            LayoutItem.gameEndWindow(EndCondition.LOSE, pStage);
+            WindowElement.gameEndWindow(EndCondition.LOSE, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            LayoutItem.gameEndWindow(EndCondition.WIN, pStage);
+            WindowElement.gameEndWindow(EndCondition.WIN, pStage);
         }
-    }
-
-    private void refreshLevelAndInventory(Inventory inventory) {
-        inv.setText(inventory.toString());
-        currentLevel.setText(map.getLevel());
     }
 
 }

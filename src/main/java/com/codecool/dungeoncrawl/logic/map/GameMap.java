@@ -1,5 +1,7 @@
-package com.codecool.dungeoncrawl.logic;
+package com.codecool.dungeoncrawl.logic.map;
 
+import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
@@ -11,15 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class GameMap {
-    private int width;
-    private int height;
-    private Cell[][] cells;
+    private final int width;
+    private final int height;
+    private final Cell[][] cells;
     private Door door;
-    private String gameLevel;
+    private final String gameLevel;
 
     private Player player;
     private RocketGrunt rocketGrunt;
-    private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
+    private final List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
     public GameMap(int width, int height, CellType defaultCellType, String gameLevel) {
         this.gameLevel = gameLevel;
@@ -47,19 +49,10 @@ public class GameMap {
 
     public void addPokemon(Pokemon pokemon){this.pokemonList.add(pokemon);}
 
-    public List<Pokemon> getPokemonList(){return pokemonList;}
-
     public void removePokemon(Pokemon pokemon){ pokemonList.remove(pokemon); }
 
     public Player getPlayer() {
         return player;
-    }
-
-    public List<Integer> returnPlayerCoordinates() {
-        List<Integer> cellList = new ArrayList<Integer>();
-        cellList.add(this.player.getX());
-        cellList.add(this.player.getY());
-        return cellList;
     }
 
     public int getWidth() {

@@ -1,8 +1,7 @@
-package com.codecool.dungeoncrawl.logic;
+package com.codecool.dungeoncrawl.logic.map;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-
-import java.util.Arrays;
 
 public class MapChanger {
     private GameMap activeLevel;

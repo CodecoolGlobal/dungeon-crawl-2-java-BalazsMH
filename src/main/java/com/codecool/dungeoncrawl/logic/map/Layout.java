@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl.logic.items;
+package com.codecool.dungeoncrawl.logic.map;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,7 +43,6 @@ public class Layout {
         markEdges();
         markBoardEdges();
         addPokemonAndItems();
-        printToConsole(); // remove when done
         writeTxt();
     }
 

@@ -2,7 +2,7 @@ package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
-import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +18,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class LayoutItem {
+public class WindowElement {
 
     public static VBox createMainPane(TextField nameInput, Button submitButton) {
         VBox mainPane = new VBox(nameInput, submitButton);
@@ -104,7 +104,7 @@ public class LayoutItem {
         inventoryBox.setPrefHeight(500);
         inventoryBox.setPadding(new Insets(10));
 
-        VBox infoBox = LayoutItem.createInfoBox(currentInfo);
+        VBox infoBox = WindowElement.createInfoBox(currentInfo);
         VBox rightPane = new VBox(inventoryBox, infoBox);
         rightPane.setSpacing(20.00);
         return rightPane;
@@ -160,5 +160,10 @@ public class LayoutItem {
             map.getPokemonInRange(currentInfo).get().forEach(p -> text.append("\n" + p.toString()));
         }
         currentInfo.setText(text.toString());
+    }
+
+    public static void refreshLevelAndInventory(Inventory inventory, Label inv, Label currentLevel, GameMap map) {
+        inv.setText(inventory.toString());
+        currentLevel.setText(map.getLevel());
     }
 }
