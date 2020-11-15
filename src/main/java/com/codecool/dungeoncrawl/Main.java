@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.MapGenerator;
 
+import com.codecool.dungeoncrawl.logic.ui.LayoutItem;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,13 +16,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -80,21 +79,21 @@ public class Main extends Application {
     }
 
     private Scene mainMenu(Stage primaryStage, Scene game) {
-        TextField nameInput = createNameInput();
-        Button submitButton = createSubmitButton();
+        TextField nameInput = LayoutItem.createNameInput();
+        Button submitButton = LayoutItem.createSubmitButton();
         submitButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
-        VBox mainPane = createMainPane(nameInput, submitButton);
+        VBox mainPane = LayoutItem.createMainPane(nameInput, submitButton);
         Scene mainMenu = new Scene(mainPane);
 
         return mainMenu;
     }
 
     private Scene game() {
-        setLabels();
+        LayoutItem.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
 
         VBox rightPane = createRightPane();
-        VBox levelBox = createLevelBox();
-        VBox bottom = createBottomBox();
+        VBox levelBox = LayoutItem.createLevelBox(currentLevel);
+        VBox bottom = LayoutItem.createBottomBox();
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
@@ -268,34 +267,7 @@ public class Main extends Application {
         return toReturn;
     }
 
-    private VBox createMainPane(TextField nameInput, Button submitButton) {
-        VBox mainPane = new VBox(nameInput, submitButton);
-        mainPane.setPrefSize(1287/1.5,797/1.5);
-        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
-        mainPane.setBackground(background);
-        mainPane.setAlignment(Pos.CENTER);
-        mainPane.requestFocus();
-        return mainPane;
-    }
 
-    private Button createSubmitButton() {
-        Button submitButton = new Button("Play!");
-        submitButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return submitButton;
-    }
-
-    private TextField createNameInput() {
-        TextField nameInput = new TextField();
-        nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        nameInput.setMaxSize(220,220);
-        nameInput.setPromptText("Enter your name ");
-        return nameInput;
-    }
 
     private VBox createRightPane() {
         nameLabel.setText(map.getPlayer().getUserName());
@@ -306,62 +278,13 @@ public class Main extends Application {
         inventory.setPrefHeight(500);
         inventory.setPadding(new Insets(10));
 
-        VBox infoBox = createInfoBox();
+        VBox infoBox = LayoutItem.createInfoBox(currentInfo);
         VBox rightPane = new VBox(inventory, infoBox);
         rightPane.setSpacing(20.00);
         return rightPane;
     }
 
-    private VBox createInfoBox(){
 
-        currentInfo.setWrapText(true);
-        currentInfo.setPrefWidth(300);
-
-//        Image infoImage = new Image(String.valueOf(ClassLoader.getSystemResource("info.png")));
-//        Label infoTitle = new Label();
-//        infoTitle.setGraphic(new ImageView(infoImage));
-
-        VBox infoBox = new VBox(currentInfo);
-        infoBox.setStyle("-fx-padding: 10px;");
-        infoBox.setPrefHeight(600);
-        infoBox.setPrefWidth(300);
-
-        infoBox.setSpacing(10);
-        return infoBox;
-    }
-
-    private VBox createBottomBox() {
-        Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
-                "Press 'A' to change active pokemon and 'H' to heal it\n" +
-                "Press 'F' to fight and 'T' to catch pokemon\n" +
-                "Pick things up by 'E'\n" +
-                "Engage Rocket Grunt by 'R'\n");
-        movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
-        movementInfo.setTextAlignment(TextAlignment.CENTER);
-        movementInfo.setLineSpacing(1.5);
-
-        VBox bottom = new VBox(movementInfo);
-        bottom.setAlignment(Pos.CENTER);
-        return bottom;
-    }
-
-    private VBox createLevelBox() {
-        VBox levelBox = new VBox(currentLevel);
-        levelBox.setAlignment(Pos.CENTER);
-        levelBox.setPadding(new Insets(5));
-        levelBox.setMaxHeight(10);
-        return levelBox;
-    }
-
-    private void setLabels() {
-        currentLevel.setText(map.getLevel());
-        currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
-        nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
-        currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-        currentInfo.setWrapText(true);
-        inv.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
-//        inv.setWrapText(true);
-    }
 
     protected void gameEndWindow(EndCondition endCondition) {
         Stage endPopup = new Stage();
