@@ -26,7 +26,7 @@ public class Layout {
             this.pokemonAndItemList.addAll(List.of("C", "S", "B", "B", "k", "L", "L", "@", "d"));
         } else if (level == 2){
             this.filename = "./src/main/resources/map2.txt";
-            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d", "@"));
+            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d"));
         }
     }
 

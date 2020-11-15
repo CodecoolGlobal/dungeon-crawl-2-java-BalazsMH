@@ -15,22 +15,19 @@ public class MapChanger {
     }
 
     public GameMap changeMap(GameMap currentMap) {
+        Player toKeep = currentMap.getPlayer();
+
         level = (level == 1) ? 2 : 1;
+        toKeep.setLevel(level);
         GameMap temp = storedLevel;
         this.storedLevel = currentMap;
         this.activeLevel = temp;
-        String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
-
-        Player player = activeLevel.getPlayer();
         Cell doorCell = activeLevel.getDoor().getCell();
-        player.getCell().setActor(null);
-        player.setCell(doorCell);
-        if (Arrays.asList(developers).contains(storedLevel.getPlayer().getUserName())) {
-            player.setSuperUser(true);
-        }
-        doorCell.setActor(player);
+        toKeep.setCell(doorCell);
+        doorCell.setActor(toKeep);
         activeLevel.getDoor().setOpen();
+        activeLevel.setPlayer(toKeep);
 
         return activeLevel;
     }

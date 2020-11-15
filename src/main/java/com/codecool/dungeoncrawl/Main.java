@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.*;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -116,42 +117,39 @@ public class Main extends Application {
     private void onKeyPressed(KeyEvent keyEvent) {
         text.setLength(0);
         Inventory inventory = map.getPlayer().getInventory();
+        Player player = map.getPlayer();
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
-                map.getPlayer().setFacing("up");
-                map.getPlayer().move(0, -1);
+                player.move(0, -1, "up");
                 break;
             case DOWN:
-                map.getPlayer().setFacing("down");
-                map.getPlayer().move(0, 1);
+                player.move(0, 1, "down");
                 break;
             case LEFT:
-                map.getPlayer().setFacing("left");
-                map.getPlayer().move(-1, 0);
+                player.move(-1, 0, "left");
                 break;
             case RIGHT:
-                map.getPlayer().setFacing("right");
-                map.getPlayer().move(1,0);
+                player.move(1,0, "right");
                 break;
             case R:
                 map.getRocketGrunt().releasePokemon(map);
                 break;
             case T:
-                map.getPlayer().throwPokeBall(text, getPokemonInRange(), map);
+                player.throwPokeBall(text, map.getPokemonInRange(currentInfo), map);
                 checkIfGameEnds(inventory);
                 break;
             case E:
-                if (map.getPlayer().getCell().getItem() instanceof Key){
-                    inventory.addKey(map.getPlayer().getCell());
-                    map.getPlayer().getCell().setItem(null);
+                if (player.whatAmIStandingOn() instanceof Key){
+                    inventory.addKey(player.getCell());
+                    player.getCell().setItem(null);
                 } else {
-                    map.getPlayer().pickupItem(text);
+                    player.pickupItem(text);
                 }
                 break;
             case O:
-                if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
-                    map.getPlayer().getCell().getDoor().setOpen();
+                if (player.hasKey() && player.standingOnDoor()){
+                    player.openDoor();
                     map = mapChanger.changeMap(map);
                 }
                 break;
@@ -159,7 +157,7 @@ public class Main extends Application {
                 inventory.changeActivePokemon();
                 break;
             case F:
-                map.getPlayer().fightPokemon(text, getPokemonInRange(), map);
+                player.fightPokemon(text, map.getPokemonInRange(currentInfo), map);
                 checkIfGameEnds(inventory);
                 break;
             case H:
@@ -172,8 +170,8 @@ public class Main extends Application {
     private void refresh(Inventory inventory) {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        moveAllPokemon();
-        refreshInfoWindow();
+        map.moveAllPokemon(mapChanger, mapWallsLevel1,  mapWallsLevel2);
+        LayoutItem.refreshInfoWindow(text, currentInfo, map);
         refreshLevelAndInventory(inventory);
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
@@ -198,19 +196,6 @@ public class Main extends Application {
         }
     }
 
-    private void moveAllPokemon() {
-        int level = mapChanger.getLevel();
-        List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
-        List<Pokemon> pokemonList= map.getPokemonList();
-        List playerCoordinates = map.returnPlayerCoordinates();
-        for (Pokemon pokemon : pokemonList) {
-            if (map.getRocketGrunt() != null && map.getRocketGrunt().getRocketPokemonOnBoard().contains(pokemon)) pokemon.move();
-            else {
-                pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
-            }
-        }
-    }
-
     public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
             LayoutItem.gameEndWindow(EndCondition.LOSE, pStage);
@@ -224,33 +209,4 @@ public class Main extends Application {
         currentLevel.setText(map.getLevel());
     }
 
-    private void refreshInfoWindow() {
-        Cell standingOn = map.getPlayer().getCell();
-        if (standingOn.getDoor() != null){
-            text.append("\nOpen door by 'O'\n");
-        } else if (standingOn.getItem() != null){
-            text.append(String.format("\nPick up %s by 'E'!\n", standingOn.getItem().getTileName()));
-        }
-        if (getPokemonInRange().isPresent()) {
-            text.append("\n\nPokemon in range:\n");
-            getPokemonInRange().get().forEach(p -> text.append("\n" + p.toString()));
-        }
-        currentInfo.setText(text.toString());
-    }
-
-    private Optional<List<Pokemon>> getPokemonInRange() {
-        Optional<List<Pokemon>> toReturn = Optional.empty();
-        List<Pokemon> pokemonInRange = new ArrayList<Pokemon>();
-        int playerX = map.getPlayer().getCell().getX();
-        int playerY = map.getPlayer().getCell().getY();
-        List<Pokemon> pokemonList= map.getPokemonList();
-        pokemonList.forEach(p -> {
-            if (Math.abs(p.getCell().getX() - playerX) + Math.abs(p.getCell().getY() - playerY) <= 3){
-                pokemonInRange.add(p);
-                currentInfo.setText(p.toString());
-            }
-        });
-        if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
-        return toReturn;
-    }
 }

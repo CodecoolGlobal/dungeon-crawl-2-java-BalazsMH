@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.logic.ui;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
@@ -145,5 +146,19 @@ public class LayoutItem {
         endPopup.setScene(endScene);
         endContent.setBackground(background);
         endPopup.show();
+    }
+
+    public static void refreshInfoWindow(StringBuilder text, Label currentInfo, GameMap map) {
+        Cell standingOn = map.getPlayer().getCell();
+        if (standingOn.getDoor() != null){
+            text.append("\nOpen door by 'O'\n");
+        } else if (standingOn.getItem() != null){
+            text.append(String.format("\nPick up %s by 'E'!\n", standingOn.getItem().getTileName()));
+        }
+        if (map.getPokemonInRange(currentInfo).isPresent()) {
+            text.append("\n\nPokemon in range:\n");
+            map.getPokemonInRange(currentInfo).get().forEach(p -> text.append("\n" + p.toString()));
+        }
+        currentInfo.setText(text.toString());
     }
 }
