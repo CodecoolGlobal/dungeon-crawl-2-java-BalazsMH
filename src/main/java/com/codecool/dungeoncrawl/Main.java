@@ -6,6 +6,8 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.MapGenerator;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,6 +27,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +44,7 @@ public class Main extends Application {
     GameMap map2 = MapLoader.loadMap("Level2");
     List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
 
+    Timeline enemyMove;
 
     MapChanger mapChanger = new MapChanger(map, map2);
 
@@ -76,6 +80,7 @@ public class Main extends Application {
 
         primaryStage.setScene(mainMenu);
         refresh();
+        addEnemyMoveHandler();
         primaryStage.show();
     }
 
@@ -186,7 +191,6 @@ public class Main extends Application {
         //context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        moveAllPokemon();
         refreshInfoWindow();
         refreshLevelAndInventory();
         for (int x = 0; x < map.getWidth(); x++) {
@@ -223,6 +227,15 @@ public class Main extends Application {
                 pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
             }
         }
+    }
+
+    private void addEnemyMoveHandler() {
+        enemyMove = new Timeline(
+                new KeyFrame(Duration.seconds(1), (event) -> {
+                    moveAllPokemon();
+                    refresh(); }));
+        enemyMove.setCycleCount(Timeline.INDEFINITE);
+        enemyMove.play();
     }
 
     public void checkIfGameEnds(){
