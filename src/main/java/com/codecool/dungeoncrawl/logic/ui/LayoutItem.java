@@ -1,8 +1,11 @@
 package com.codecool.dungeoncrawl.logic.ui;
 
+import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.items.Inventory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class LayoutItem {
 
@@ -87,5 +92,58 @@ public class LayoutItem {
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
         currentInfo.setWrapText(true);
         inv.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
+    }
+
+    public static VBox createRightPane(Inventory inventory, GameMap map, Label nameLabel, Label inv, Label currentInfo) {
+        nameLabel.setText(map.getPlayer().getUserName());
+        inv.setText(inventory.toString());
+        inv.setWrapText(true);
+        VBox inventoryBox = new VBox(nameLabel, inv);
+        inventoryBox.setPrefWidth(300);
+        inventoryBox.setPrefHeight(500);
+        inventoryBox.setPadding(new Insets(10));
+
+        VBox infoBox = LayoutItem.createInfoBox(currentInfo);
+        VBox rightPane = new VBox(inventoryBox, infoBox);
+        rightPane.setSpacing(20.00);
+        return rightPane;
+    }
+
+    public static void gameEndWindow(EndCondition endCondition, Stage pStage) {
+        Stage endPopup = new Stage();
+        endPopup.initModality(Modality.WINDOW_MODAL);
+        endPopup.initOwner(pStage);
+        VBox endContent = new VBox();
+        Scene endScene = new Scene(endContent);
+        Text winText = new Text("Congratulations! You won!");
+        Text loseText = new Text("You lost. Try again!");
+        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
+        Button closeWindow = new Button("Quit game");
+        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
+        endContent.setAlignment(Pos.CENTER);
+
+        closeWindow.setOnAction((event)-> {
+            try {
+                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        endContent.getChildren().addAll(displayedText, closeWindow);
+        endContent.setPrefSize(800.0/2,761.0/2);
+        Background background = new Background(new BackgroundImage(
+                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+
+        endPopup.setScene(endScene);
+        endContent.setBackground(background);
+        endPopup.show();
     }
 }

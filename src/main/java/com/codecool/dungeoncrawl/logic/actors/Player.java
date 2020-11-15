@@ -16,10 +16,11 @@ public class Player extends Actor {
     private String facing = "down";
     private String userName = "";
     private boolean superUser = false;
+    private Inventory inventory;
 
     public Player(Cell cell) {
         super(cell);
-
+        this.inventory = new Inventory();
     }
 
     public void setFacing(String facing) {
@@ -60,7 +61,7 @@ public class Player extends Actor {
 
     }
 
-    public void pickupItem(Inventory inventory, StringBuilder text) {
+    public void pickupItem(StringBuilder text) {
         if (cell.getItem() instanceof LootBox) {
             LootBox lootbox = (LootBox) cell.getItem();
             int pickedUpPotions = lootbox.getPotionNumber();
@@ -94,7 +95,7 @@ public class Player extends Actor {
 
     }
 
-    public void fightPokemon(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+    public void fightPokemon(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
         if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
         else {
             Optional<Pokemon> aliveInRange = pokemonInRange.get().stream()
@@ -128,7 +129,7 @@ public class Player extends Actor {
         }
     }
 
-    public void throwPokeBall(Inventory inventory, StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+    public void throwPokeBall(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
 
         if (pokemonInRange.isEmpty()){
             text.append("\nNothing to catch here");
@@ -164,4 +165,6 @@ public class Player extends Actor {
             map.getRocketGrunt().releasePokemon(map);
         }
     }
+
+    public Inventory getInventory() {return inventory;}
 }

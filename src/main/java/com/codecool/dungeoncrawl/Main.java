@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+
 public class Main extends Application {
     private static Stage pStage;
     boolean m = MapGenerator.generateMap(1);
@@ -56,10 +57,6 @@ public class Main extends Application {
     StringBuilder text = new StringBuilder();
     String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
-
-    public Inventory inventory = new Inventory();
-
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -74,7 +71,7 @@ public class Main extends Application {
         Scene mainMenu = mainMenu(primaryStage, game);
 
         primaryStage.setScene(mainMenu);
-        refresh();
+        refresh(map.getPlayer().getInventory());
         primaryStage.show();
     }
 
@@ -91,7 +88,7 @@ public class Main extends Application {
     private Scene game() {
         LayoutItem.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
 
-        VBox rightPane = createRightPane();
+        VBox rightPane = LayoutItem.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
         VBox levelBox = LayoutItem.createLevelBox(currentLevel);
         VBox bottom = LayoutItem.createBottomBox();
 
@@ -118,76 +115,66 @@ public class Main extends Application {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         text.setLength(0);
+        Inventory inventory = map.getPlayer().getInventory();
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
                 map.getPlayer().setFacing("up");
                 map.getPlayer().move(0, -1);
-                refresh();
                 break;
             case DOWN:
                 map.getPlayer().setFacing("down");
                 map.getPlayer().move(0, 1);
-                refresh();
                 break;
             case LEFT:
                 map.getPlayer().setFacing("left");
                 map.getPlayer().move(-1, 0);
-                refresh();
                 break;
             case RIGHT:
                 map.getPlayer().setFacing("right");
                 map.getPlayer().move(1,0);
-                refresh();
                 break;
             case R:
                 map.getRocketGrunt().releasePokemon(map);
-                refresh();
                 break;
             case T:
-                map.getPlayer().throwPokeBall(inventory, text, getPokemonInRange(), map);
-                refresh();
-                checkIfGameEnds();
+                map.getPlayer().throwPokeBall(text, getPokemonInRange(), map);
+                checkIfGameEnds(inventory);
                 break;
             case E:
                 if (map.getPlayer().getCell().getItem() instanceof Key){
                     inventory.addKey(map.getPlayer().getCell());
                     map.getPlayer().getCell().setItem(null);
                 } else {
-                    map.getPlayer().pickupItem(inventory, text);
+                    map.getPlayer().pickupItem(text);
                 }
-                refresh();
                 break;
             case O:
                 if (inventory.hasKey() && map.getPlayer().getCell().getType() == CellType.DOOR){
                     map.getPlayer().getCell().getDoor().setOpen();
                     map = mapChanger.changeMap(map);
-                    refresh();
                 }
                 break;
             case A:
                 inventory.changeActivePokemon();
-                refresh();
                 break;
             case F:
-                map.getPlayer().fightPokemon(inventory, text, getPokemonInRange(), map);
-                refresh();
-                checkIfGameEnds();
+                map.getPlayer().fightPokemon(text, getPokemonInRange(), map);
+                checkIfGameEnds(inventory);
                 break;
             case H:
                 inventory.heal();
-                refresh();
                 break;
         }
+        refresh(inventory);
     }
 
-    private void refresh() {
-        //context.setFill(new ImagePattern(Tiles.getFloorTile(), 0, 0, 960, 960, false));
+    private void refresh(Inventory inventory) {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         moveAllPokemon();
         refreshInfoWindow();
-        refreshLevelAndInventory();
+        refreshLevelAndInventory(inventory);
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -224,15 +211,15 @@ public class Main extends Application {
         }
     }
 
-    public void checkIfGameEnds(){
+    public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
-            gameEndWindow(EndCondition.LOSE);
+            LayoutItem.gameEndWindow(EndCondition.LOSE, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            gameEndWindow(EndCondition.WIN);
+            LayoutItem.gameEndWindow(EndCondition.WIN, pStage);
         }
     }
 
-    private void refreshLevelAndInventory() {
+    private void refreshLevelAndInventory(Inventory inventory) {
         inv.setText(inventory.toString());
         currentLevel.setText(map.getLevel());
     }
@@ -265,62 +252,5 @@ public class Main extends Application {
         });
         if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
         return toReturn;
-    }
-
-
-
-    private VBox createRightPane() {
-        nameLabel.setText(map.getPlayer().getUserName());
-        inv.setText(inventory.toString());
-        inv.setWrapText(true);
-        VBox inventory = new VBox(nameLabel, inv);
-        inventory.setPrefWidth(300);
-        inventory.setPrefHeight(500);
-        inventory.setPadding(new Insets(10));
-
-        VBox infoBox = LayoutItem.createInfoBox(currentInfo);
-        VBox rightPane = new VBox(inventory, infoBox);
-        rightPane.setSpacing(20.00);
-        return rightPane;
-    }
-
-
-
-    protected void gameEndWindow(EndCondition endCondition) {
-        Stage endPopup = new Stage();
-        endPopup.initModality(Modality.WINDOW_MODAL);
-        endPopup.initOwner(pStage);
-        VBox endContent = new VBox();
-        Scene endScene = new Scene(endContent);
-        Text winText = new Text("Congratulations! You won!");
-        Text loseText = new Text("You lost. Try again!");
-        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
-        Button closeWindow = new Button("Quit game");
-        closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
-        endContent.setAlignment(Pos.CENTER);
-
-        closeWindow.setOnAction((event)-> {
-            try {
-                System.exit(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        endContent.getChildren().addAll(displayedText, closeWindow);
-        endContent.setPrefSize(800.0/2,761.0/2);
-        Background background = new Background(new BackgroundImage(
-                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
-
-        endPopup.setScene(endScene);
-        endContent.setBackground(background);
-        endPopup.show();
     }
 }
