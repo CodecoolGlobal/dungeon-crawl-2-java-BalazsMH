@@ -64,12 +64,28 @@ public class Tiles {
     }
 
 
+    public static void drawTile(GraphicsContext context, Drawable d, int targetX, int targetY, int renderedX, int renderedY) {
+        Tile tile = tileMap.get(d.getTileName());
+        int deltaX = targetX-renderedX == 0? 0 : (targetX-renderedX) / Math.abs(targetX-renderedX);
+        int deltaY = targetY-renderedY == 0? 0 : (targetY-renderedY) / Math.abs(targetY-renderedY);
+
+        if (d instanceof Player) {
+            //decrease difference between rendered and target
+            context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
+                    (renderedX+deltaX),
+                    (renderedY+deltaY),
+                    DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
+            ((Player) d).setRenderedPositionX(renderedX*DEFAULT_TILE_WIDTH+deltaX);
+            ((Player) d).setRenderedPositionY(renderedY*DEFAULT_TILE_WIDTH+deltaY);
+
+        }
+    }
+
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
         if (d instanceof Player) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
-            //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));
 
         } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur|ivysaur|koffing|dustox|arbok|lootbox")){
             context.drawImage(pokeTileset, tile.x, tile.y, tile.w, tile.h,

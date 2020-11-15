@@ -63,7 +63,7 @@ public class MapLoader {
                             break;
                         case '@':
                             cell.setType(CellType.FLOOR);
-                            map.setPlayer(new Player(cell));
+                            map.setPlayer(new Player(cell, x, y));
                             break;
                         case 'L':
                             cell.setType(CellType.FLOOR);

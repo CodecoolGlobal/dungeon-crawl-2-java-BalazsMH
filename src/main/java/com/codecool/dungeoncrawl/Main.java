@@ -7,11 +7,13 @@ import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.map.MapChanger;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -169,6 +171,25 @@ public class Main extends Application {
                 break;
         }
         refresh(inventory);
+        refreshPlayer(inventory);
+
+    }
+
+    private void refreshPlayer(Inventory inventory) {
+        int x = map.getPlayer().getCell().getX();
+        int y = map.getPlayer().getCell().getY();
+        int renderedX = map.getPlayer().getRenderedPositionX();
+        int renderedY = map.getPlayer().getRenderedPositionY();
+        while (map.getPlayer().getRenderedPositionX() != x || map.getPlayer().getRenderedPositionY() != y) {
+            Tiles.drawTile(context, map.getPlayer(), x, y, renderedX, renderedY);
+            Transition pt =  new PauseTransition(Duration.millis(1500));
+            //pt.pause();
+
+            //refresh(inventory);
+
+        }
+
+
     }
 
     private void refresh(Inventory inventory) {
@@ -187,10 +208,9 @@ public class Main extends Application {
                 if(cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
                 }
-                if (cell.getActor() != null) {
+                if(cell.getActor() != null){
                     Tiles.drawTile(context, cell.getActor(), x, y);
                 }
-
                 if(cell.getPokemon() != null){
                     Tiles.drawTile(context, cell.getPokemon(), x, y);
                 }
@@ -208,9 +228,12 @@ public class Main extends Application {
     }
     private void addEnemyMoveHandler() {
         enemyMove = new Timeline(
-                new KeyFrame(Duration.seconds(1), (event) -> {
+                new KeyFrame(Duration.seconds(1.5), (event) -> {
                     map.moveAllPokemon(mapChanger, mapWallsLevel1,  mapWallsLevel2);
-                    refresh(map.getPlayer().getInventory()); }));
+                    refresh(map.getPlayer().getInventory());
+                    refreshPlayer(map.getPlayer().getInventory());
+
+                }));
         enemyMove.setCycleCount(Timeline.INDEFINITE);
         enemyMove.play();
     }

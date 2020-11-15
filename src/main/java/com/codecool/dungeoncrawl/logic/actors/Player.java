@@ -19,12 +19,40 @@ public class Player extends Actor {
     private boolean superUser = false;
     private Inventory inventory;
     private int onLevel;
+
+
     private int movementSpeed = 100;
+    private int renderedPositionX;
+    private int renderedPositionY;
+
+    public int getRenderedPositionX() {
+        return renderedPositionX;
+    }
+
+    public void setRenderedPositionX(int renderedPositionX) {
+        this.renderedPositionX = renderedPositionX;
+    }
+
+    public int getRenderedPositionY() {
+        return renderedPositionY;
+    }
+
+    public void setRenderedPositionY(int renderedPositionY) {
+        this.renderedPositionY = renderedPositionY;
+    }
 
     public Player(Cell cell) {
         super(cell);
         this.inventory = new Inventory();
         this.onLevel = 1;
+    }
+
+    public Player(Cell cell, int renderedPositionX, int renderedPositionY) {
+        super(cell);
+        this.inventory = new Inventory();
+        this.onLevel = 1;
+        this.renderedPositionX = renderedPositionX;
+        this.renderedPositionY = renderedPositionY;
     }
 
     public void setSuperUser(boolean superUser) {
