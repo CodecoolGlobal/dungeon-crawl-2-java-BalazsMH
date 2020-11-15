@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl.logic.items;
+package com.codecool.dungeoncrawl.logic.map;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,7 +26,7 @@ public class Layout {
             this.pokemonAndItemList.addAll(List.of("C", "S", "B", "B", "k", "L", "L", "@", "d"));
         } else if (level == 2){
             this.filename = "./src/main/resources/map2.txt";
-            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d", "@"));
+            this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d"));
         }
     }
 
@@ -43,7 +43,6 @@ public class Layout {
         markEdges();
         markBoardEdges();
         addPokemonAndItems();
-        printToConsole(); // remove when done
         writeTxt();
     }
 
