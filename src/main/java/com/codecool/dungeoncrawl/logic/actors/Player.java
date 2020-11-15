@@ -19,6 +19,7 @@ public class Player extends Actor {
     private boolean superUser = false;
     private Inventory inventory;
     private int onLevel;
+    private int movementSpeed = 100;
 
     public Player(Cell cell) {
         super(cell);
@@ -178,4 +179,6 @@ public class Player extends Actor {
     }
 
     public Inventory getInventory() {return inventory;}
+
+    public int getMovementSpeed() {return this.movementSpeed;}
 }

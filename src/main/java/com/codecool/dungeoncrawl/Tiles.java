@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Drawable;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -65,7 +66,7 @@ public class Tiles {
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        if (d.getTileName().matches("player_left|player_up|player_down|player_right|rocketGrunt")) {
+        if (d instanceof Player) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
             //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));
