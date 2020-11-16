@@ -31,6 +31,7 @@ public class RocketGrunt extends Actor {
         rocketPokemonList.remove(released);
         rocketPokemonOnBoard.add(released);
         released.setCell(map.getCell(c, r));
+        released.setLevel(2);
         map.getCell(c, r).setPokemon(released);
         map.addPokemon(released);
     }

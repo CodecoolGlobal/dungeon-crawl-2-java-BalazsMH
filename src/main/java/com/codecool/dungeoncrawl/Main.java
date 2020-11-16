@@ -1,5 +1,7 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.dao.Converter;
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
@@ -169,6 +171,10 @@ public class Main extends Application {
             case H:
                 inventory.heal();
                 break;
+            case S:
+                // TODO should be Ctrl + S
+                Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
+                converter.run();
         }
         refresh(inventory);
         refreshPlayer(inventory);

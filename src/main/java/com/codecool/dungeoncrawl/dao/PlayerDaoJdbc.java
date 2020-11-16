@@ -16,10 +16,10 @@ public class PlayerDaoJdbc implements PlayerDao {
     @Override
     public void add(PlayerModel player) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO player (player_name, hp, x, y) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO player (player_name, god_mode, x, y) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, player.getPlayerName());
-            statement.setInt(2, player.getHp());
+            statement.setBoolean(2, player.getGodMode());
             statement.setInt(3, player.getX());
             statement.setInt(4, player.getY());
             statement.executeUpdate();

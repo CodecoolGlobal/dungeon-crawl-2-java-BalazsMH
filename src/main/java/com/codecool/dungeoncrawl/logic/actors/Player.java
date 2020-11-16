@@ -209,4 +209,7 @@ public class Player extends Actor {
     public Inventory getInventory() {return inventory;}
 
     public int getMovementSpeed() {return this.movementSpeed;}
+
+    public boolean getGodMode() { return superUser; }
+
 }

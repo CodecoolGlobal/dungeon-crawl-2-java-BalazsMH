@@ -71,15 +71,15 @@ public class MapLoader {
                             break;
                         case 'C':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Charizard(cell, "Charizard"));
+                            map.addPokemon(new Charizard(cell, "Charizard", gameLevel));
                             break;
                         case 'S':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Slowpoke(cell, "Slowpoke"));
+                            map.addPokemon(new Slowpoke(cell, "Slowpoke", gameLevel));
                             break;
                         case 'B':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur"));
+                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur", gameLevel));
                             break;
                         case 'R':
                             cell.setType(CellType.FLOOR);
