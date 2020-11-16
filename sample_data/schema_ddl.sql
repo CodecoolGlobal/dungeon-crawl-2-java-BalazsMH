@@ -6,6 +6,19 @@ CREATE TABLE public.game_state (
     player_id integer NOT NULL
 );
 
+DROP TABLE IF EXISTS public.pokemon;
+CREATE TABLE public.pokemon(
+    id serial NOT NULL PRIMARY KEY,
+    player_id integer NOT NULL,
+    pokeHealth integer NOT NULL,
+    pokeDamage integer NOT NULL,
+    pokeName text NOT NULL,
+    x integer,
+    y integer,
+    cellType text
+);
+
+
 DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.player (
     id serial NOT NULL PRIMARY KEY,
@@ -16,4 +29,7 @@ CREATE TABLE public.player (
 );
 
 ALTER TABLE ONLY public.game_state
+    ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);
+
+ALTER TABLE ONLY public.pokemon
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);
