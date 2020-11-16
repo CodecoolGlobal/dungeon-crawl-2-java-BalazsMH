@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Pokemon implements Drawable {
-    private boolean isActive = false;
     private int pokeHealth;
     private int pokeDamage;
     private final String pokeName;
