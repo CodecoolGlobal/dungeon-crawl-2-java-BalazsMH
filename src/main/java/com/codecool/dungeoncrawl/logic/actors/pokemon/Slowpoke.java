@@ -10,7 +10,7 @@ public class Slowpoke extends Pokemon {
     double seeingDistance = 5.0;
 
     public Slowpoke(Cell cell, String name){ super(cell, name); }
-    public Slowpoke(String name){ super(name); }
+    public Slowpoke(Cell cell, String slowpoke, String name){ super(name); }
 
     @Override
     public String getTileName(){return "slowpoke";}
