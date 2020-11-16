@@ -18,7 +18,6 @@ public class PokemonModel extends BaseModel{
         x = pokemon.getX();
         y = pokemon.getY();
         cellType = pokemon.getCell().getType().name();
-        this.setId((int)(Math.random()*1000000));
     }
 
     public int getPokeHealth() {
