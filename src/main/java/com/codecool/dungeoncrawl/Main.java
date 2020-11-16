@@ -89,12 +89,15 @@ public class Main extends Application {
 
         //TODO:remove when testing finished
         Layout2 generationTest = new Layout2(20, 30, 1, MapType.GRASS);
-        String[][] sea = generationTest.createSea("NORTH");
-        for (String[]line : sea) {
+        String[][] sea = generationTest.createSea("EAST");
+//        for (String[]line : sea) {
+//            System.out.println(Arrays.toString(line));
+//        }
+
+        String[][] forest = generationTest.createForest("EAST");
+        for (String[]line : forest) {
             System.out.println(Arrays.toString(line));
         }
-
-
 
 
         return mainMenu;

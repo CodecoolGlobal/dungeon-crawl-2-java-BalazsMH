@@ -103,12 +103,49 @@ public class Layout2 {
             return transposedSea;
         }
         return sea;
-
     }
 
-    private void createTreeBorder(){
+    public String[][] createForest(String placement){
+        int maxWidth = 3;
+        int minWidth = 1;
+        int forestWidth;
+        boolean singleWidth = false;
+        String[][] forest;
+        switch (placement) {
+            case "NORTH":
+            case "SOUTH":
+                forest = new String[this.cols][maxWidth];
+                break;
+            case "EAST":
+            case "WEST":
+            default:
+                forest = new String[this.rows][maxWidth];
+        }
 
+        if (placement.matches("EAST|WEST")) {
+            for (int i=0; i<forest.length; ) {
+                int numberOfSameType = (int) ((Math.random() * (5-1)) + 1);
+                System.out.println(numberOfSameType);
+                for (int t = 0; t<numberOfSameType; t++) {
+                    try {
+                        if (!singleWidth) {
+                            forest[i][0] = "468";
+                            forest[i][1] = "469";
+                            forest[i+1][0] = "476";
+                            forest[i+1][1] = "477";
+                            i = i+2;
+                        } else {
+                            forest[i][0] = "469";
+                            forest[i+1][0] = "485";
+                            i = i+2;
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ignored) {}
+                }
+                singleWidth = !singleWidth;
 
+            }
+        }
+        return forest;
     }
 
 
