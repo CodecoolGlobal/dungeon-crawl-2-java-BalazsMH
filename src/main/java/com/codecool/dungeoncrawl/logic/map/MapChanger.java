@@ -34,4 +34,8 @@ public class MapChanger {
     public int getLevel() {
         return level;
     }
+
+    public GameMap getStored() { return storedLevel; }
+
+    public GameMap getActive() { return activeLevel; }
 }
