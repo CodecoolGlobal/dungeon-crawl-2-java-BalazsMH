@@ -23,8 +23,8 @@ public class Layout2 {
         this.rows = rows;
         this.cols = cols;
         this.mapType = mapType;
-        this.seaSideNumber = (int) ((Math.random() * (2-0)) + 0);
-        this.treeSideNumber = (int) ((Math.random() * (4-this.seaSideNumber-1-0)) + 0);
+        this.seaSideNumber = (int) ((Math.random() * (2)) + 0);
+        this.treeSideNumber = (int) ((Math.random() * (4 - this.seaSideNumber - 1)) + 0);
 
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
@@ -70,11 +70,44 @@ public class Layout2 {
         }
     }
 
-    private void createWaterBorder() {
+    public String[][] createSea(String placement) {
+        int maxWidth = 4;
+        int minWidth = 1;
+        int seaWidth;
+        String[][] sea;
+        switch (placement) {
+            case "NORTH":
+            case "SOUTH":
+                sea = new String[this.cols][maxWidth];
+                break;
+            case "EAST":
+            case "WEST":
+            default:
+                sea = new String[this.rows][maxWidth];
+        }
+        for (int i=0; i<sea.length; i++) {
+            seaWidth = (int) ((Math.random() * (maxWidth-minWidth)) + minWidth);
+            for (int j = 0; j<seaWidth;j++) {
+                sea[i][j] = MapType.getTileCode(MapType.WATER);
+
+            }
+        }
+        //transpose sea if it is on the top or the bottom
+        if (placement.matches("NORTH|SOUTH")) {
+            String[][] transposedSea = new String[maxWidth][this.cols];
+            for (int x = 0; x < maxWidth; x++) {
+                for (int y = 0; y<this.cols; y++) {
+                    transposedSea[x][y] = sea[y][x];
+                }
+            }
+            return transposedSea;
+        }
+        return sea;
 
     }
 
     private void createTreeBorder(){
+
 
     }
 

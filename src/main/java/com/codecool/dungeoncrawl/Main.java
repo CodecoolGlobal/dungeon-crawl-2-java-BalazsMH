@@ -6,13 +6,10 @@ import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.map.MapGenerator;
+import com.codecool.dungeoncrawl.logic.map.*;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import com.codecool.dungeoncrawl.logic.map.GameMap;
-import com.codecool.dungeoncrawl.logic.map.MapChanger;
-import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -88,6 +85,17 @@ public class Main extends Application {
         newGameButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton);
         Scene mainMenu = new Scene(mainPane);
+
+
+        //TODO:remove when testing finished
+        Layout2 generationTest = new Layout2(20, 30, 1, MapType.GRASS);
+        String[][] sea = generationTest.createSea("NORTH");
+        for (String[]line : sea) {
+            System.out.println(Arrays.toString(line));
+        }
+
+
+
 
         return mainMenu;
     }
