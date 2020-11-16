@@ -144,6 +144,47 @@ public class Layout2 {
                 singleWidth = !singleWidth;
 
             }
+        } else {
+            for (int i=0; i<forest.length; ) {
+                TreeType currentType = TreeType.getRandomTreeType();
+                int numberOfSameType = (int) ((Math.random() * (5-2)) + 2);
+                System.out.println(numberOfSameType);
+                for (int t = 0; t<numberOfSameType; t++) {
+                    try {
+                        if (currentType == TreeType.VERTICAL_FULL) {
+                            forest[i][0] = "476";
+                            forest[i][1] = "468";
+                            forest[i][2] = "462";
+                            forest[i+1][0] = "477";
+                            forest[i+1][1] = "469";
+                            forest[i+1][2] = "463";
+                            i = i+2;
+                        } else if (currentType == TreeType.VERTICAL_HALF) {
+                            forest[i][0] = "468";
+                            forest[i][1] = "462";
+                            forest[i+1][0] = "469";
+                            forest[i+1][1] = "463";
+                            i = i+2;
+                        } else if (currentType == TreeType.VERTICAL_TOP_ONLY) {
+                            forest[i][0] = "462";
+                            forest[i+1][0] = "463";
+                            i = i+2;
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ignored) {}
+                }
+
+            }
+
+        }
+        //transpose forest if it is on the top or the bottom
+        if (placement.matches("NORTH|SOUTH")) {
+            String[][] transposedForest = new String[maxWidth][this.cols];
+            for (int x = 0; x < maxWidth; x++) {
+                for (int y = 0; y<this.cols; y++) {
+                    transposedForest[x][y] = forest[y][x];
+                }
+            }
+            return transposedForest;
         }
         return forest;
     }
