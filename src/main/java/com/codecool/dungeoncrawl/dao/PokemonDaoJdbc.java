@@ -15,24 +15,26 @@ public class PokemonDaoJdbc implements PokemonDao{
     }
 
     @Override
-    public void add(PokemonModel pokemon) {
-        // we need to know player's id to save pokemons!!!
+    public void add(PokemonModel pokemon, int playerId) {
+        // I have changed method signature to include playerId - not sure if this is the best solution
         try(Connection conn = dataSource.getConnection()){
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO pokemon (player_id, pokehealth, pokedamage, pokename, x, y, celltype) " +
-                       "values (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, pokemon.getPokeHealth());
-            ps.setInt(2, pokemon.getPokeHealth());
-            ps.setInt(3, pokemon.getPokeDamage());
-            ps.setString(4, pokemon.getPokeName());
-            ps.setInt(5, pokemon.getX());
-            ps.setInt(6, pokemon.getY());
-            ps.setString(7, pokemon.getCellType());
+                    "INSERT INTO pokemon (player_id, game_level, pokehealth, pokedamage, pokename, x, y, celltype) " +
+                       "values (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, playerId);
+            ps.setInt(2, pokemon.getGameLevel());
+            ps.setInt(3, pokemon.getPokeHealth());
+            ps.setInt(4, pokemon.getPokeDamage());
+            ps.setString(5, pokemon.getPokeName());
+            ps.setInt(6, pokemon.getX());
+            ps.setInt(7, pokemon.getY());
+            ps.setString(8, pokemon.getCellType());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             pokemon.setId(rs.getInt(1));
         } catch (SQLException e){
+            System.out.println(e.getMessage());
             throw new RuntimeException("Pokemon could not be saved in database");
         }
 
