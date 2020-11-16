@@ -9,16 +9,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Pokemon implements Drawable {
-    private boolean isActive = false;
     private int pokeHealth;
     private int pokeDamage;
     private final String pokeName;
     protected Cell cell;
+    private int level;
 
-    public Pokemon(Cell cell, String name){
+    public Pokemon(Cell cell, String name, String level){
         this(name);
         this.cell = cell;
         this.cell.setPokemon(this);
+        this.level = level.equals("Level1")? 1 : 2;
     }
 
     public Pokemon(String name){
@@ -54,11 +55,11 @@ public abstract class Pokemon implements Drawable {
     public abstract boolean npcCanSeePlayer(List<List<Integer>> mapWalls, List playerCoordinate, int npcX, int npcY);
 
     public int getX() {
-        return cell.getX();
+        return (cell != null)? cell.getX() : null;
     }
 
     public int getY() {
-        return cell.getY();
+        return (cell != null)? cell.getY() : null;
     }
 
     public int getPokeHealth() { return pokeHealth; }
@@ -386,4 +387,7 @@ public abstract class Pokemon implements Drawable {
                 "Damage = " + pokeDamage +  '\n';
     }
 
+    public int getGameLevel(){ return level; }
+
+    public void setLevel(int level){this.level = level;}
 }

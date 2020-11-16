@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Bulbasaur extends Pokemon{
 
-    public Bulbasaur(Cell cell, String name){
-        super(cell, name);
+    public Bulbasaur(Cell cell, String name, String level){
+        super(cell, name, level);
     }
     public Bulbasaur(String name){ super(name); }
 
