@@ -11,6 +11,7 @@ import java.util.Map;
 public class Tiles {
 
     public static int DEFAULT_TILE_WIDTH = 32;
+    private static int BLOCKPALETTE_TILES_PER_ROW = 8;
 
     private static final Image backgroundTileset = new Image("/emerald_rip.png", 1408 * 2, 1104 * 2, true, false);
     private static final Image charactersTileset = new Image("/playersprites.png", 800*2, 600*2, true, false );
@@ -37,6 +38,17 @@ public class Tiles {
             w = tileWidth;
             h = tileWidth;
         }
+        Tile(String tileCode) {
+            int numberCode = Integer.parseInt(tileCode)-1;
+            int row = numberCode / BLOCKPALETTE_TILES_PER_ROW;
+            int column = numberCode % BLOCKPALETTE_TILES_PER_ROW;
+
+            x = column * (DEFAULT_TILE_WIDTH);
+            y = row * (DEFAULT_TILE_WIDTH);
+            w = DEFAULT_TILE_WIDTH;
+            h = DEFAULT_TILE_WIDTH;
+        }
+
     }
 
     static {
@@ -68,7 +80,6 @@ public class Tiles {
         if (d.getTileName().matches("player_left|player_up|player_down|player_right|rocketGrunt")) {
             context.drawImage(charactersTileset, tile.x, tile.y, tile.w, tile.h,
                     x * DEFAULT_TILE_WIDTH, y * DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH, DEFAULT_TILE_WIDTH);
-            //context.setFill(new ImagePattern(backgroundTileset, 1, 0, 32, 32, true));
 
         } else if (d.getTileName().matches("charizard|slowpoke|bulbasaur|ivysaur|koffing|dustox|arbok|lootbox")){
             context.drawImage(pokeTileset, tile.x, tile.y, tile.w, tile.h,
