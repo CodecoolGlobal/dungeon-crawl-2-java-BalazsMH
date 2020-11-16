@@ -387,4 +387,7 @@ public abstract class Pokemon implements Drawable {
                 "Damage = " + pokeDamage +  '\n';
     }
 
+    public int getGameLevel(){ return level; }
+
+    public void setLevel(int level){this.level = level;}
 }

@@ -10,6 +10,7 @@ public class PokemonModel extends BaseModel{
     private int x;
     private int y;
     private String cellType;
+    private int gameLevel;
 
     public PokemonModel(Pokemon pokemon){
         pokeHealth = pokemon.getPokeHealth();
@@ -18,6 +19,15 @@ public class PokemonModel extends BaseModel{
         x = pokemon.getX();
         y = pokemon.getY();
         cellType = pokemon.getCell().getType().name();
+        gameLevel = pokemon.getGameLevel();
+    }
+
+    public int getGameLevel() {
+        return gameLevel;
+    }
+
+    public void setGameLevel(int gameLevel) {
+        this.gameLevel = gameLevel;
     }
 
     public int getPokeHealth() {

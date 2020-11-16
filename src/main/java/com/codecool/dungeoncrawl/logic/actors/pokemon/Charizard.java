@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Charizard extends Pokemon {
     double seeingDistance = 10.0;
-    public Charizard(Cell cell, String name){ super(cell, name); }
-    public Charizard(Cell cell, String charizard, String name){ super(name); }
+    public Charizard(Cell cell, String name, String level){ super(cell, name, level); }
+    public Charizard(String name){ super(name); }
 
     @Override
     public String getTileName(){return "charizard";}
