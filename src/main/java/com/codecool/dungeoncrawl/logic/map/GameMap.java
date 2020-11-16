@@ -67,6 +67,7 @@ public class GameMap {
         return this.gameLevel;
 
     }
+    public Cell[][] getCells(){return cells;}
 
     public void setRocketGrunt(RocketGrunt rocketGrunt) { this.rocketGrunt = rocketGrunt; }
 

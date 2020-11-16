@@ -178,4 +178,7 @@ public class Player extends Actor {
     }
 
     public Inventory getInventory() {return inventory;}
+
+    public boolean getGodMode() { return superUser; }
+
 }
