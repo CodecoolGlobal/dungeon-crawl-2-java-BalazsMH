@@ -68,19 +68,17 @@ public class WindowElement {
         loadGamePane.setAlignment(Pos.CENTER);
         loadGamePane.requestFocus();
 
+        //Get saves and convert result to ObservableList.
         GameDatabaseManager manager = new GameDatabaseManager();
         try {
             manager.setup();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         List<GameState> saves = manager.getSaves();
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
-        System.out.println(saves.get(0));
-        System.out.println(saves2.get(0));
 
-
+        //Create columns
         TableColumn<GameState, Player> playerColumn = new TableColumn<GameState, Player>("Player");
         playerColumn.setMinWidth(300);
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
@@ -90,13 +88,14 @@ public class WindowElement {
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
 
         TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<GameState, Integer>("Current level");
-        currentMapTableColumn.setMinWidth(100);
+        currentMapTableColumn.setMinWidth(200);
         currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
 
 
         TableView<GameState> table = new TableView<>();
         table.setItems(saves2);
         table.setEditable(false);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
 
