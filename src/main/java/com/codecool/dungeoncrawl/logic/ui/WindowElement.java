@@ -96,10 +96,15 @@ public class WindowElement {
         table.setItems(saves2);
         table.setEditable(false);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
 
         Button loadSelectedButton = new Button("Load selected game");
+        loadSelectedButton.setOnMouseClicked((event)->{
+            GameState selectedSave = table.getSelectionModel().getSelectedItem();
+            System.out.println(selectedSave);
+        });
         loadSelectedButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         loadGamePane.getChildren().addAll(table, loadSelectedButton);
 
