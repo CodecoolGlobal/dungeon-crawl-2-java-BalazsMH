@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.map;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -18,7 +19,8 @@ public class Layout2 {
     private final MapType mapType;
     private final int seaSideNumber;
     private final int treeSideNumber;
-    private final List<MapSide> unpopulatedSides;
+    private final ArrayList<MapSide> unpopulatedSides = new ArrayList<MapSide>(Arrays.asList
+                                                        (MapSide.NORTH, MapSide.SOUTH, MapSide.EAST, MapSide.WEST));
     private final int sideNumber = 4;
 
 
@@ -28,7 +30,6 @@ public class Layout2 {
         this.mapType = mapType;
         this.seaSideNumber = (int) ((Math.random() * (2)) + 0);
         this.treeSideNumber = (int) ((Math.random() * (4 - this.seaSideNumber - 1)) + 0);
-        this.unpopulatedSides = List.of(MapSide.values());
 
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
@@ -65,7 +66,7 @@ public class Layout2 {
         return treeSideNumber;
     }
 
-    private void createEmptyBase(){
+    public void createEmptyBase(){
         this.layout = new String[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -74,12 +75,41 @@ public class Layout2 {
         }
     }
 
-    private void placeSeaOnBase(){
+    public void placeSeaOnBase(){
         Stream<MapSide> sides = this.unpopulatedSides.stream();
         Iterator<MapSide> iterator = sides.iterator();
         for (int s = 0; s <this.sideNumber; s++) {
             MapSide side = iterator.next();
             for (int i = 0; i<this.seaSideNumber; i++) {
+                String[][] sea = this.createSea(side);
+                switch (side){
+                    case NORTH:
+                        for (int sc = 0; sc<sea.length; sc++) {
+                            for(int sr = 0; sr<sea[0].length; sr++) {
+                                if (sea[sc][sr] != null){
+                                    this.layout[sc][sr] = sea[sc][sr];
+                                }
+                            }
+                        }
+                        break;
+                    case SOUTH:
+                        int sc = 0;
+                        int sr = 0;
+                        for (int lc = this.rows-1; this.rows-sea.length<lc; lc-- ){
+                            for (int lr = 0; lr<this.cols-1; lr++) {
+                                if(sea[lc][lr] != null){
+                                    this.layout[lc][lr] = sea[sc][sr];
+                                }
+                                sr++;
+                            }
+                            sc++;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                s = s + seaSideNumber;
+
 
             }
         }
@@ -213,6 +243,10 @@ public class Layout2 {
         return forest;
     }
 
+
+    public String[][] getLayout() {
+        return layout;
+    }
 
     private void generatePath(){
         int[] startCoord = new int[]{(int) ((Math.random() * (rows/3 - 1)) + 1),(int) ((Math.random() * (cols/3 - 1)) + 1)};

@@ -29,6 +29,7 @@ import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class Main extends Application {
@@ -89,15 +90,21 @@ public class Main extends Application {
 
         //TODO:remove when testing finished
         Layout2 generationTest = new Layout2(20, 30, 1, MapType.GRASS);
-        String[][] sea = generationTest.createSea("EAST");
-//        for (String[]line : sea) {
-//            System.out.println(Arrays.toString(line));
-//        }
-
-        String[][] forest = generationTest.createForest("NORTH");
-        for (String[]line : forest) {
+/*        String[][] sea = generationTest.createSea(MapSide.SOUTH);
+        for (String[]line : sea) {
+            System.out.println(Arrays.toString(line));
+        }*/
+        generationTest.createEmptyBase();
+        generationTest.placeSeaOnBase();
+        String[][]layout = generationTest.getLayout();
+        for (String[] line : layout){
             System.out.println(Arrays.toString(line));
         }
+
+/*        String[][] forest = generationTest.createForest(MapSide.NORTH;
+        for (String[]line : forest) {
+            System.out.println(Arrays.toString(line));
+        }*/
 
 
         return mainMenu;
