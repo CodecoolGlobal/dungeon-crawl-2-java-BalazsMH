@@ -70,6 +70,18 @@ public class Layout2 {
         }
     }
 
+    private void placeSeaOnBase(){
+        //pick a side from the remaining sides and place the sea on the map;
+    }
+
+    private void placeForestOnBase(){
+        //pick a side from the remaining sides and place the forest on the map;
+        //Layout has to be initialized with a list, with the available sides, which will decrease as the elements
+        //are placed
+    }
+
+
+
     public String[][] createSea(String placement) {
         int maxWidth = 4;
         int minWidth = 1;
@@ -135,8 +147,8 @@ public class Layout2 {
                             forest[i+1][1] = "477";
                             i = i+2;
                         } else {
-                            forest[i][0] = "469";
-                            forest[i+1][0] = "485";
+                            forest[i][0] = placement.equals("EAST") ? "469" : "468";
+                            forest[i+1][0] = placement.equals("EAST") ? "485" : "484";
                             i = i+2;
                         }
                     } catch (ArrayIndexOutOfBoundsException ignored) {}
