@@ -78,10 +78,8 @@ public class WindowElement {
         List<GameState> saves = manager.getSaves();
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
         System.out.println(saves.get(0));
+        System.out.println(saves2.get(0));
 
-        TableColumn<GameState, Integer> idColumn = new TableColumn<GameState, Integer>("ID");
-        idColumn.setMinWidth(100);
-        idColumn.setText("1");
 
         TableColumn<GameState, Player> playerColumn = new TableColumn<GameState, Player>("Player");
         playerColumn.setMinWidth(300);
@@ -98,8 +96,12 @@ public class WindowElement {
 
         TableView<GameState> table = new TableView<>();
         table.setItems(saves2);
-        table.getColumns().addAll(idColumn, playerColumn, dateTableColumn, currentMapTableColumn);
+        table.setEditable(false);
+
+        table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
+
         loadGamePane.getChildren().addAll(table);
+
 
 
         return new Scene(loadGamePane);

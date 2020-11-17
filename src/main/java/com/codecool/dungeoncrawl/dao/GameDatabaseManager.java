@@ -36,7 +36,9 @@ public class GameDatabaseManager {
     }
 
     public List<GameState> getSaves(){
-        return gameStateDao.getAll();
+        List<GameState> saves = gameStateDao.getAll();
+
+        return saves;
     }
 
 

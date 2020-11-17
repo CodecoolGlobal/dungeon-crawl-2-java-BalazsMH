@@ -36,7 +36,7 @@ public class GameStateDaoJdbc implements GameStateDao {
         List<GameState> output = new ArrayList<GameState>();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT gs.*, p.* FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
+            String query = "SELECT gs.*, p.player_name, p.x, p.y FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
             ResultSet rs = conn.createStatement().executeQuery(query);
             while (rs.next()) {
                 GameState row = new GameState(rs.getString("current_map"),
@@ -45,7 +45,6 @@ public class GameStateDaoJdbc implements GameStateDao {
                                                             rs.getInt("x"),
                                                             rs.getInt("y")));
                 output.add(row);
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
