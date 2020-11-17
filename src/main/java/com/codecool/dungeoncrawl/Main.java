@@ -94,7 +94,7 @@ public class Main extends Application {
 //            System.out.println(Arrays.toString(line));
 //        }
 
-        String[][] forest = generationTest.createForest("EAST");
+        String[][] forest = generationTest.createForest("NORTH");
         for (String[]line : forest) {
             System.out.println(Arrays.toString(line));
         }

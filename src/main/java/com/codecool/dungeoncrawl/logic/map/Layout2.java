@@ -159,27 +159,27 @@ public class Layout2 {
         } else {
             for (int i=0; i<forest.length; ) {
                 TreeType currentType = TreeType.getRandomTreeType();
-                int numberOfSameType = (int) ((Math.random() * (5-2)) + 2);
+                int numberOfSameType = (int) ((Math.random() * (4-2)) + 2);
                 System.out.println(numberOfSameType);
                 for (int t = 0; t<numberOfSameType; t++) {
                     try {
                         if (currentType == TreeType.VERTICAL_FULL) {
-                            forest[i][0] = "476";
-                            forest[i][1] = "468";
-                            forest[i][2] = "462";
-                            forest[i+1][0] = "477";
-                            forest[i+1][1] = "469";
-                            forest[i+1][2] = "463";
+                            forest[i][0] = placement.equals("SOUTH")? "476" : "476";
+                            forest[i][1] = placement.equals("SOUTH")? "468" : "468";
+                            forest[i][2] = placement.equals("SOUTH")? "462" : "484";
+                            forest[i+1][0] = placement.equals("SOUTH")? "477" : "477";
+                            forest[i+1][1] = placement.equals("SOUTH")? "469" : "469";
+                            forest[i+1][2] = placement.equals("SOUTH")? "463" : "485";
                             i = i+2;
                         } else if (currentType == TreeType.VERTICAL_HALF) {
-                            forest[i][0] = "468";
-                            forest[i][1] = "462";
-                            forest[i+1][0] = "469";
-                            forest[i+1][1] = "463";
+                            forest[i][0] = placement.equals("SOUTH")? "468" : "468";
+                            forest[i][1] = placement.equals("SOUTH")? "462" : "484";
+                            forest[i+1][0] = placement.equals("SOUTH")? "469" : "469";
+                            forest[i+1][1] = placement.equals("SOUTH")? "463" : "485";
                             i = i+2;
                         } else if (currentType == TreeType.VERTICAL_TOP_ONLY) {
-                            forest[i][0] = "462";
-                            forest[i+1][0] = "463";
+                            forest[i][0] = placement.equals("SOUTH")? "462" : "484";
+                            forest[i+1][0] = placement.equals("SOUTH")? "463" : "485";
                             i = i+2;
                         }
                     } catch (ArrayIndexOutOfBoundsException ignored) {}
