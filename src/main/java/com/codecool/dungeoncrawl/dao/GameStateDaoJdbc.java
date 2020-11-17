@@ -9,6 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateDaoJdbc implements GameStateDao {
+    private DataSource dataSource;
+
+    public GameStateDaoJdbc(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+
     @Override
     public void add(GameState state) {
 
@@ -26,6 +33,23 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     @Override
     public List<GameState> getAll() {
-        return null;
+        List<GameState> output = new ArrayList<GameState>();
+
+        try (Connection conn = dataSource.getConnection()) {
+            String query = "SELECT gs.*, p.* FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
+            ResultSet rs = conn.createStatement().executeQuery(query);
+            while (rs.next()) {
+                GameState row = new GameState(rs.getString("gs.current_map"),
+                                              rs.getDate("gs.saved_at"),
+                                              new PlayerModel(rs.getString("p.player_name"),
+                                                            rs.getInt("p.x"),
+                                                            rs.getInt("p.y")));
+                output.add(row);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return output;
     }
 }

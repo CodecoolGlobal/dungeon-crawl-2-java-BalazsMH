@@ -47,6 +47,23 @@ public class WindowElement {
         return loadGameButton;
     }
 
+    public static Scene createLoadGameMenu(){
+
+        VBox loadGamePane = new VBox();
+        loadGamePane.setPrefSize(1287/1.5,797/1.5);
+        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
+                BackgroundSize.AUTO,
+                false, false, true, true)));
+        loadGamePane.setBackground(background);
+        loadGamePane.setAlignment(Pos.CENTER);
+        loadGamePane.requestFocus();
+        return new Scene(loadGamePane);
+
+    }
+
     public static TextField createNameInput() {
         TextField nameInput = new TextField();
         nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
