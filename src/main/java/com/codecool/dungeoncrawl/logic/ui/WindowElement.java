@@ -1,9 +1,11 @@
 package com.codecool.dungeoncrawl.logic.ui;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.model.GameState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,6 +19,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class WindowElement {
 
@@ -48,7 +53,6 @@ public class WindowElement {
     }
 
     public static Scene createLoadGameMenu(){
-
         VBox loadGamePane = new VBox();
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
@@ -60,6 +64,17 @@ public class WindowElement {
         loadGamePane.setBackground(background);
         loadGamePane.setAlignment(Pos.CENTER);
         loadGamePane.requestFocus();
+
+        GameDatabaseManager manager = new GameDatabaseManager();
+        try {
+            manager.setup();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        List<GameState> saves = manager.getSaves();
+        System.out.println(saves.get(0).getSavedAt());
+
+
         return new Scene(loadGamePane);
 
     }

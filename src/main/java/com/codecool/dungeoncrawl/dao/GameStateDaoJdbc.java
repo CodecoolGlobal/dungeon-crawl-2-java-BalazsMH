@@ -39,11 +39,11 @@ public class GameStateDaoJdbc implements GameStateDao {
             String query = "SELECT gs.*, p.* FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
             ResultSet rs = conn.createStatement().executeQuery(query);
             while (rs.next()) {
-                GameState row = new GameState(rs.getString("gs.current_map"),
-                                              rs.getDate("gs.saved_at"),
-                                              new PlayerModel(rs.getString("p.player_name"),
-                                                            rs.getInt("p.x"),
-                                                            rs.getInt("p.y")));
+                GameState row = new GameState(rs.getString("current_map"),
+                                              rs.getDate("saved_at"),
+                                              new PlayerModel(rs.getString("player_name"),
+                                                            rs.getInt("x"),
+                                                            rs.getInt("y")));
                 output.add(row);
 
             }

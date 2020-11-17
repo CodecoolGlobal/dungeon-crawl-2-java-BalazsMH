@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
+import com.codecool.dungeoncrawl.model.GameState;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,4 +48,5 @@ public class Converter {
 
         }
     }
+
 }
