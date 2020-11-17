@@ -3,15 +3,17 @@ package com.codecool.dungeoncrawl.logic.ui;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -21,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class WindowElement {
@@ -71,13 +74,38 @@ public class WindowElement {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
         List<GameState> saves = manager.getSaves();
-        System.out.println(saves.get(0).getSavedAt());
+        ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
+        System.out.println(saves.get(0));
+
+        TableColumn<GameState, Integer> idColumn = new TableColumn<GameState, Integer>("ID");
+        idColumn.setMinWidth(100);
+        idColumn.setText("1");
+
+        TableColumn<GameState, Player> playerColumn = new TableColumn<GameState, Player>("Player");
+        playerColumn.setMinWidth(300);
+        playerColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
+
+        TableColumn<GameState, Date> dateTableColumn = new TableColumn<GameState, Date>("Saved on");
+        dateTableColumn.setMinWidth(300);
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
+
+        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<GameState, Integer>("Current level");
+        currentMapTableColumn.setMinWidth(100);
+        currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
+
+
+        TableView<GameState> table = new TableView<>();
+        table.setItems(saves2);
+        table.getColumns().addAll(idColumn, playerColumn, dateTableColumn, currentMapTableColumn);
+        loadGamePane.getChildren().addAll(table);
 
 
         return new Scene(loadGamePane);
 
     }
+
 
     public static TextField createNameInput() {
         TextField nameInput = new TextField();
