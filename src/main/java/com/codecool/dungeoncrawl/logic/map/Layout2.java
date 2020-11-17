@@ -3,9 +3,8 @@ package com.codecool.dungeoncrawl.logic.map;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Layout2 {
     private final int rows;
@@ -15,9 +14,13 @@ public class Layout2 {
     List<String> pokemonAndItemList = new ArrayList<String>();
     String[][] layout;
     String filename;
+
     private final MapType mapType;
     private final int seaSideNumber;
     private final int treeSideNumber;
+    private final List<MapSide> unpopulatedSides;
+    private final int sideNumber = 4;
+
 
     public Layout2(int rows, int cols, int level, MapType mapType){
         this.rows = rows;
@@ -25,6 +28,7 @@ public class Layout2 {
         this.mapType = mapType;
         this.seaSideNumber = (int) ((Math.random() * (2)) + 0);
         this.treeSideNumber = (int) ((Math.random() * (4 - this.seaSideNumber - 1)) + 0);
+        this.unpopulatedSides = List.of(MapSide.values());
 
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
@@ -71,6 +75,14 @@ public class Layout2 {
     }
 
     private void placeSeaOnBase(){
+        Stream<MapSide> sides = this.unpopulatedSides.stream();
+        Iterator<MapSide> iterator = sides.iterator();
+        for (int s = 0; s <this.sideNumber; s++) {
+            MapSide side = iterator.next();
+            for (int i = 0; i<this.seaSideNumber; i++) {
+
+            }
+        }
         //pick a side from the remaining sides and place the sea on the map;
     }
 
@@ -82,18 +94,18 @@ public class Layout2 {
 
 
 
-    public String[][] createSea(String placement) {
+    public String[][] createSea(MapSide placement) {
         int maxWidth = 4;
         int minWidth = 1;
         int seaWidth;
         String[][] sea;
         switch (placement) {
-            case "NORTH":
-            case "SOUTH":
+            case NORTH:
+            case SOUTH:
                 sea = new String[this.cols][maxWidth];
                 break;
-            case "EAST":
-            case "WEST":
+            case EAST:
+            case WEST:
             default:
                 sea = new String[this.rows][maxWidth];
         }
@@ -105,7 +117,7 @@ public class Layout2 {
             }
         }
         //transpose sea if it is on the top or the bottom
-        if (placement.matches("NORTH|SOUTH")) {
+        if (placement == MapSide.NORTH || placement == MapSide.SOUTH) {
             String[][] transposedSea = new String[maxWidth][this.cols];
             for (int x = 0; x < maxWidth; x++) {
                 for (int y = 0; y<this.cols; y++) {
@@ -117,24 +129,24 @@ public class Layout2 {
         return sea;
     }
 
-    public String[][] createForest(String placement){
+    public String[][] createForest(MapSide placement){
         int maxWidth = 3;
         int minWidth = 1;
         int forestWidth;
         boolean singleWidth = false;
         String[][] forest;
         switch (placement) {
-            case "NORTH":
-            case "SOUTH":
+            case NORTH:
+            case SOUTH:
                 forest = new String[this.cols][maxWidth];
                 break;
-            case "EAST":
-            case "WEST":
+            case EAST:
+            case WEST:
             default:
                 forest = new String[this.rows][maxWidth];
         }
 
-        if (placement.matches("EAST|WEST")) {
+        if (placement == MapSide.EAST || placement == MapSide.WEST) {
             for (int i=0; i<forest.length; ) {
                 int numberOfSameType = (int) ((Math.random() * (5-1)) + 1);
                 System.out.println(numberOfSameType);
@@ -147,8 +159,8 @@ public class Layout2 {
                             forest[i+1][1] = "477";
                             i = i+2;
                         } else {
-                            forest[i][0] = placement.equals("EAST") ? "469" : "468";
-                            forest[i+1][0] = placement.equals("EAST") ? "485" : "484";
+                            forest[i][0] = placement == MapSide.EAST ? "469" : "468";
+                            forest[i+1][0] = placement == MapSide.EAST ? "485" : "484";
                             i = i+2;
                         }
                     } catch (ArrayIndexOutOfBoundsException ignored) {}
@@ -164,22 +176,22 @@ public class Layout2 {
                 for (int t = 0; t<numberOfSameType; t++) {
                     try {
                         if (currentType == TreeType.VERTICAL_FULL) {
-                            forest[i][0] = placement.equals("SOUTH")? "476" : "476";
-                            forest[i][1] = placement.equals("SOUTH")? "468" : "468";
-                            forest[i][2] = placement.equals("SOUTH")? "462" : "484";
-                            forest[i+1][0] = placement.equals("SOUTH")? "477" : "477";
-                            forest[i+1][1] = placement.equals("SOUTH")? "469" : "469";
-                            forest[i+1][2] = placement.equals("SOUTH")? "463" : "485";
+                            forest[i][0] = placement == MapSide.SOUTH? "476" : "476";
+                            forest[i][1] = placement == MapSide.SOUTH? "468" : "468";
+                            forest[i][2] = placement == MapSide.SOUTH? "462" : "484";
+                            forest[i+1][0] = placement == MapSide.SOUTH? "477" : "477";
+                            forest[i+1][1] = placement == MapSide.SOUTH? "469" : "469";
+                            forest[i+1][2] = placement == MapSide.SOUTH? "463" : "485";
                             i = i+2;
                         } else if (currentType == TreeType.VERTICAL_HALF) {
-                            forest[i][0] = placement.equals("SOUTH")? "468" : "468";
-                            forest[i][1] = placement.equals("SOUTH")? "462" : "484";
-                            forest[i+1][0] = placement.equals("SOUTH")? "469" : "469";
-                            forest[i+1][1] = placement.equals("SOUTH")? "463" : "485";
+                            forest[i][0] = placement == MapSide.SOUTH? "468" : "468";
+                            forest[i][1] = placement == MapSide.SOUTH? "462" : "484";
+                            forest[i+1][0] = placement == MapSide.SOUTH? "469" : "469";
+                            forest[i+1][1] = placement == MapSide.SOUTH? "463" : "485";
                             i = i+2;
                         } else if (currentType == TreeType.VERTICAL_TOP_ONLY) {
-                            forest[i][0] = placement.equals("SOUTH")? "462" : "484";
-                            forest[i+1][0] = placement.equals("SOUTH")? "463" : "485";
+                            forest[i][0] = placement == MapSide.SOUTH? "462" : "484";
+                            forest[i+1][0] = placement == MapSide.SOUTH? "463" : "485";
                             i = i+2;
                         }
                     } catch (ArrayIndexOutOfBoundsException ignored) {}
@@ -189,7 +201,7 @@ public class Layout2 {
 
         }
         //transpose forest if it is on the top or the bottom
-        if (placement.matches("NORTH|SOUTH")) {
+        if (placement == MapSide.NORTH || placement == MapSide.SOUTH) {
             String[][] transposedForest = new String[maxWidth][this.cols];
             for (int x = 0; x < maxWidth; x++) {
                 for (int y = 0; y<this.cols; y++) {
