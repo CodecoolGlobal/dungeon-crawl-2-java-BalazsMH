@@ -99,7 +99,9 @@ public class WindowElement {
 
         table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
 
-        loadGamePane.getChildren().addAll(table);
+        Button loadSelectedButton = new Button("Load selected game");
+        loadSelectedButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        loadGamePane.getChildren().addAll(table, loadSelectedButton);
 
 
 
