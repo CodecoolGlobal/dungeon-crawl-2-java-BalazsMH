@@ -29,7 +29,7 @@ import java.util.List;
 public class WindowElement {
 
     public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton ) {
-        VBox mainPane = new VBox(nameInput, newGameButton, loadGameButton);
+        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -56,7 +56,7 @@ public class WindowElement {
     }
 
     public static Scene createLoadGameMenu(){
-        VBox loadGamePane = new VBox();
+        VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -103,6 +103,9 @@ public class WindowElement {
 
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        navigateBackButton.setOnMouseClicked((event)->{
+            //TODO:go back to main menu. Find a way to render the main menu without the primaryStage and game arguments.
+        });
 
         Button loadSelectedButton = new Button("Load selected game");
         loadSelectedButton.setOnMouseClicked((event)->{

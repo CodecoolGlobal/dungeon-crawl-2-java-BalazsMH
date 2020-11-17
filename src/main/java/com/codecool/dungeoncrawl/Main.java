@@ -83,10 +83,9 @@ public class Main extends Application {
         TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
-        Scene loadGameScene = WindowElement.createLoadGameMenu();
         //TODO: implement functionality for load game button.
         newGameButton.setOnMouseClicked((event)-> this.onSubmitPressed(primaryStage, game, nameInput));
-        loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(loadGameScene, primaryStage));
+        loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton);
         Scene mainMenu = new Scene(mainPane);
 
@@ -121,9 +120,9 @@ public class Main extends Application {
         primaryStage.setScene(gameScene);
     }
 
-    private void onLoadPressed(Scene loadGameScene, Stage primaryStage) {
+    private void onLoadPressed(Stage primaryStage) {
+        Scene loadGameScene = WindowElement.createLoadGameMenu();
         primaryStage.setScene(loadGameScene);
-
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
