@@ -27,7 +27,8 @@ CREATE TABLE public.player (
     player_name text NOT NULL,
     god_mode boolean NOT NULL,
     x integer NOT NULL,
-    y integer NOT NULL
+    y integer NOT NULL,
+    game_level integer NOT NULL
 );
 
 ALTER TABLE ONLY public.game_state
