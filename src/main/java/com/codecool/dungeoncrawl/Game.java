@@ -133,8 +133,21 @@ public class Game {
             case O:
                 if (player.hasKey() && player.standingOnDoor()){
                     player.openDoor();
-                    this.activeMap = this.activeMap == 1 ? 2 : 1;
-                    map = mapChanger.changeMap(map); //TODO: currently it does not place the player correctly
+                    this.activeMap = this.activeMap == 1 ? 2 : 1; // change activeMap
+
+                    //map = mapChanger.changeMap(map); //TODO: currently it does not place the player correctly
+                    GameMap  nextMap = this.activeMap == 1 ? this.map1 : map2; //the new activeMap will be the next map
+                    Player toKeep = map.getPlayer(); //get the player from the original map
+
+                    toKeep.setLevel(this.activeMap);
+
+                    Cell doorCell = nextMap.getDoor().getCell();
+                    toKeep.setCell(doorCell);
+                    doorCell.setActor(toKeep);
+                    nextMap.getDoor().setOpen();
+                    nextMap.setPlayer(toKeep);
+
+
                 }
                 break;
             case A:
