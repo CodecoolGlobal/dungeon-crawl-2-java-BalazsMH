@@ -1,9 +1,11 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PokemonDaoJdbc implements PokemonDao{
@@ -63,6 +65,17 @@ public class PokemonDaoJdbc implements PokemonDao{
 
     @Override
     public List<PokemonModel> getAll() {
-        return null;
+        List<PokemonModel> pokemonList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM pokemon");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                pokemonList.add(new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5),
+                        rs.getString(6), rs.getInt(7), rs.getInt(8), rs.getString(9)));
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return pokemonList;
     }
 }
