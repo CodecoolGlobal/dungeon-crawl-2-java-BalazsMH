@@ -36,12 +36,12 @@ public class Game {
     private final MapChanger mapChanger;
     private final Canvas canvas;
     private final GraphicsContext context;
-    private Label nameLabel = new Label();
-    private Label inv = new Label();
-    private Label currentInfo = new Label();
-    private Label currentLevel = new Label();
+    private final Label nameLabel = new Label();
+    private final Label inv = new Label();
+    private final Label currentInfo = new Label();
+    private final Label currentLevel = new Label();
     private int activeMap = 1;
-    private StringBuilder text = new StringBuilder();
+    private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
 
 
@@ -49,12 +49,11 @@ public class Game {
 
 
     public Game() {
-        boolean m = MapGenerator.generateMap(1);
+        MapGenerator.generateMap(1);
         this.map1 = MapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
-        //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
-        boolean mapReady = MapGenerator.generateMap(2);
+        MapGenerator.generateMap(2);
         this.map2 = MapLoader.loadMap(2);
         this.mapWallsLevel2 = map2.getWalls();
 
@@ -224,9 +223,6 @@ public class Game {
         return this.activeMap == 1 ? this.map1 : this.map2;
     }
 
-    public void setActiveMap(int activeMap) {
-        this.activeMap = activeMap;
-    }
 
     public Player getPlayer() {
         return player;
