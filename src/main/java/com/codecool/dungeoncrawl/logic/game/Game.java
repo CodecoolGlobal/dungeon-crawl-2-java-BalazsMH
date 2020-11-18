@@ -45,7 +45,7 @@ public class Game {
     private int activeMap = 1;
     private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
-
+    private Converter converter;
 
 
 
@@ -67,6 +67,7 @@ public class Game {
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
+        converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
     }
 
     public Game(GameMap map1, GameMap map2) {
@@ -181,8 +182,14 @@ public class Game {
                 break;
             case S:
                 // TODO should be Ctrl + S
-                Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
-                converter.run();
+                if (converter.ifPlayerExists(player)) {
+                    System.out.println("exists");
+                    converter.run("update");
+                }
+                else {
+                    System.out.println("new save");
+                    converter.run("save");
+                }
         }
         refresh(inventory);
     }
