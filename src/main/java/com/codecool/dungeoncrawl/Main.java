@@ -36,21 +36,7 @@ import java.util.List;
 public class Main extends Application {
     private static Stage pStage;
 
-    boolean m = MapGenerator.generateMap(1);
-    GameMap map = MapLoader.loadMap(1);
-    List<List<Integer>> mapWallsLevel1 = MapLoader.getWalls();
-    boolean mapReady = MapGenerator.generateMap(2);
-    GameMap map2 = MapLoader.loadMap(2);
-    List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
-    //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
-
-    MapChanger mapChanger = new MapChanger(map, map2);
-
-    Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
-            map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
-    GraphicsContext context = canvas.getGraphicsContext2D();
 
     Timeline enemyMove;
 
@@ -72,20 +58,34 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
         //TODO:game should only be created when the player selects new game.
-        Scene game = gameScene();
-        Scene mainMenu = mainMenu(primaryStage, game);
+        //Scene game = gameScene();
+        Scene mainMenu = mainMenu(primaryStage);
 
         primaryStage.setScene(mainMenu);
         addEnemyMoveHandler();
-        refresh(map.getPlayer().getInventory());
+        //refresh(map.getPlayer().getInventory()); why does it need to refresh right away?
         primaryStage.show();
     }
 
     private void setupGame(){
+        boolean m = MapGenerator.generateMap(1);
+        GameMap map = MapLoader.loadMap(1);
+        List<List<Integer>> mapWallsLevel1 = MapLoader.getWalls();
+        boolean mapReady = MapGenerator.generateMap(2);
+        GameMap map2 = MapLoader.loadMap(2);
+        List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
+        //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
+
+        MapChanger mapChanger = new MapChanger(map, map2);
+
+        Canvas canvas = new Canvas(
+                map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+        GraphicsContext context = canvas.getGraphicsContext2D();
     }
 
-    private Scene mainMenu(Stage primaryStage, Scene game) {
+    private Scene mainMenu(Stage primaryStage) {
         TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
@@ -117,6 +117,7 @@ public class Main extends Application {
     }
 
     private void onSubmitPressed(Stage primaryStage, Scene gameScene, TextField nameInput) {
+
         String enteredName = nameInput.getText();
         map.getPlayer().setUserName(enteredName);
         if (Arrays.asList(developers).contains(enteredName)) {
