@@ -46,6 +46,7 @@ public class Main extends Application {
     Timeline enemyMove;
 
     MapChanger mapChanger = new MapChanger(map, map2);
+    Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
 
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
@@ -176,8 +177,15 @@ public class Main extends Application {
                 break;
             case S:
                 // TODO should be Ctrl + S
-                Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
-                converter.run();
+//                Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
+                if (converter.ifPlayerExists(player)) {
+                    System.out.println("exists");
+                    converter.run("update");
+                }
+                else {
+                    System.out.println("new save");
+                    converter.run("save");
+                }
         }
         refresh(inventory);
     }

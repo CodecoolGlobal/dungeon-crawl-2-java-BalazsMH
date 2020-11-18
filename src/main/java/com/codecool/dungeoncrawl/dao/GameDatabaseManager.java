@@ -30,6 +30,15 @@ public class GameDatabaseManager {
         playerId = model.getId();
     }
 
+    public void updatePlayer(Player player){
+        PlayerModel model = new PlayerModel(player);
+        playerDao.update(model);
+    }
+
+    public PlayerModel getPlayerByName(Player player){
+        return playerDao.getByName(player.getUserName());
+    }
+
     public void savePokemon(Pokemon pokemon){
         PokemonModel model = new PokemonModel(pokemon);
         pokemonDao.add(model, playerId);
