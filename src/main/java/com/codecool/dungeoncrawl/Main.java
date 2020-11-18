@@ -1,15 +1,8 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.map.MapGenerator;
-
-import com.codecool.dungeoncrawl.logic.map.GameMap;
-import com.codecool.dungeoncrawl.logic.map.MapChanger;
-import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -17,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
-import java.util.List;
 
 
 public class Main extends Application {
@@ -40,7 +32,7 @@ public class Main extends Application {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
-        this.mainMenu = mainMenu(primaryStage);
+        mainMenu = mainMenu(primaryStage);
 
         primaryStage.setScene(mainMenu);
         primaryStage.show();
@@ -64,9 +56,8 @@ public class Main extends Application {
         newGameButton.setOnMouseClicked((event)-> this.onNewGamePressed(primaryStage, nameInput));
         loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton);
-        Scene mainMenu = new Scene(mainPane);
 
-        return mainMenu;
+        return new Scene(mainPane);
     }
 
 
