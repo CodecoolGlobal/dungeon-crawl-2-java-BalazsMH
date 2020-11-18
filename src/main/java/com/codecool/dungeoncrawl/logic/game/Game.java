@@ -67,8 +67,27 @@ public class Game {
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-
     }
+
+    public Game(GameMap map1, GameMap map2) {
+        this.map1 = map1;
+        this.mapWallsLevel1 = map1.getWalls();
+
+        this.map2 = map2;
+        this.mapWallsLevel2 = map2.getWalls();
+
+        this.player = this.map1.getPlayer();
+
+        this.mapChanger = new MapChanger(map1, map2);
+        this.canvas = new Canvas(
+                map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+        this.context = canvas.getGraphicsContext2D();
+        this.addEnemyMoveHandler();
+    }
+
+
+
 
     public Scene showGameScene() {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
