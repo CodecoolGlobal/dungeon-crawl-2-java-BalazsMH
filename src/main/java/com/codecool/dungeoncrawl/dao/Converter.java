@@ -51,6 +51,7 @@ public class Converter {
     }
 
     public void update() {
+        manager.updatePlayer(player);
         pokemonList.forEach(p -> manager.updatePokemon(p));
     }
 
