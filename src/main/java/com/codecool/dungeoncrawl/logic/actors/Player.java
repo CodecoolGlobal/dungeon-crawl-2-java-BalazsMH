@@ -33,6 +33,7 @@ public class Player extends Actor {
     public void setLevel(int level){
         onLevel = level;
     }
+    public int getLevel(){ return onLevel; }
     public void setUserName(String userName) {
         this.userName = userName;
     }

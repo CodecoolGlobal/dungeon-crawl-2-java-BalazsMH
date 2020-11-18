@@ -157,9 +157,8 @@ public class Game {
                     this.activeMap = this.activeMap == 1 ? 2 : 1; // change activeMap
 
                     GameMap  nextMap = this.activeMap == 1 ? this.map1 : map2; //the new activeMap will be the next map
+                    player.setLevel(this.activeMap);
                     Player toKeep = map.getPlayer(); //get the player from the original map
-
-                    toKeep.setLevel(this.activeMap);
 
                     Cell doorCell = nextMap.getDoor().getCell();
                     toKeep.setCell(doorCell);
