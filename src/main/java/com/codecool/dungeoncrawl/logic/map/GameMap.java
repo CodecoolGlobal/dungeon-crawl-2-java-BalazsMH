@@ -98,8 +98,7 @@ public class GameMap {
         return toReturn;
     }
 
-    public void moveAllPokemon(List<List<Integer>> mapWallsLevel1, List<List<Integer>> mapWallsLevel2) {
-        int level = this.getLevel();
+    public void moveAllPokemon() {
         List<List<Integer>> mapWalls =  this.walls;
 
         List playerCoordinates = new ArrayList(List.of(player.getX(), player.getY()));
