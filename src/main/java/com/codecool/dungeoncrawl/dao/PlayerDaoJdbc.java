@@ -39,8 +39,8 @@ public class PlayerDaoJdbc implements PlayerDao {
                     "UPDATE player SET x = ?, y = ?, game_level = ? WHERE player_name = ?");
             ps.setInt(1, player.getX());
             ps.setInt(2, player.getY());
-            ps.setString(3, player.getPlayerName());
-            ps.setInt(4, player.getLevel());
+            ps.setInt(3, player.getLevel());
+            ps.setString(4, player.getPlayerName());
             ps.executeUpdate();
         } catch (SQLException e){
             System.out.println(e.getMessage());

@@ -43,7 +43,8 @@ public class GameStateDaoJdbc implements GameStateDao {
                                               rs.getDate("saved_at"),
                                               new PlayerModel(rs.getString("player_name"),
                                                             rs.getInt("x"),
-                                                            rs.getInt("y")));
+                                                            rs.getInt("y"),
+                                                            rs.getInt("game_level")));
                 output.add(row);
             }
         } catch (SQLException e) {
