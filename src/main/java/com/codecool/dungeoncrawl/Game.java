@@ -206,12 +206,12 @@ public class Game {
         }
     }
     private void addEnemyMoveHandler() {
-        GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
+        //GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
 
         enemyMove = new Timeline(
                 new KeyFrame(Duration.seconds(1), (event) -> {
-                    map.moveAllPokemon();
-                    refresh(map.getPlayer().getInventory()); }));
+                    this.getActiveMap().moveAllPokemon();
+                    refresh(this.getActiveMap().getPlayer().getInventory()); }));
         enemyMove.setCycleCount(Timeline.INDEFINITE);
         enemyMove.play();
     }
@@ -220,8 +220,8 @@ public class Game {
 
 
 
-    public int getActiveMap() {
-        return activeMap;
+    public GameMap getActiveMap() {
+        return this.activeMap == 1 ? this.map1 : this.map2;
     }
 
     public void setActiveMap(int activeMap) {
