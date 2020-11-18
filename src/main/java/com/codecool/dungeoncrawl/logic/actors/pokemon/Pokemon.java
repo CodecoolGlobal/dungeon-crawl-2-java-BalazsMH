@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Pokemon implements Drawable {
+    private static int counter;
+    private int pokeId;
     private int pokeHealth;
     private int pokeDamage;
     private final String pokeName;
@@ -23,6 +25,7 @@ public abstract class Pokemon implements Drawable {
     }
 
     public Pokemon(String name){
+        this.pokeId = counter++;
         this.pokeName = name;
         this.pokeDamage = 2;
         this.pokeHealth = 4;
@@ -72,6 +75,9 @@ public abstract class Pokemon implements Drawable {
 
     public String getPokeName(){ return this.pokeName; }
 
+    public int getPokeId() {
+        return pokeId;
+    }
 
     /***
      * Aim: make sure that info is updated everywhere it needs to be updated

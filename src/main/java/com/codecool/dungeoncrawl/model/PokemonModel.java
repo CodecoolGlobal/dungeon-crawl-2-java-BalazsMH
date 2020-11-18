@@ -14,6 +14,7 @@ public class PokemonModel extends BaseModel{
     private int gameLevel;
 
     public PokemonModel(Pokemon pokemon){
+        pokeId = pokemon.getPokeId();
         pokeHealth = pokemon.getPokeHealth();
         pokeDamage = pokemon.getPokeDamage();
         pokeName = pokemon.getPokeName();
@@ -23,7 +24,8 @@ public class PokemonModel extends BaseModel{
         gameLevel = pokemon.getGameLevel();
     }
 
-    public PokemonModel(int gameLevel, int pokeHealth, int pokeDamage, String pokeName, int x, int y, String cellType){
+    public PokemonModel(int pokeId, int gameLevel, int pokeHealth, int pokeDamage, String pokeName, int x, int y, String cellType){
+        this.pokeId = pokeId;
         this.gameLevel = gameLevel;
         this.pokeHealth = pokeHealth;
         this.pokeDamage = pokeDamage;
@@ -39,6 +41,10 @@ public class PokemonModel extends BaseModel{
 
     public void setGameLevel(int gameLevel) {
         this.gameLevel = gameLevel;
+    }
+
+    public int getPokeId() {
+        return pokeId;
     }
 
     public int getPokeHealth() {
