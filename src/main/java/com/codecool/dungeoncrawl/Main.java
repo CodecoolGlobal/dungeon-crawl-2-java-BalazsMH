@@ -22,7 +22,9 @@ import java.util.List;
 
 public class Main extends Application {
     private static Stage pStage;
-
+    private static Scene gameScene;
+    private static Scene loadGameMenu;
+    private static Scene mainMenu;
 
 
 
@@ -38,7 +40,7 @@ public class Main extends Application {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
-        Scene mainMenu = mainMenu(primaryStage);
+        this.mainMenu = mainMenu(primaryStage);
 
         primaryStage.setScene(mainMenu);
         //refresh(map.getPlayer().getInventory()); why does it need to refresh right away?
@@ -46,7 +48,16 @@ public class Main extends Application {
     }
 
 
-    private Scene mainMenu(Stage primaryStage) {
+    public static Scene getGameScene() {
+        return gameScene;
+    }
+
+    public static Scene getMainMenu() {
+        return mainMenu;
+    }
+
+
+    public Scene mainMenu(Stage primaryStage) {
         TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
@@ -73,7 +84,7 @@ public class Main extends Application {
     }
 
     private void onLoadPressed(Stage primaryStage) {
-        Scene loadGameScene = WindowElement.createLoadGameMenu();
+        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage);
         primaryStage.setScene(loadGameScene);
     }
 
