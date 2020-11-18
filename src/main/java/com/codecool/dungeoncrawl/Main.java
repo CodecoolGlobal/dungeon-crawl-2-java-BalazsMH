@@ -72,7 +72,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
         //TODO:game should only be created when the player selects new game.
-        Scene game = game();
+        Scene game = gameScene();
         Scene mainMenu = mainMenu(primaryStage, game);
 
         primaryStage.setScene(mainMenu);
@@ -98,7 +98,7 @@ public class Main extends Application {
         return mainMenu;
     }
 
-    private Scene game() {
+    private Scene gameScene() {
         WindowElement.setLabels(currentLevel, nameLabel, currentInfo, inv, map);
 
         VBox rightPane = WindowElement.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
