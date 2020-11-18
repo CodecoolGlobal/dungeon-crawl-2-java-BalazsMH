@@ -35,6 +35,19 @@ public class GameDatabaseManager {
         pokemonDao.add(model, playerId);
     }
 
+    public void updatePokemon(Pokemon pokemon){
+        PokemonModel model = new PokemonModel(pokemon);
+        pokemonDao.update(model, playerId);
+    }
+
+    public PokemonModel getPokemon(int id){
+        return pokemonDao.get(id);
+    }
+
+    public List<PokemonModel> getAllPokemon(){
+        return pokemonDao.getAll();
+    }
+
     public List<GameState> getSaves(){
         List<GameState> saves = gameStateDao.getAll();
 
