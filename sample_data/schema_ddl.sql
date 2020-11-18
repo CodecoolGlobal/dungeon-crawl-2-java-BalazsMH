@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS public.pokemon;
 CREATE TABLE public.pokemon(
     id serial NOT NULL PRIMARY KEY,
     player_id integer NOT NULL,
+    pokeid integer NOT NULL,
     game_level integer,
     pokeHealth integer NOT NULL,
     pokeDamage integer NOT NULL,
