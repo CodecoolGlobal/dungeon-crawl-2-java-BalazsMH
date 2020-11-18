@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PokemonDao {
     void add(PokemonModel pokemon, int playerId);
-    void update(PokemonModel pokemon);
+    void update(PokemonModel pokemon, int playerId);
     PokemonModel get(int id);
     List<PokemonModel> getAll();
 }
