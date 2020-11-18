@@ -4,22 +4,35 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 
 
 public class PokemonModel extends BaseModel{
+    private int pokeId;
     private int pokeHealth;
     private int pokeDamage;
     private String pokeName;
-    private int x;
-    private int y;
+    private Integer x;
+    private Integer y;
     private String cellType;
     private int gameLevel;
 
     public PokemonModel(Pokemon pokemon){
+        pokeId = pokemon.getPokeId();
         pokeHealth = pokemon.getPokeHealth();
         pokeDamage = pokemon.getPokeDamage();
         pokeName = pokemon.getPokeName();
         x = pokemon.getX();
         y = pokemon.getY();
-        cellType = pokemon.getCell().getType().name();
+        cellType = (pokemon.getCell() != null)? pokemon.getCell().getType().name(): null;
         gameLevel = pokemon.getGameLevel();
+    }
+
+    public PokemonModel(int pokeId, int gameLevel, int pokeHealth, int pokeDamage, String pokeName, Integer x, Integer y, String cellType){
+        this.pokeId = pokeId;
+        this.gameLevel = gameLevel;
+        this.pokeHealth = pokeHealth;
+        this.pokeDamage = pokeDamage;
+        this.pokeName = pokeName;
+        this.x = x;
+        this.y = y;
+        this.cellType = cellType;
     }
 
     public int getGameLevel() {
@@ -28,6 +41,10 @@ public class PokemonModel extends BaseModel{
 
     public void setGameLevel(int gameLevel) {
         this.gameLevel = gameLevel;
+    }
+
+    public int getPokeId() {
+        return pokeId;
     }
 
     public int getPokeHealth() {
@@ -54,19 +71,17 @@ public class PokemonModel extends BaseModel{
         this.pokeName = pokeName;
     }
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
-    public int getY() {
-        return y;
-    }
+    public Integer getY() { return y; }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         this.y = y;
     }
 

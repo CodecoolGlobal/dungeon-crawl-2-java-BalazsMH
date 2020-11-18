@@ -17,6 +17,7 @@ public class RocketGrunt extends Actor {
         rocketPokemonList.add(new Dustox("Dustox"));
         rocketPokemonList.add(new Koffing("Koffing"));
         rocketPokemonList.add(new Arbok("Arbok"));
+        rocketPokemonList.forEach(p -> p.setLevel(-1));
     }
 
     public void releasePokemon(GameMap map){
@@ -28,6 +29,7 @@ public class RocketGrunt extends Actor {
             if (map.getCell(c, r).getTileName() == CellType.FLOOR.getTileName()) break;
         }
         Pokemon released = rocketPokemonList.get(0);
+        released.setLevel(2);
         rocketPokemonList.remove(released);
         rocketPokemonOnBoard.add(released);
         released.setCell(map.getCell(c, r));
