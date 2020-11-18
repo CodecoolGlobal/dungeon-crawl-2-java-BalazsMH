@@ -87,7 +87,10 @@ public class Game {
         borderPane.setTop(levelBox);
 
         Scene scene = new Scene(borderPane);
-        scene.setOnKeyPressed(this::onKeyPressed); //TODO: Not good. Create new InputHandler class. this is a temporary solution
+        scene.setOnKeyPressed(this::onKeyPressed);
+
+        refresh(map.getPlayer().getInventory());
+
         return scene;
     }
 
@@ -131,7 +134,7 @@ public class Game {
                 if (player.hasKey() && player.standingOnDoor()){
                     player.openDoor();
                     this.activeMap = this.activeMap == 1 ? 2 : 1;
-                    map = mapChanger.changeMap(map); //TODO: currently it does not place the player
+                    map = mapChanger.changeMap(map); //TODO: currently it does not place the player correctly
                 }
                 break;
             case A:

@@ -43,7 +43,6 @@ public class Main extends Application {
         this.mainMenu = mainMenu(primaryStage);
 
         primaryStage.setScene(mainMenu);
-        //refresh(map.getPlayer().getInventory()); why does it need to refresh right away?
         primaryStage.show();
     }
 
@@ -81,6 +80,7 @@ public class Main extends Application {
         }
 
         primaryStage.setScene(game.showGameScene());
+
     }
 
     private void onLoadPressed(Stage primaryStage) {

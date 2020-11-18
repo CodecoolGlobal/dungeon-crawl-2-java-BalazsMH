@@ -2,7 +2,7 @@ package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.Main;//TODO: not good, find different approach
+import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -109,7 +109,7 @@ public class WindowElement {
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         navigateBackButton.setOnMouseClicked((event)->{
             primaryStage.setScene(Main.getMainMenu());
-            //TODO:go back to main menu. Find a way to render the main menu without the primaryStage and game arguments.
+            //TODO:Find a way to get the main menu Scene some other way.
         });
 
         Button loadSelectedButton = new Button("Load selected game");
