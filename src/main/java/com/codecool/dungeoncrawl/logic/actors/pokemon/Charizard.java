@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Charizard extends Pokemon {
     double seeingDistance = 10.0;
-    public Charizard(Cell cell, String name, String level){ super(cell, name, level); }
+    public Charizard(Cell cell, String name, int level){ super(cell, name, level); }
     public Charizard(String name){ super(name); }
 
     @Override

@@ -17,11 +17,11 @@ public abstract class Pokemon implements Drawable {
     protected Cell cell;
     private int level;
 
-    public Pokemon(Cell cell, String name, String level){
+    public Pokemon(Cell cell, String name, int level){
         this(name);
         this.cell = cell;
         this.cell.setPokemon(this);
-        this.level = level.equals("Level1")? 1 : 2;
+        this.level = level == 1 ? 1 : 2;
     }
 
     public Pokemon(String name){

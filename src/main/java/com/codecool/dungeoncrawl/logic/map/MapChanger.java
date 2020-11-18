@@ -13,6 +13,7 @@ public class MapChanger {
         this.storedLevel = map2;
     }
 
+    //TODO: made redundant probably.
     public GameMap changeMap(GameMap currentMap) {
         Player toKeep = currentMap.getPlayer();
 

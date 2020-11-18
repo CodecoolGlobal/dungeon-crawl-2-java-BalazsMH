@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 public class WindowElement {
+
 
     public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton ) {
         VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton);
@@ -55,7 +57,9 @@ public class WindowElement {
         return loadGameButton;
     }
 
-    public static Scene createLoadGameMenu(){
+    public static Scene createLoadGameMenu(Stage primaryStage){
+
+
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
@@ -79,15 +83,15 @@ public class WindowElement {
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
 
         //Create columns
-        TableColumn<GameState, Player> playerColumn = new TableColumn<GameState, Player>("Player");
+        TableColumn<GameState, Player> playerColumn = new TableColumn<>("Player");
         playerColumn.setMinWidth(300);
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
 
-        TableColumn<GameState, Date> dateTableColumn = new TableColumn<GameState, Date>("Saved on");
+        TableColumn<GameState, Date> dateTableColumn = new TableColumn<>("Saved on");
         dateTableColumn.setMinWidth(300);
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
 
-        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<GameState, Integer>("Current level");
+        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<>("Current level");
         currentMapTableColumn.setMinWidth(200);
         currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
 
@@ -104,7 +108,8 @@ public class WindowElement {
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         navigateBackButton.setOnMouseClicked((event)->{
-            //TODO:go back to main menu. Find a way to render the main menu without the primaryStage and game arguments.
+            primaryStage.setScene(Main.getMainMenu());
+            //TODO:Find a way to get the main menu Scene some other way.
         });
 
         Button loadSelectedButton = new Button("Load selected game");
@@ -168,7 +173,7 @@ public class WindowElement {
     }
 
     public static void setLabels(Label currentLevel, Label nameLabel, Label currentInfo, Label inv, GameMap map) {
-        currentLevel.setText(map.getLevel());
+        currentLevel.setText("Level " + map.getLevel());
         currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
@@ -245,6 +250,6 @@ public class WindowElement {
 
     public static void refreshLevelAndInventory(Inventory inventory, Label inv, Label currentLevel, GameMap map) {
         inv.setText(inventory.toString());
-        currentLevel.setText(map.getLevel());
+        currentLevel.setText("Level " + map.getLevel());
     }
 }

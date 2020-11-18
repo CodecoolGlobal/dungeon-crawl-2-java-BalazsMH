@@ -9,7 +9,7 @@ public class Slowpoke extends Pokemon {
     private boolean shouldMove = true;
     double seeingDistance = 5.0;
 
-    public Slowpoke(Cell cell, String name, String level){ super(cell, name, level); }
+    public Slowpoke(Cell cell, String name, int level){ super(cell, name, level); }
     public Slowpoke(String name){ super(name); }
 
     @Override

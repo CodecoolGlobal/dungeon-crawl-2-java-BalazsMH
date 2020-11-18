@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
-    GameMap map = new GameMap(3, 3, CellType.FLOOR, "level1");
+    GameMap map = new GameMap(3, 3, CellType.FLOOR, 1);
 
     @Test
     void getNeighbor() {

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Arbok extends Pokemon {
 
-    public Arbok(Cell cell, String name, String level){ super(cell, name, level); }
+    public Arbok(Cell cell, String name, int level){ super(cell, name, level); }
     public Arbok(String name){ super(name); }
 
     @Override
