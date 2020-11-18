@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.PokemonModel;
-import org.postgresql.core.SqlCommand;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -29,9 +28,15 @@ public class PokemonDaoJdbc implements PokemonDao{
             ps.setInt(4, pokemon.getPokeHealth());
             ps.setInt(5, pokemon.getPokeDamage());
             ps.setString(6, pokemon.getPokeName());
-            ps.setInt(7, pokemon.getX());
-            ps.setInt(8, pokemon.getY());
-            ps.setString(9, pokemon.getCellType());
+            if (pokemon.getX() != null) {
+                ps.setInt(7, pokemon.getX());
+                ps.setInt(8, pokemon.getY());
+                ps.setString(9, pokemon.getCellType());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+                ps.setNull(8, java.sql.Types.INTEGER);
+                ps.setString(9, null);
+            }
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
@@ -52,8 +57,13 @@ public class PokemonDaoJdbc implements PokemonDao{
                             "WHERE player_id = ? AND pokeid = ?");
             ps.setInt(1, pokemon.getPokeHealth());
             ps.setInt(2, pokemon.getPokeDamage());
-            ps.setInt(3, pokemon.getX());
-            ps.setInt(4, pokemon.getY());
+            if (pokemon.getX() != null) {
+                ps.setInt(3, pokemon.getX());
+                ps.setInt(4, pokemon.getY());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
             ps.setInt(5, playerId);
             ps.setInt(6, pokemon.getPokeId());
             ps.executeUpdate();
@@ -71,7 +81,7 @@ public class PokemonDaoJdbc implements PokemonDao{
             ResultSet rs = ps.executeQuery();
             if (! rs.next()) return null;
             PokemonModel pokemonModel = new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6),
-                    rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10));
+                    rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10)); //rs.wasNull()
             return pokemonModel;
         } catch (SQLException e){
             System.out.println(e.getMessage());

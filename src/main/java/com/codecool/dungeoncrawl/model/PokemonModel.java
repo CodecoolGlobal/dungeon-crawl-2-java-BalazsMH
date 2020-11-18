@@ -8,8 +8,8 @@ public class PokemonModel extends BaseModel{
     private int pokeHealth;
     private int pokeDamage;
     private String pokeName;
-    private int x;
-    private int y;
+    private Integer x;
+    private Integer y;
     private String cellType;
     private int gameLevel;
 
@@ -20,7 +20,7 @@ public class PokemonModel extends BaseModel{
         pokeName = pokemon.getPokeName();
         x = pokemon.getX();
         y = pokemon.getY();
-        cellType = pokemon.getCell().getType().name();
+        cellType = (pokemon.getCell() != null)? pokemon.getCell().getType().name(): null;
         gameLevel = pokemon.getGameLevel();
     }
 
@@ -71,19 +71,17 @@ public class PokemonModel extends BaseModel{
         this.pokeName = pokeName;
     }
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
-    public int getY() {
-        return y;
-    }
+    public Integer getY() { return y; }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         this.y = y;
     }
 

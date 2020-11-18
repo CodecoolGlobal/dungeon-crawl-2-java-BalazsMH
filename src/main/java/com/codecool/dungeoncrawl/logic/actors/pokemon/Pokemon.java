@@ -57,11 +57,11 @@ public abstract class Pokemon implements Drawable {
     public abstract void attackMove(List<List<Integer>> mapWalls, List playerCoordinates, int npcX, int npcY);
     public abstract boolean npcCanSeePlayer(List<List<Integer>> mapWalls, List playerCoordinate, int npcX, int npcY);
 
-    public int getX() {
+    public Integer getX() {
         return (cell != null)? cell.getX() : null;
     }
 
-    public int getY() {
+    public Integer getY() {
         return (cell != null)? cell.getY() : null;
     }
 
