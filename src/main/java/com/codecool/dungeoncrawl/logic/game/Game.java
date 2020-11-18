@@ -1,5 +1,7 @@
-package com.codecool.dungeoncrawl;
+package com.codecool.dungeoncrawl.logic.game;
 
+import com.codecool.dungeoncrawl.Main;
+import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
@@ -36,12 +38,12 @@ public class Game {
     private final MapChanger mapChanger;
     private final Canvas canvas;
     private final GraphicsContext context;
-    private Label nameLabel = new Label();
-    private Label inv = new Label();
-    private Label currentInfo = new Label();
-    private Label currentLevel = new Label();
+    private final Label nameLabel = new Label();
+    private final Label inv = new Label();
+    private final Label currentInfo = new Label();
+    private final Label currentLevel = new Label();
     private int activeMap = 1;
-    private StringBuilder text = new StringBuilder();
+    private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
 
 
@@ -49,12 +51,11 @@ public class Game {
 
 
     public Game() {
-        boolean m = MapGenerator.generateMap(1);
+        MapGenerator.generateMap(1);
         this.map1 = MapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
-        //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
-        boolean mapReady = MapGenerator.generateMap(2);
+        MapGenerator.generateMap(2);
         this.map2 = MapLoader.loadMap(2);
         this.mapWallsLevel2 = map2.getWalls();
 
@@ -66,8 +67,27 @@ public class Game {
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-
     }
+
+    public Game(GameMap map1, GameMap map2) {
+        this.map1 = map1;
+        this.mapWallsLevel1 = map1.getWalls();
+
+        this.map2 = map2;
+        this.mapWallsLevel2 = map2.getWalls();
+
+        this.player = this.map1.getPlayer();
+
+        this.mapChanger = new MapChanger(map1, map2);
+        this.canvas = new Canvas(
+                map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+        this.context = canvas.getGraphicsContext2D();
+        this.addEnemyMoveHandler();
+    }
+
+
+
 
     public Scene showGameScene() {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
@@ -135,7 +155,6 @@ public class Game {
                     player.openDoor();
                     this.activeMap = this.activeMap == 1 ? 2 : 1; // change activeMap
 
-                    //map = mapChanger.changeMap(map); //TODO: currently it does not place the player correctly
                     GameMap  nextMap = this.activeMap == 1 ? this.map1 : map2; //the new activeMap will be the next map
                     Player toKeep = map.getPlayer(); //get the player from the original map
 
@@ -224,9 +243,6 @@ public class Game {
         return this.activeMap == 1 ? this.map1 : this.map2;
     }
 
-    public void setActiveMap(int activeMap) {
-        this.activeMap = activeMap;
-    }
 
     public Player getPlayer() {
         return player;

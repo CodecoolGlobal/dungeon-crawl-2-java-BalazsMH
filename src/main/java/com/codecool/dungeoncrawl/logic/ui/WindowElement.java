@@ -83,15 +83,15 @@ public class WindowElement {
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
 
         //Create columns
-        TableColumn<GameState, Player> playerColumn = new TableColumn<GameState, Player>("Player");
+        TableColumn<GameState, Player> playerColumn = new TableColumn<>("Player");
         playerColumn.setMinWidth(300);
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
 
-        TableColumn<GameState, Date> dateTableColumn = new TableColumn<GameState, Date>("Saved on");
+        TableColumn<GameState, Date> dateTableColumn = new TableColumn<>("Saved on");
         dateTableColumn.setMinWidth(300);
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
 
-        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<GameState, Integer>("Current level");
+        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<>("Current level");
         currentMapTableColumn.setMinWidth(200);
         currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
 
