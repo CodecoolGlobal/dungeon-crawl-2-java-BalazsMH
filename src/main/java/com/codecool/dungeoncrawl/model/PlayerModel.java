@@ -4,15 +4,16 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 
 public class PlayerModel extends BaseModel {
     private String playerName;
-//    private int hp;
     private int x;
     private int y;
     private boolean godMode;
+    private int level;
 
-    public PlayerModel(String playerName, int x, int y) {
+    public PlayerModel(String playerName, int x, int y, int level) {
         this.playerName = playerName;
         this.x = x;
         this.y = y;
+        this.level = level;
     }
 
     public PlayerModel(Player player) {
@@ -20,8 +21,15 @@ public class PlayerModel extends BaseModel {
         this.x = player.getX();
         this.y = player.getY();
         this.godMode = player.getGodMode();
-//        this.hp = player.getHealth();
+        this.level = player.getLevel();
+    }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getPlayerName() {
@@ -32,11 +40,6 @@ public class PlayerModel extends BaseModel {
         this.playerName = playerName;
     }
 
-//    public int getHp() { return hp; }
-//
-//    public void setHp(int hp) {
-//        this.hp = hp;
-//    }
     public boolean getGodMode(){return godMode;}
     public void setGogMode(boolean mode) {this.godMode = mode; }
 
