@@ -1,5 +1,7 @@
-package com.codecool.dungeoncrawl;
+package com.codecool.dungeoncrawl.logic.game;
 
+import com.codecool.dungeoncrawl.Main;
+import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;

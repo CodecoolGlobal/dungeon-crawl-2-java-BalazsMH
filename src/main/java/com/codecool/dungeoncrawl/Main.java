@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
 import javafx.scene.Scene;
