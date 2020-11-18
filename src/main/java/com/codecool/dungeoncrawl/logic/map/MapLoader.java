@@ -18,11 +18,11 @@ import java.util.Scanner;
 
 public class MapLoader {
     private static List<List<Integer>> walls;
-    public static GameMap loadMap(String gameLevel) {
+    public static GameMap loadMap(int gameLevel) {
         InputStream is;
         walls = new ArrayList<>();
         //TODO: map should not be part of the resources folder
-        if (gameLevel.equals("Level1")) {
+        if (gameLevel == 1) {
             is = MapLoader.class.getResourceAsStream("/map.txt");
         } else {
             is = MapLoader.class.getResourceAsStream("/map2.txt");

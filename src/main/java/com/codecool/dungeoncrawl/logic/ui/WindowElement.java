@@ -168,7 +168,7 @@ public class WindowElement {
     }
 
     public static void setLabels(Label currentLevel, Label nameLabel, Label currentInfo, Label inv, GameMap map) {
-        currentLevel.setText(map.getLevel());
+        currentLevel.setText(String.valueOf(map.getLevel()));
         currentLevel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         nameLabel.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 18));
         currentInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf",14));
@@ -245,6 +245,6 @@ public class WindowElement {
 
     public static void refreshLevelAndInventory(Inventory inventory, Label inv, Label currentLevel, GameMap map) {
         inv.setText(inventory.toString());
-        currentLevel.setText(map.getLevel());
+        currentLevel.setText(String.valueOf(map.getLevel()));
     }
 }

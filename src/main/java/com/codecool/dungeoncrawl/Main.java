@@ -35,13 +35,14 @@ import java.util.List;
 
 public class Main extends Application {
     private static Stage pStage;
+
     boolean m = MapGenerator.generateMap(1);
-    GameMap map = MapLoader.loadMap("Level1");
+    GameMap map = MapLoader.loadMap(1);
     List<List<Integer>> mapWallsLevel1 = MapLoader.getWalls();
     boolean mapReady = MapGenerator.generateMap(2);
-    //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
-    GameMap map2 = MapLoader.loadMap("Level2");
+    GameMap map2 = MapLoader.loadMap(2);
     List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
+    //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
     Timeline enemyMove;
 
@@ -70,6 +71,7 @@ public class Main extends Application {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
+        //TODO:game should only be created when the player selects new game.
         Scene game = game();
         Scene mainMenu = mainMenu(primaryStage, game);
 
@@ -77,6 +79,10 @@ public class Main extends Application {
         addEnemyMoveHandler();
         refresh(map.getPlayer().getInventory());
         primaryStage.show();
+    }
+
+    private void setupGame(){
+
     }
 
     private Scene mainMenu(Stage primaryStage, Scene game) {

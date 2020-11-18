@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Koffing extends Pokemon {
 
-    public Koffing(Cell cell, String name, String level){ super(cell, name, level); }
+    public Koffing(Cell cell, String name, int level){ super(cell, name, level); }
     public Koffing(String name){ super(name); }
 
     @Override

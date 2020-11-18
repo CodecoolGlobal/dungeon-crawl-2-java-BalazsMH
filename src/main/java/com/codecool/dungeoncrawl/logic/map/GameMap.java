@@ -17,13 +17,13 @@ public class GameMap {
     private final int height;
     private final Cell[][] cells;
     private Door door;
-    private final String gameLevel;
+    private final int gameLevel;
 
     private Player player;
     private RocketGrunt rocketGrunt;
     private final List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
-    public GameMap(int width, int height, CellType defaultCellType, String gameLevel) {
+    public GameMap(int width, int height, CellType defaultCellType, int gameLevel) {
         this.gameLevel = gameLevel;
         this.width = width;
         this.height = height;
@@ -63,7 +63,7 @@ public class GameMap {
         return height;
     }
 
-    public String getLevel() {
+    public int getLevel() {
         return this.gameLevel;
 
     }
@@ -89,7 +89,7 @@ public class GameMap {
     }
 
     public void moveAllPokemon(MapChanger mapChanger, List<List<Integer>> mapWallsLevel1, List<List<Integer>> mapWallsLevel2) {
-        int level = mapChanger.getLevel();
+        int level = this.getLevel();
         List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
 
         List playerCoordinates = new ArrayList(List.of(player.getX(), player.getY()));

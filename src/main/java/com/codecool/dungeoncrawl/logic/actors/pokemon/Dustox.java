@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Dustox extends Pokemon {
     private boolean shouldMove;
-    public Dustox(Cell cell, String name, String level){ super(cell, name, level); }
+    public Dustox(Cell cell, String name, int level){ super(cell, name, level); }
     public Dustox(String name){ super(name); }
 
     @Override
