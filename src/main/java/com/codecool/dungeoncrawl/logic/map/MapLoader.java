@@ -91,6 +91,7 @@ public class MapLoader {
                 }
             }
         }
+        map.setWalls(walls);
         return map;
     }
     public static List<List<Integer>> getWalls() {

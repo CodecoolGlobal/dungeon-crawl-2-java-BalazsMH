@@ -18,6 +18,8 @@ public class GameMap {
     private final Cell[][] cells;
     private Door door;
     private final int gameLevel;
+    private List<List<Integer>>  walls = new ArrayList<>();
+
 
     private Player player;
     private RocketGrunt rocketGrunt;
@@ -33,6 +35,14 @@ public class GameMap {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
             }
         }
+    }
+
+    public List<List<Integer>> getWalls() {
+        return walls;
+    }
+
+    public void setWalls(List<List<Integer>> walls) {
+        this.walls = walls;
     }
 
     public Cell getCell(int x, int y) {
@@ -90,7 +100,7 @@ public class GameMap {
 
     public void moveAllPokemon(List<List<Integer>> mapWallsLevel1, List<List<Integer>> mapWallsLevel2) {
         int level = this.getLevel();
-        List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
+        List<List<Integer>> mapWalls =  this.walls;
 
         List playerCoordinates = new ArrayList(List.of(player.getX(), player.getY()));
         for (Pokemon pokemon : pokemonList) {

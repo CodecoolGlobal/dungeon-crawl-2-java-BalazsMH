@@ -44,7 +44,6 @@ public class Main extends Application {
     List<List<Integer>> mapWallsLevel2 = MapLoader.getWalls();
     //TODO: figure out why it doesn't allow simply calling Mapgenerator with a void return value
 
-    Timeline enemyMove;
 
     MapChanger mapChanger = new MapChanger(map, map2);
 
@@ -53,6 +52,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
 
+    Timeline enemyMove;
 
     Label nameLabel = new Label();
     Label inv = new Label();
