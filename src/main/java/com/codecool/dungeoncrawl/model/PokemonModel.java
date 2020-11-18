@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 
 
 public class PokemonModel extends BaseModel{
+    private int pokeId;
     private int pokeHealth;
     private int pokeDamage;
     private String pokeName;
@@ -20,6 +21,16 @@ public class PokemonModel extends BaseModel{
         y = pokemon.getY();
         cellType = pokemon.getCell().getType().name();
         gameLevel = pokemon.getGameLevel();
+    }
+
+    public PokemonModel(int gameLevel, int pokeHealth, int pokeDamage, String pokeName, int x, int y, String cellType){
+        this.gameLevel = gameLevel;
+        this.pokeHealth = pokeHealth;
+        this.pokeDamage = pokeDamage;
+        this.pokeName = pokeName;
+        this.x = x;
+        this.y = y;
+        this.cellType = cellType;
     }
 
     public int getGameLevel() {
