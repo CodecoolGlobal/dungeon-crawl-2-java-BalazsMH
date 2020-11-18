@@ -53,19 +53,21 @@ public class PokemonDaoJdbc implements PokemonDao{
         // I have changed method signature to include playerId - not sure if this is the best solution
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE pokemon SET pokehealth = ?, pokedamage = ?, x = ?, y = ?" +
+                    "UPDATE pokemon SET game_level = ?, pokehealth = ?, pokedamage = ?, x = ?, y = ?" +
                             "WHERE player_id = ? AND pokeid = ?");
-            ps.setInt(1, pokemon.getPokeHealth());
-            ps.setInt(2, pokemon.getPokeDamage());
+
+            ps.setInt(1, pokemon.getGameLevel());
+            ps.setInt(2, pokemon.getPokeHealth());
+            ps.setInt(3, pokemon.getPokeDamage());
             if (pokemon.getX() != null) {
-                ps.setInt(3, pokemon.getX());
-                ps.setInt(4, pokemon.getY());
+                ps.setInt(4, pokemon.getX());
+                ps.setInt(5, pokemon.getY());
             } else {
-                ps.setNull(3, java.sql.Types.INTEGER);
                 ps.setNull(4, java.sql.Types.INTEGER);
+                ps.setNull(5, java.sql.Types.INTEGER);
             }
-            ps.setInt(5, playerId);
-            ps.setInt(6, pokemon.getPokeId());
+            ps.setInt(6, playerId);
+            ps.setInt(7, pokemon.getPokeId());
             ps.executeUpdate();
         } catch (SQLException e){
             System.out.println(e.getMessage());
