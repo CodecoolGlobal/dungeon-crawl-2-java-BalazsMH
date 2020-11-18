@@ -226,7 +226,7 @@ public class Main extends Application {
     private void addEnemyMoveHandler() {
         enemyMove = new Timeline(
                 new KeyFrame(Duration.seconds(1), (event) -> {
-                    map.moveAllPokemon(mapChanger, mapWallsLevel1,  mapWallsLevel2);
+                    map.moveAllPokemon(mapWallsLevel1,  mapWallsLevel2);
                     refresh(map.getPlayer().getInventory()); }));
         enemyMove.setCycleCount(Timeline.INDEFINITE);
         enemyMove.play();

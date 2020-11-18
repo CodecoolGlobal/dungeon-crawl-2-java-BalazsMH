@@ -88,7 +88,7 @@ public class GameMap {
         return toReturn;
     }
 
-    public void moveAllPokemon(MapChanger mapChanger, List<List<Integer>> mapWallsLevel1, List<List<Integer>> mapWallsLevel2) {
+    public void moveAllPokemon(List<List<Integer>> mapWallsLevel1, List<List<Integer>> mapWallsLevel2) {
         int level = this.getLevel();
         List<List<Integer>> mapWalls = (level == 1) ? mapWallsLevel1 : mapWallsLevel2;
 
