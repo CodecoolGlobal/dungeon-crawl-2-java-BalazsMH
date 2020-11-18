@@ -134,7 +134,6 @@ public class Game {
                     player.openDoor();
                     this.activeMap = this.activeMap == 1 ? 2 : 1; // change activeMap
 
-                    //map = mapChanger.changeMap(map); //TODO: currently it does not place the player correctly
                     GameMap  nextMap = this.activeMap == 1 ? this.map1 : map2; //the new activeMap will be the next map
                     Player toKeep = map.getPlayer(); //get the player from the original map
 
