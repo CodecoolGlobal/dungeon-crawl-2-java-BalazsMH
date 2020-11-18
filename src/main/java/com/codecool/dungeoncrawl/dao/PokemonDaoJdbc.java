@@ -47,6 +47,17 @@ public class PokemonDaoJdbc implements PokemonDao{
 
     @Override
     public PokemonModel get(int id) {
+        try(Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM pokemon WHERE id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (! rs.next()) return null;
+            PokemonModel pokemonModel = new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5),
+                    rs.getString(6), rs.getInt(7), rs.getInt(8), rs.getString(9));
+            return pokemonModel;
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
