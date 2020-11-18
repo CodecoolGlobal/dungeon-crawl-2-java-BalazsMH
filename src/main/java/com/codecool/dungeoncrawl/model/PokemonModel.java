@@ -24,7 +24,7 @@ public class PokemonModel extends BaseModel{
         gameLevel = pokemon.getGameLevel();
     }
 
-    public PokemonModel(int pokeId, int gameLevel, int pokeHealth, int pokeDamage, String pokeName, int x, int y, String cellType){
+    public PokemonModel(int pokeId, int gameLevel, int pokeHealth, int pokeDamage, String pokeName, Integer x, Integer y, String cellType){
         this.pokeId = pokeId;
         this.gameLevel = gameLevel;
         this.pokeHealth = pokeHealth;

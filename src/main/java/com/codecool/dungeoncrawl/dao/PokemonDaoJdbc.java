@@ -80,8 +80,7 @@ public class PokemonDaoJdbc implements PokemonDao{
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (! rs.next()) return null;
-            PokemonModel pokemonModel = new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6),
-                    rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10)); //rs.wasNull()
+            PokemonModel pokemonModel = createPokemonModel(rs);
             return pokemonModel;
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -95,13 +94,19 @@ public class PokemonDaoJdbc implements PokemonDao{
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM pokemon");
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                pokemonList.add(new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6),
-                        rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10)));
-            }
+            while (rs.next()) pokemonList.add(createPokemonModel(rs));
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
         return pokemonList;
+    }
+
+    private PokemonModel createPokemonModel(ResultSet rs) throws SQLException {
+        String cellType = rs.getString(10);
+        Integer x = (cellType == null)? null : rs.getInt(8);
+        Integer y = (cellType == null)? null : rs.getInt(9);
+        PokemonModel model = new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6),
+                rs.getString(7), x, y, cellType);
+        return model;
     }
 }
