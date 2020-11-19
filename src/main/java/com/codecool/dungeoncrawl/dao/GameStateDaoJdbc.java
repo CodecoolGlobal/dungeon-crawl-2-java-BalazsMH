@@ -49,6 +49,20 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     @Override
     public GameState get(int id) {
+        try (Connection conn = dataSource.getConnection()) {
+            String query = "SELECT gs.*, p.player_name, p.god_mode, p.x, p.y, p.game_level " +
+                    "FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
+            ResultSet rs = conn.createStatement().executeQuery(query);
+            if (! rs.next()) return null;
+            PlayerModel playerModel = createPlayerModel(rs);
+            GameState gameState = new GameState(rs.getString("current_map"),
+                    rs.getString("stored_map"),
+                    rs.getDate("saved_at"),
+                    playerModel);
+            gameState.setId(rs.getInt("id"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
@@ -57,22 +71,31 @@ public class GameStateDaoJdbc implements GameStateDao {
         List<GameState> output = new ArrayList<GameState>();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT gs.*, p.player_name, p.x, p.y FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
+            String query = "SELECT gs.*, p.player_name, p.god_mode, p.x, p.y, p.game_level " +
+                    "FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
             ResultSet rs = conn.createStatement().executeQuery(query);
             while (rs.next()) {
+                PlayerModel playerModel = createPlayerModel(rs);
                 GameState row = new GameState(rs.getString("current_map"),
                                               rs.getString("stored_map"),
                                               rs.getDate("saved_at"),
-                                              new PlayerModel(rs.getString("player_name"),
-                                                            rs.getBoolean("godMode"),
-                                                            rs.getInt("x"),
-                                                            rs.getInt("y"),
-                                                            rs.getInt("game_level")));
+                                              playerModel);
+                row.setId(rs.getInt("id"));
                 output.add(row);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return output;
+    }
+
+    private PlayerModel createPlayerModel(ResultSet rs) throws SQLException {
+        PlayerModel playerModel = new PlayerModel(rs.getString("player_name"),
+                rs.getBoolean("god_mode"),
+                rs.getInt("x"),
+                rs.getInt("y"),
+                rs.getInt("game_level"));
+        playerModel.setId(rs.getInt("player_id"));
+        return playerModel;
     }
 }
