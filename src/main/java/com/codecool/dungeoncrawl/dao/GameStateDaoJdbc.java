@@ -18,6 +18,18 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     @Override
     public void add(GameState state) {
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO game_state (current_map, stored_map, saved_at, player_id)" +
+                            "VALUES (?,?,?,?)");
+            ps.setString(1, state.getCurrentMap());
+            ps.setString(2, state.getStoredMap());
+            ps.setDate(3, state.getSavedAt());
+            ps.setInt(4, state.getPlayer().getId());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
 
     }
 
@@ -40,6 +52,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             ResultSet rs = conn.createStatement().executeQuery(query);
             while (rs.next()) {
                 GameState row = new GameState(rs.getString("current_map"),
+                                              rs.getString("stored_map"),
                                               rs.getDate("saved_at"),
                                               new PlayerModel(rs.getString("player_name"),
                                                             rs.getInt("x"),
