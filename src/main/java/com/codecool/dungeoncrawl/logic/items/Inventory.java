@@ -80,4 +80,8 @@ public class Inventory {
     }
 
     public List<Pokemon> getAllPokemon() { return pokemonList; }
+
+    public int getHealthPotionNumber() { return healthPotionNumber; }
+
+    public int getPokeBallNumber() { return pokeBallList.size(); }
 }
