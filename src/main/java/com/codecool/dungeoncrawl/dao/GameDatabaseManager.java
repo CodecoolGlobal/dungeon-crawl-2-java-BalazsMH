@@ -25,14 +25,15 @@ public class GameDatabaseManager {
         gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public void saveGameState(String map, String storedMap, Date date, PlayerModel player){
-        GameState model = new GameState(map, storedMap, date, player);
-        gameStateDao.add(model);
+    public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player){
+        GameState gameStateModel = new GameState(map, storedMap, date, player);
+        gameStateDao.add(gameStateModel);
+        return gameStateModel;
     }
 
-    public void updateGameState(String map, String storedMap, Date date, PlayerModel player){
-        GameState model = new GameState(map, storedMap, date, player);
-        gameStateDao.update(model);
+    public void updateGameState(String map, String storedMap, Date date, PlayerModel player, GameState gameStateModel){
+        gameStateModel = new GameState(map, storedMap, date, player);
+        gameStateDao.update(gameStateModel);
     }
 
     public PlayerModel savePlayer(Player player) {
@@ -42,9 +43,9 @@ public class GameDatabaseManager {
         return model;
     }
 
-    public void updatePlayer(Player player){
-        PlayerModel model = new PlayerModel(player);
-        playerDao.update(model);
+    public void updatePlayer(Player player, PlayerModel playerModel){
+        playerModel = new PlayerModel(player);
+        playerDao.update(playerModel);
     }
 
     public PlayerModel getPlayerByName(Player player){

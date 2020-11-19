@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
+import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import java.sql.SQLException;
@@ -17,7 +18,8 @@ public class Converter {
     private GameMap map2;
     private Date date;
     private Player player;
-    private PlayerModel playerModel; // this has the database generated ID
+    private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
+    private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private List<Pokemon> pokemonList = new ArrayList<>();
     private GameDatabaseManager manager;
 
@@ -43,16 +45,16 @@ public class Converter {
         date = new Date(System.currentTimeMillis());
         GameMap active = (player.getLevel() == 1)? map1 : map2;
         GameMap stored = (player.getLevel() == 1)? map2 : map1;
-        manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel);
+        gameStateModel = manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel);
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon);
     }
 
     public void update() {
         date = new Date(System.currentTimeMillis());
-        manager.updatePlayer(player);
+        manager.updatePlayer(player, playerModel);
         GameMap active = (player.getLevel() == 1)? map1 : map2;
         GameMap stored = (player.getLevel() == 1)? map2 : map1;
-        manager.updateGameState(active.layoutToString(), stored.layoutToString(), date, playerModel);
+        manager.updateGameState(active.layoutToString(), stored.layoutToString(), date, playerModel, gameStateModel);
         pokemonList.forEach(p -> manager.updatePokemon(p));
     }
 
