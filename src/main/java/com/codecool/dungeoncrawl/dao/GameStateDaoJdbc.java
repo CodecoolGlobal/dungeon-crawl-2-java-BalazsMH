@@ -33,7 +33,7 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     @Override
     public List<GameState> getAll() {
-        List<GameState> output = new ArrayList<GameState>();
+        List<GameState> output = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT gs.*, p.player_name, p.x, p.y FROM game_state gs INNER JOIN player p on p.id = gs.player_id";

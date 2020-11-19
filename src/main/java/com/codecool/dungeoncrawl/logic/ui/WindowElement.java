@@ -57,7 +57,7 @@ public class WindowElement {
         return loadGameButton;
     }
 
-    public static Scene createLoadGameMenu(Stage primaryStage){
+    public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu){
 
 
         VBox loadGamePane = new VBox(20);
@@ -73,13 +73,13 @@ public class WindowElement {
         loadGamePane.requestFocus();
 
         //Get saves and convert result to ObservableList.
-        GameDatabaseManager manager = new GameDatabaseManager();
+
+        List<GameState> saves = null;
         try {
-            manager.setup();
+            saves = GameDatabaseManager.getSaves2();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        List<GameState> saves = manager.getSaves();
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
 
         //Create columns
@@ -108,7 +108,7 @@ public class WindowElement {
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         navigateBackButton.setOnMouseClicked((event)->{
-            primaryStage.setScene(Main.getMainMenu());
+            primaryStage.setScene(mainMenu);
             //TODO:Find a way to get the main menu Scene some other way.
         });
 

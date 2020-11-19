@@ -41,8 +41,32 @@ public class GameDatabaseManager {
         return saves;
     }
 
+    public static List<GameState> getSaves2() throws SQLException {
+        DataSource dataSource =  connect2();
+        GameStateDao gameStateDao = new GameStateDaoJdbc(dataSource);
+        return gameStateDao.getAll();
+
+
+    }
+
 
     private DataSource connect() throws SQLException {
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        String dbName = System.getenv("dbName");
+        String user = System.getenv("user");
+        String password = System.getenv("password");
+
+        dataSource.setDatabaseName(dbName);
+        dataSource.setUser(user);
+        dataSource.setPassword(password);
+
+        System.out.println("Trying to connect");
+        dataSource.getConnection().close();
+        System.out.println("Connection ok.");
+
+        return dataSource;
+    }
+    private static DataSource connect2() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String dbName = System.getenv("dbName");
         String user = System.getenv("user");

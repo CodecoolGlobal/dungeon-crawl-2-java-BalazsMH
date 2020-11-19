@@ -76,7 +76,7 @@ public class Main extends Application {
     }
 
     private void onLoadPressed(Stage primaryStage) {
-        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage);
+        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage, mainMenu);
         primaryStage.setScene(loadGameScene);
     }
 
