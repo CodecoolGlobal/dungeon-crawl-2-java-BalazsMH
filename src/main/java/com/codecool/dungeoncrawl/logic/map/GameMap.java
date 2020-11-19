@@ -113,7 +113,6 @@ public class GameMap {
 
     public String layoutToString() {
         StringJoiner mapString = new StringJoiner("\n");
-        List<String> rows = new ArrayList<>();
         for (Cell[] row : cells){
             StringBuilder r = new StringBuilder();
             for (Cell cell : row){
@@ -122,7 +121,7 @@ public class GameMap {
                 else if (cell.getTileName().equals("empty")) r.append(" ");
                 else if (cell.getTileName().equals("door")) r.append("d");
             }
-            rows.add(r.toString());
+            mapString.add(r.toString());
         }
         return mapString.toString();
     }
