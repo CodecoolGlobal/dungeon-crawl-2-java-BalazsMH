@@ -9,6 +9,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.List;
 
 public class GameDatabaseManager {
@@ -24,10 +25,21 @@ public class GameDatabaseManager {
         gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public void savePlayer(Player player) {
+    public void saveGameState(String map, String storedMap, Date date, PlayerModel player){
+        GameState model = new GameState(map, storedMap, date, player);
+        gameStateDao.add(model);
+    }
+
+    public void updateGameState(String map, String storedMap, Date date, PlayerModel player){
+        GameState model = new GameState(map, storedMap, date, player);
+        gameStateDao.update(model);
+    }
+
+    public PlayerModel savePlayer(Player player) {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
-        playerId = model.getId();
+        playerId = model.getId(); // delete?
+        return model;
     }
 
     public void updatePlayer(Player player){
