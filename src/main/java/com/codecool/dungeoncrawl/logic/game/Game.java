@@ -35,7 +35,6 @@ public class Game {
     private Player player;
     private final List<List<Integer>> mapWallsLevel1;
     private final List<List<Integer>> mapWallsLevel2;
-    private final MapChanger mapChanger;
     private final Canvas canvas;
     private final GraphicsContext context;
     private final Label nameLabel = new Label();
@@ -61,13 +60,12 @@ public class Game {
 
         this.player = this.map1.getPlayer();
 
-        this.mapChanger = new MapChanger(map1, map2);
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-        converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
+        converter = new Converter(map1, map2);
     }
 
     public Game(GameMap map1, GameMap map2) {
@@ -79,7 +77,6 @@ public class Game {
 
         this.player = this.map1.getPlayer();
 
-        this.mapChanger = new MapChanger(map1, map2);
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
