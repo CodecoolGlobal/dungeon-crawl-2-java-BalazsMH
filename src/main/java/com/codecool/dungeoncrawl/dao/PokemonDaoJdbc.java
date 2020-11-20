@@ -41,6 +41,7 @@ public class PokemonDaoJdbc implements PokemonDao{
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             pokemon.setId(rs.getInt(1));
+            pokemon.setPlayerId(playerId);
         } catch (SQLException e){
             System.out.println(e.getMessage());
             throw new RuntimeException("Pokemon could not be saved in database");
@@ -111,6 +112,8 @@ public class PokemonDaoJdbc implements PokemonDao{
         Integer y = (cellType == null)? null : rs.getInt(9);
         PokemonModel model = new PokemonModel(rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6),
                 rs.getString(7), x, y, cellType);
+        model.setId(rs.getInt(1));
+        model.setPlayerId(rs.getInt(2));
         return model;
     }
 }

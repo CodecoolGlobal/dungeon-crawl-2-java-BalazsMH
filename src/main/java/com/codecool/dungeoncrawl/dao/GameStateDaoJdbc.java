@@ -81,8 +81,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             PreparedStatement pst = conn.prepareStatement("SELECT * FROM game_state");
             ResultSet rss = pst.executeQuery();
             while (rss.next()){
-                int player_id = rss.getInt("player_id");
-                PlayerModel pm = playerDao.get(player_id); //player_id
+                PlayerModel pm = playerDao.get(rss.getInt("player_id"));
                 GameState gs = new GameState(rss.getString("current_map"),
                         rss.getString("stored_map"),
                         rss.getDate("saved_at"),

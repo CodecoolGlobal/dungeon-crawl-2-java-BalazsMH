@@ -12,6 +12,7 @@ public class PokemonModel extends BaseModel{
     private Integer y;
     private String cellType;
     private int gameLevel;
+    private int playerId;
 
     public PokemonModel(Pokemon pokemon){
         pokeId = pokemon.getPokeId();
@@ -91,5 +92,13 @@ public class PokemonModel extends BaseModel{
 
     public void setCellType(String cellType) {
         this.cellType = cellType;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
     }
 }
