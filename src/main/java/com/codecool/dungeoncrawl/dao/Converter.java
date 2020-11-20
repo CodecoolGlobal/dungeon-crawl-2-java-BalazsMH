@@ -49,6 +49,7 @@ public class Converter {
         GameMap active = (player.getLevel() == 1)? map1 : map2;
         GameMap stored = (player.getLevel() == 1)? map2 : map1;
         gameStateModel = manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel, saveName);
+        System.out.println("pokenum" + pokemonList.size());
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon, playerModel.getId());
     }
 
@@ -88,7 +89,6 @@ public class Converter {
 
     private void getRocketPokemon(){
         RocketGrunt rocketGrunt = (map1.getRocketGrunt() != null)? map1.getRocketGrunt() : map2.getRocketGrunt();
-        rocketGrunt.getRocketPokemonOnBoard().forEach(p -> pokemonList.add(p));
         rocketGrunt.getRocketPokemonList().forEach(p -> pokemonList.add(p));
     }
 
