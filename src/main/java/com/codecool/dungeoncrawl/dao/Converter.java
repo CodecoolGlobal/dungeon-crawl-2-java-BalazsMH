@@ -54,6 +54,7 @@ public class Converter {
                 new Date(System.currentTimeMillis()),
                 playerModel,
                 saveName);
+        manager.saveInventory(inventory, playerModel.getId());
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon, playerModel.getId());
     }
 
