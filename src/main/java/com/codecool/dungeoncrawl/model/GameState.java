@@ -8,13 +8,15 @@ public class GameState extends BaseModel {
     private String stored;
     private PlayerModel player;
     private String playerName;
+    private String saveName;
 
-    public GameState(String currentMap, String storedMap, Date savedAt, PlayerModel player) {
+    public GameState(String currentMap, String storedMap, Date savedAt, PlayerModel player, String saveName) {
         this.active = currentMap;
         this.stored = storedMap;
         this.savedAt = savedAt;
         this.player = player;
         this.playerName = player.getPlayerName();
+        this.saveName = saveName;
     }
 
     public Date getSavedAt() {
@@ -23,6 +25,10 @@ public class GameState extends BaseModel {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public String getSaveName() {
+        return saveName;
     }
 
     public void setSavedAt(Date savedAt) {
@@ -36,6 +42,8 @@ public class GameState extends BaseModel {
     public void setCurrentMap(String currentMap) {
         this.active = currentMap;
     }
+
+    public void setStoredMap(String storedMap) { this.stored = storedMap; }
 
     public String getStoredMap() {
         return stored;

@@ -16,47 +16,46 @@ public class GameDatabaseManager {
     private PlayerDao playerDao;
     private GameStateDao gameStateDao;
     private PokemonDao pokemonDao;
-    private int playerId;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         pokemonDao = new PokemonDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
     }
 
-    public void saveGameState(String map, String storedMap, Date date, PlayerModel player){
-        GameState model = new GameState(map, storedMap, date, player);
-        gameStateDao.add(model);
+    public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player, String saveName){
+        GameState gameStateModel = new GameState(map, storedMap, date, player, saveName);
+        gameStateDao.add(gameStateModel);
+        return gameStateModel;
     }
 
-    public void updateGameState(String map, String storedMap, Date date, PlayerModel player){
-        GameState model = new GameState(map, storedMap, date, player);
-        gameStateDao.update(model);
+    public void updateGameState(String map, String storedMap, Date date, PlayerModel player, GameState gameStateModel){
+        gameStateModel.setCurrentMap(map);
+        gameStateModel.setStoredMap(storedMap);
+        gameStateModel.setSavedAt(date);
+        gameStateDao.update(gameStateModel);
     }
 
     public PlayerModel savePlayer(Player player) {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
-        playerId = model.getId(); // delete?
         return model;
     }
 
-    public void updatePlayer(Player player){
-        PlayerModel model = new PlayerModel(player);
-        playerDao.update(model);
+    public void updatePlayer(Player player, PlayerModel playerModel){
+        playerModel.setX(player.getX());
+        playerModel.setY(player.getY());
+        playerModel.setLevel(player.getLevel());
+        playerDao.update(playerModel);
     }
 
-    public PlayerModel getPlayerByName(Player player){
-        return playerDao.getByName(player.getUserName());
-    }
-
-    public void savePokemon(Pokemon pokemon){
+    public void savePokemon(Pokemon pokemon, int playerId){
         PokemonModel model = new PokemonModel(pokemon);
         pokemonDao.add(model, playerId);
     }
 
-    public void updatePokemon(Pokemon pokemon){
+    public void updatePokemon(Pokemon pokemon, int playerId){
         PokemonModel model = new PokemonModel(pokemon);
         pokemonDao.update(model, playerId);
     }

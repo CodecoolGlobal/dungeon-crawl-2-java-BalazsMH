@@ -4,7 +4,8 @@ CREATE TABLE public.game_state (
     current_map text NOT NULL,
     stored_map text NOT NULL,
     saved_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    player_id integer NOT NULL
+    player_id integer NOT NULL,
+    save_name text NOT NULL
 );
 
 DROP TABLE IF EXISTS public.pokemon;
