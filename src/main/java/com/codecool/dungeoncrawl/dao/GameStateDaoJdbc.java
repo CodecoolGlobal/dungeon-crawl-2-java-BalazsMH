@@ -55,8 +55,11 @@ public class GameStateDaoJdbc implements GameStateDao {
     public GameState get(int id) {
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT gs.*, p.player_name, p.god_mode, p.x, p.y, p.game_level " +
-                    "FROM game_state gs INNER JOIN player p on p.id = gs.player_id";
-            ResultSet rs = conn.createStatement().executeQuery(query);
+                    "FROM game_state gs INNER JOIN player p on p.id = gs.player_id " +
+                    "WHERE gs.id = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery(query);
             if (! rs.next()) return null;
             PlayerModel playerModel = createPlayerModel(rs);
             GameState gameState = new GameState(rs.getString("current_map"),
