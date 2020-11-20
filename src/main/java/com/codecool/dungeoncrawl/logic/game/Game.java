@@ -181,14 +181,15 @@ public class Game {
                 if (keyEvent.isControlDown()){
                     while(true){
                         String saveName = getSaveName();
-                        if (converter.ifPlayerSaveExists(saveName, player.getUserName())) {
+                        String playerName = player.getUserName();
+                        if (converter.ifPlayerSaveExists(saveName, playerName)) {
                             String decision = getDecision();
                             if (decision.equals("s")) {
-                                converter.run("update", saveName); // within game update - playerModel already exists
+                                converter.run("update", saveName, playerName);
                                 break;
                             }
                         } else {
-                            converter.run("save", saveName);
+                            converter.run("save", saveName, playerName);
                             break;
                         }
                     }
