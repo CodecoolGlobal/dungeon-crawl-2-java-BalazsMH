@@ -36,11 +36,11 @@ public class PlayerDaoJdbc implements PlayerDao {
     public void update(PlayerModel player) {
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE player SET x = ?, y = ?, game_level = ? WHERE player_name = ?");
+                    "UPDATE player SET x = ?, y = ?, game_level = ? WHERE id = ?");
             ps.setInt(1, player.getX());
             ps.setInt(2, player.getY());
             ps.setInt(3, player.getLevel());
-            ps.setString(4, player.getPlayerName());
+            ps.setInt(4, player.getId());
             ps.executeUpdate();
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -52,21 +52,6 @@ public class PlayerDaoJdbc implements PlayerDao {
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM player WHERE player_id = ?");
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (! rs.next()) return null;
-            PlayerModel playerModel = new PlayerModel(rs.getString(2), rs.getBoolean(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
-            return playerModel;
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public PlayerModel getByName(String name){
-        try(Connection connection = dataSource.getConnection()){
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM player WHERE player_name = ?");
-            ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (! rs.next()) return null;
             PlayerModel playerModel = new PlayerModel(rs.getString(2), rs.getBoolean(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
