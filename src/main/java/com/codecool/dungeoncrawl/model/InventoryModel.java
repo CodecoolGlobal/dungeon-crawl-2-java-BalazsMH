@@ -3,15 +3,11 @@ package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class InventoryModel extends BaseModel {
 
     private int healthPotionNumber;
     private int pokeBallNumber;
-    private List<Integer> pokemonIds = new ArrayList<>();
     private boolean key;
     private int activePokemonId;
     private int playerId;
@@ -19,9 +15,16 @@ public class InventoryModel extends BaseModel {
     public InventoryModel(Inventory inventory){
         healthPotionNumber = inventory.getHealthPotionNumber();
         pokeBallNumber = inventory.getPokeBallNumber();
-        pokemonIds = inventory.getAllPokemon().stream().map(p -> p.getPokeId()).collect(Collectors.toList());
         key = inventory.hasKey();
         activePokemonId = inventory.getActivePokemon().getPokeId();
+    }
+
+    public InventoryModel(int playerId, int healthPotionNumber, int pokeBallNumber, boolean key, int activePokemonId){
+        this.healthPotionNumber = healthPotionNumber;
+        this.pokeBallNumber = pokeBallNumber;
+        this.key = key;
+        this.activePokemonId = activePokemonId;
+        this.playerId = playerId;
     }
 
     public int getHealthPotionNumber() {
@@ -40,15 +43,7 @@ public class InventoryModel extends BaseModel {
         this.pokeBallNumber = pokeBallNumber;
     }
 
-    public List<Integer> getPokemonIds() {
-        return pokemonIds;
-    }
-
-    public void setPokemonIds(List<Integer> pokemonIds) {
-        this.pokemonIds = pokemonIds;
-    }
-
-    public boolean isKey() {
+    public boolean hasKey() {
         return key;
     }
 

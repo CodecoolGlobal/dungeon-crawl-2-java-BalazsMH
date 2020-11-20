@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.model.InventoryModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryDaoJdbc implements InventoryDao {
@@ -54,11 +55,44 @@ public class InventoryDaoJdbc implements InventoryDao {
 
     @Override
     public InventoryModel get(int id) {
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM inventory WHERE id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (! rs.next()) return null;
+            InventoryModel inventoryModel = new InventoryModel(
+                    rs.getInt(2),
+                    rs.getInt(3),
+                    rs.getInt(4),
+                    rs.getBoolean(5),
+                    rs.getInt(6));
+            inventoryModel.setId(rs.getInt(1));
+            return inventoryModel;
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
     @Override
     public List<InventoryModel> getAll() {
-        return null;
+        List<InventoryModel> output = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM inventory");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                InventoryModel inventoryModel = new InventoryModel(
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getInt(4),
+                        rs.getBoolean(5),
+                        rs.getInt(6));
+                inventoryModel.setId(rs.getInt(1));
+                output.add(inventoryModel);
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return output;
     }
 }
