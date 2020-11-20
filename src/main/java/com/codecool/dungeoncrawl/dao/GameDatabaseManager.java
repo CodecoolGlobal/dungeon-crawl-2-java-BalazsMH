@@ -16,7 +16,6 @@ public class GameDatabaseManager {
     private PlayerDao playerDao;
     private GameStateDao gameStateDao;
     private PokemonDao pokemonDao;
-    private int playerId;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -41,7 +40,6 @@ public class GameDatabaseManager {
     public PlayerModel savePlayer(Player player) {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
-        playerId = model.getId(); // delete?
         return model;
     }
 
@@ -52,12 +50,12 @@ public class GameDatabaseManager {
         playerDao.update(playerModel);
     }
 
-    public void savePokemon(Pokemon pokemon){
+    public void savePokemon(Pokemon pokemon, int playerId){
         PokemonModel model = new PokemonModel(pokemon);
         pokemonDao.add(model, playerId);
     }
 
-    public void updatePokemon(Pokemon pokemon){
+    public void updatePokemon(Pokemon pokemon, int playerId){
         PokemonModel model = new PokemonModel(pokemon);
         pokemonDao.update(model, playerId);
     }
