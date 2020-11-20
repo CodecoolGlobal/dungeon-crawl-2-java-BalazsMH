@@ -23,6 +23,7 @@ public class Converter {
     private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private final List<Pokemon> pokemonList = new ArrayList<>();
     private final GameDatabaseManager manager;
+    private String saveNameStored;
 
     public Converter(GameMap map1, GameMap map2){
         this.map1 = map1;
@@ -41,6 +42,7 @@ public class Converter {
     }
 
     private void save(String saveName) {
+        saveNameStored = saveName;
         extractDataFromMap();
         playerModel = manager.savePlayer(player);
         date = new Date(System.currentTimeMillis());
@@ -51,7 +53,8 @@ public class Converter {
     }
 
     public void update(String saveName, String playerName) {
-        if (gameStateModel == null){
+        if (! saveNameStored.equals(saveName)){
+            saveNameStored = saveName;
             loadPreviousGame(playerName, saveName);
         }
         date = new Date(System.currentTimeMillis());
