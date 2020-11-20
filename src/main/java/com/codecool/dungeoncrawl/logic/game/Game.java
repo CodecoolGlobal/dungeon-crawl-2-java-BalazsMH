@@ -28,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Game {
     private final GameMap map1;
@@ -177,17 +178,37 @@ public class Game {
                 inventory.heal();
                 break;
             case S:
-                // TODO should be Ctrl + S
-                if (converter.ifPlayerExists(player)) {
-                    System.out.println("exists");
-                    converter.run("update");
-                }
-                else {
-                    System.out.println("new save");
-                    converter.run("save");
+                if (keyEvent.isControlDown()){
+                    while(true){
+                        String saveName = getSaveName();
+                        if (converter.ifPlayerSaveExists(saveName, player.getUserName())) {
+                            String decision = getDecision();
+                            if (decision.equals("s")) {
+                                converter.run("update", saveName); // within game update - playerModel already exists
+                                break;
+                            }
+                        } else {
+                            converter.run("save", saveName);
+                            break;
+                        }
+                    }
                 }
         }
         refresh(inventory);
+    }
+
+    private String getSaveName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter save name: ");
+        if (scanner.hasNextLine()) return scanner.nextLine();
+        return null;
+    }
+
+    private String getDecision(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Save already exists, press S to overwrite or C to cancel: ");
+        if (scanner.hasNextLine()) return scanner.nextLine();
+        return null;
     }
 
     private void refresh(Inventory inventory) {
