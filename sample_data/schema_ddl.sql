@@ -22,6 +22,16 @@ CREATE TABLE public.pokemon(
     cellType text
 );
 
+DROP TABLE IF EXISTS public.inventory;
+CREATE TABLE public.inventory (
+    id serial NOT NULL PRIMARY KEY,
+    player_id INTEGER NOT NULL,
+    health_potion_number INTEGER NOT NULL,
+    poke_ball_number INTEGER NOT NULL,
+    has_key boolean NOT NULL,
+    active_pokemon_id INTEGER NOT NULL
+);
+
 DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.player (
     id serial NOT NULL PRIMARY KEY,
@@ -30,16 +40,6 @@ CREATE TABLE public.player (
     x integer NOT NULL,
     y integer NOT NULL,
     game_level integer NOT NULL
-);
-
-DROP TABLE IF EXISTS public.inventory
-CREATE TABLE public.inventory (
-    id serial NOT NULL PRIMARY KEY,
-    player_id INTEGER NOT NULL
-    health_potion_umber INTEGER NOT NULL,
-    poke_ball_number INTEGER NOT NULL,
-    key boolean NOT NULL,
-    active_pokemon_id INTEGER NOT NULL,
 );
 
 ALTER TABLE ONLY public.game_state
