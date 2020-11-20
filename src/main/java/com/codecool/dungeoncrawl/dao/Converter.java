@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Converter {
     private GameMap map1;
@@ -34,22 +35,30 @@ public class Converter {
         }
     }
 
-    public void run(String mode) {
-        if (mode.equals("save")) save();
-        else update();
+    public void run(String mode, String saveName, String playerName) {
+        if (mode.equals("save")) save(saveName);
+        else update(saveName, playerName);
     }
 
-    private void save() {
+    private void save(String saveName) {
         extractDataFromMap();
         playerModel = manager.savePlayer(player);
         date = new Date(System.currentTimeMillis());
         GameMap active = (player.getLevel() == 1)? map1 : map2;
         GameMap stored = (player.getLevel() == 1)? map2 : map1;
-        gameStateModel = manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel);
+        gameStateModel = manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel, saveName);
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon);
     }
 
-    public void update() {
+    public void update(String saveName, String playerName) {
+        if (gameStateModel == null){
+            extractDataFromMap();
+            player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
+            gameStateModel = manager.getSaves().stream()
+                    .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
+                    .collect(Collectors.toList()).get(0);
+            playerModel = gameStateModel.getPlayer();
+        }
         date = new Date(System.currentTimeMillis());
         manager.updatePlayer(player, playerModel);
         GameMap active = (player.getLevel() == 1)? map1 : map2;
@@ -83,8 +92,11 @@ public class Converter {
         rocketGrunt.getRocketPokemonList().forEach(p -> pokemonList.add(p));
     }
 
-    public boolean ifPlayerExists(Player player) {
-        if (manager.getPlayerByName(player) != null) return true;
-        return false;
+    public boolean ifPlayerSaveExists(String saveName, String playerName) {
+        List<GameState> gameStates = manager.getSaves();
+        List<GameState> previous = gameStates.stream()
+                .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
+                .collect(Collectors.toList());
+        return previous.size() != 0;
     }
 }
