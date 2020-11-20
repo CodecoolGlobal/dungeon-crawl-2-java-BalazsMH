@@ -43,6 +43,8 @@ public class GameState extends BaseModel {
         this.active = currentMap;
     }
 
+    public void setStoredMap(String storedMap) { this.stored = storedMap; }
+
     public String getStoredMap() {
         return stored;
     }

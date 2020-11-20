@@ -25,14 +25,16 @@ public class GameDatabaseManager {
         gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player){
-        GameState gameStateModel = new GameState(map, storedMap, date, player);
+    public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player, String saveName){
+        GameState gameStateModel = new GameState(map, storedMap, date, player, saveName);
         gameStateDao.add(gameStateModel);
         return gameStateModel;
     }
 
     public void updateGameState(String map, String storedMap, Date date, PlayerModel player, GameState gameStateModel){
-        gameStateModel = new GameState(map, storedMap, date, player);
+        gameStateModel.setCurrentMap(map);
+        gameStateModel.setStoredMap(storedMap);
+        gameStateModel.setSavedAt(date);
         gameStateDao.update(gameStateModel);
     }
 
@@ -44,12 +46,10 @@ public class GameDatabaseManager {
     }
 
     public void updatePlayer(Player player, PlayerModel playerModel){
-        playerModel = new PlayerModel(player);
+        playerModel.setX(player.getX());
+        playerModel.setY(player.getY());
+        playerModel.setLevel(player.getLevel());
         playerDao.update(playerModel);
-    }
-
-    public PlayerModel getPlayerByName(Player player){
-        return playerDao.getByName(player.getUserName());
     }
 
     public void savePokemon(Pokemon pokemon){
