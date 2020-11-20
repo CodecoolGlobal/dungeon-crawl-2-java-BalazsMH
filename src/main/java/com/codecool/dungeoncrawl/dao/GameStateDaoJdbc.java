@@ -20,12 +20,13 @@ public class GameStateDaoJdbc implements GameStateDao {
     public void add(GameState state) {
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO game_state (current_map, stored_map, saved_at, player_id)" +
-                            "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    "INSERT INTO game_state (current_map, stored_map, saved_at, player_id, save_name)" +
+                            "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, state.getCurrentMap());
             ps.setString(2, state.getStoredMap());
             ps.setDate(3, state.getSavedAt());
             ps.setInt(4, state.getPlayer().getId());
+            ps.setString(5, state.getSaveName());
             ps.executeUpdate();
             ResultSet resultSet = ps.getGeneratedKeys();
             resultSet.next();
@@ -61,7 +62,8 @@ public class GameStateDaoJdbc implements GameStateDao {
             GameState gameState = new GameState(rs.getString("current_map"),
                     rs.getString("stored_map"),
                     rs.getDate("saved_at"),
-                    playerModel);
+                    playerModel,
+                    rs.getString("save_name"));
             gameState.setId(rs.getInt("id"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -82,7 +84,8 @@ public class GameStateDaoJdbc implements GameStateDao {
                 GameState row = new GameState(rs.getString("current_map"),
                                               rs.getString("stored_map"),
                                               rs.getDate("saved_at"),
-                                              playerModel);
+                                              playerModel,
+                                              rs.getString("save_name"));
                 row.setId(rs.getInt("id"));
                 output.add(row);
             }
