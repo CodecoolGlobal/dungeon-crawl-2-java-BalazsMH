@@ -21,7 +21,7 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         pokemonDao = new PokemonDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
     }
 
     public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player, String saveName){
