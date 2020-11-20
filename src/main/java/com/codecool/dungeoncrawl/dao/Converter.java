@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -17,8 +18,10 @@ import java.util.stream.Collectors;
 public class Converter {
     private final GameMap map1;
     private final GameMap map2;
-    private Date date;
+    private GameMap active;
+    private GameMap stored;
     private Player player;
+    private Inventory inventory;
     private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
     private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private final List<Pokemon> pokemonList = new ArrayList<>();
@@ -45,11 +48,12 @@ public class Converter {
         saveNameStored = saveName;
         extractDataFromMap();
         playerModel = manager.savePlayer(player);
-        date = new Date(System.currentTimeMillis());
-        GameMap active = (player.getLevel() == 1)? map1 : map2;
-        GameMap stored = (player.getLevel() == 1)? map2 : map1;
-        gameStateModel = manager.saveGameState(active.layoutToString(), stored.layoutToString(), date, playerModel, saveName);
-        System.out.println("pokenum" + pokemonList.size());
+        gameStateModel = manager.saveGameState(
+                active.layoutToString(),
+                stored.layoutToString(),
+                new Date(System.currentTimeMillis()),
+                playerModel,
+                saveName);
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon, playerModel.getId());
     }
 
@@ -58,21 +62,30 @@ public class Converter {
             saveNameStored = saveName;
             loadPreviousGame(playerName, saveName);
         }
-        date = new Date(System.currentTimeMillis());
         manager.updatePlayer(player, playerModel);
-        GameMap active = (player.getLevel() == 1)? map1 : map2;
-        GameMap stored = (player.getLevel() == 1)? map2 : map1;
-        manager.updateGameState(active.layoutToString(), stored.layoutToString(), date, playerModel, gameStateModel);
+        sortMaps();
+        manager.updateGameState(active.layoutToString(),
+                stored.layoutToString(),
+                new Date(System.currentTimeMillis()),
+                playerModel,
+                gameStateModel);
         pokemonList.forEach(p -> manager.updatePokemon(p, playerModel.getId()));
     }
 
     private void extractDataFromMap() {
         pokemonList.clear();
         player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
+        sortMaps();
+        inventory = player.getInventory();
         getPokemonFromField(map1);
         getPokemonFromField(map2);
         getPokemonFromInventory();
         getRocketPokemon();
+    }
+
+    private void sortMaps() {
+        active = (player.getLevel() == 1)? map1 : map2;
+        stored = (player.getLevel() == 1)? map2 : map1;
     }
 
     private void getPokemonFromField(GameMap map){
