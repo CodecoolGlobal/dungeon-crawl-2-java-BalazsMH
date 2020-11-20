@@ -7,7 +7,6 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import java.sql.SQLException;
 import java.sql.Date;
@@ -22,8 +21,6 @@ public class Converter {
     private GameMap stored;
     private Player player;
     private Inventory inventory;
-    private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
-    private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private final List<Pokemon> pokemonList = new ArrayList<>();
     private final GameDatabaseManager manager;
     private String saveNameStored;
@@ -47,15 +44,10 @@ public class Converter {
     private void save(String saveName) {
         saveNameStored = saveName;
         extractDataFromMap();
-        playerModel = manager.savePlayer(player);
-        gameStateModel = manager.saveGameState(
-                active.layoutToString(),
-                stored.layoutToString(),
-                new Date(System.currentTimeMillis()),
-                playerModel,
-                saveName);
-        manager.saveInventory(inventory, playerModel.getId());
-        for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon, playerModel.getId());
+        manager.savePlayer(player);
+        manager.saveGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()), saveName);
+        manager.saveInventory(inventory);
+        for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon);
     }
 
     public void update(String saveName, String playerName) {
@@ -63,14 +55,10 @@ public class Converter {
             saveNameStored = saveName;
             loadPreviousGame(playerName, saveName);
         }
-        manager.updatePlayer(player, playerModel);
+        manager.updatePlayer(player);
         sortMaps();
-        manager.updateGameState(active.layoutToString(),
-                stored.layoutToString(),
-                new Date(System.currentTimeMillis()),
-                playerModel,
-                gameStateModel);
-        pokemonList.forEach(p -> manager.updatePokemon(p, playerModel.getId()));
+        manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
+        pokemonList.forEach(manager::updatePokemon);
     }
 
     private void extractDataFromMap() {
@@ -98,12 +86,12 @@ public class Converter {
     }
 
     private void getPokemonFromInventory() {
-        player.getInventory().getAllPokemon().forEach(p -> pokemonList.add(p));
+        pokemonList.addAll(player.getInventory().getAllPokemon());
     }
 
     private void getRocketPokemon(){
         RocketGrunt rocketGrunt = (map1.getRocketGrunt() != null)? map1.getRocketGrunt() : map2.getRocketGrunt();
-        rocketGrunt.getRocketPokemonList().forEach(p -> pokemonList.add(p));
+        pokemonList.addAll(rocketGrunt.getRocketPokemonList());
     }
 
     public boolean ifPlayerSaveExists(String saveName, String playerName) {
@@ -114,13 +102,10 @@ public class Converter {
         return previous.size() != 0;
     }
 
+    /** I use this to create the gameStateModel and playerModel objects, so I have access to the database ID-s
+     * Only used when player doesn't start game by loading prior game, but then chooses to overwrite a prior game*/
     private void loadPreviousGame(String playerName, String saveName){
-        /** I use this to create the gameStateModel and playerModel objects, so I have access to the database ID-s
-         * Only used when player doesn't start game by loading prior game, but then chooses to overwrite a prior game*/
-        extractDataFromMap();
-        gameStateModel = manager.getSaves().stream()
-                .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
-                .collect(Collectors.toList()).get(0);
-        playerModel = gameStateModel.getPlayer();
+        extractDataFromMap(); // sets up objects in Converter
+        manager.loadGame(playerName, saveName); // sets up models in GameDatabaseManager
     }
 }

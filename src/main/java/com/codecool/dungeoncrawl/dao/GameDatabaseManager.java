@@ -13,12 +13,17 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
     private GameStateDao gameStateDao;
     private PokemonDao pokemonDao;
     private InventoryDao inventoryDao;
+
+    private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
+    private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
+    private InventoryModel inventoryModel;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -28,45 +33,43 @@ public class GameDatabaseManager {
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
-    public GameState saveGameState(String map, String storedMap, Date date, PlayerModel player, String saveName){
-        GameState gameStateModel = new GameState(map, storedMap, date, player, saveName);
+    public void saveGameState(String map, String storedMap, Date date, String saveName){
+        gameStateModel = new GameState(map, storedMap, date, playerModel, saveName);
         gameStateDao.add(gameStateModel);
-        return gameStateModel;
     }
 
-    public void updateGameState(String map, String storedMap, Date date, PlayerModel player, GameState gameStateModel){
+    public void updateGameState(String map, String storedMap, Date date){
         gameStateModel.setCurrentMap(map);
         gameStateModel.setStoredMap(storedMap);
         gameStateModel.setSavedAt(date);
         gameStateDao.update(gameStateModel);
     }
 
-    public PlayerModel savePlayer(Player player) {
-        PlayerModel model = new PlayerModel(player);
-        playerDao.add(model);
-        return model;
+    public void savePlayer(Player player) {
+        playerModel = new PlayerModel(player);
+        playerDao.add(playerModel);
     }
 
-    public void updatePlayer(Player player, PlayerModel playerModel){
+    public void updatePlayer(Player player){
         playerModel.setX(player.getX());
         playerModel.setY(player.getY());
         playerModel.setLevel(player.getLevel());
         playerDao.update(playerModel);
     }
 
-    public void savePokemon(Pokemon pokemon, int playerId){
+    public void savePokemon(Pokemon pokemon){
         PokemonModel model = new PokemonModel(pokemon);
-        pokemonDao.add(model, playerId);
+        pokemonDao.add(model, playerModel.getId());
     }
 
-    public void updatePokemon(Pokemon pokemon, int playerId){
+    public void updatePokemon(Pokemon pokemon){
         PokemonModel model = new PokemonModel(pokemon);
-        pokemonDao.update(model, playerId);
+        pokemonDao.update(model, playerModel.getId());
     }
 
-    public void saveInventory(Inventory inventory, int playerId){
-        InventoryModel inventoryModel = new InventoryModel(inventory);
-        inventoryDao.add(inventoryModel, playerId);
+    public void saveInventory(Inventory inventory){
+        inventoryModel = new InventoryModel(inventory);
+        inventoryDao.add(inventoryModel, playerModel.getId());
     }
 
     public PokemonModel getPokemon(int id){
@@ -78,11 +81,16 @@ public class GameDatabaseManager {
     }
 
     public List<GameState> getSaves(){
-        List<GameState> saves = gameStateDao.getAll();
-
-        return saves;
+        return gameStateDao.getAll();
     }
 
+    public void loadGame(String playerName, String saveName) {
+        List<GameState> saves = gameStateDao.getAll();
+        gameStateModel = saves.stream()
+                .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
+                .collect(Collectors.toList()).get(0);
+        playerModel = gameStateModel.getPlayer();
+    }
 
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
