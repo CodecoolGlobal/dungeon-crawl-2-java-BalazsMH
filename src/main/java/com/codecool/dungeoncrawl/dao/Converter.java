@@ -53,7 +53,7 @@ public class Converter {
     }
 
     public void update(String saveName, String playerName) {
-        if (! saveNameStored.equals(saveName)){
+        if (! saveName.equals(saveNameStored)){
             saveNameStored = saveName;
             loadPreviousGame(playerName, saveName);
         }
