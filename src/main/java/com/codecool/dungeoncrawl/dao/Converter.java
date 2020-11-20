@@ -58,6 +58,7 @@ public class Converter {
         manager.updatePlayer(player);
         sortMaps();
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
+        manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
     }
 

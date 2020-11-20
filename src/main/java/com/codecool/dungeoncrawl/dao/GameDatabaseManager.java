@@ -69,7 +69,16 @@ public class GameDatabaseManager {
 
     public void saveInventory(Inventory inventory){
         inventoryModel = new InventoryModel(inventory);
-        inventoryDao.add(inventoryModel, playerModel.getId());
+        inventoryModel.setPlayerId(playerModel.getId());
+        inventoryDao.add(inventoryModel);
+    }
+
+    public void updateInventory(Inventory inventory) {
+        inventoryModel.setHealthPotionNumber(inventory.getHealthPotionNumber());
+        inventoryModel.setPokeBallNumber(inventory.getPokeBallNumber());
+        inventoryModel.setKey(inventory.hasKey());
+        inventoryModel.setActivePokemonId(inventory.getActivePokemon().getPokeId());
+        inventoryDao.update(inventoryModel);
     }
 
     public PokemonModel getPokemon(int id){
