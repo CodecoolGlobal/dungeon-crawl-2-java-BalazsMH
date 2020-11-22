@@ -28,6 +28,11 @@ public class Inventory {
     public Inventory(int healthPotionNumber, int pokeBallNumber, boolean key){
         this.healthPotionNumber = healthPotionNumber;
         IntStream.range(0, pokeBallNumber).forEach(i -> pokeBallList.add(new PokeBall()));
+        //TODO: temporarily added new Slowpoke until active pokemon load is fixed.
+        pokemonList.add(new Slowpoke("Slowpoke"));
+        activePokemon = pokemonList.get(0);
+
+
     }
 
     public Optional<PokeBall> takePokeBall(){
