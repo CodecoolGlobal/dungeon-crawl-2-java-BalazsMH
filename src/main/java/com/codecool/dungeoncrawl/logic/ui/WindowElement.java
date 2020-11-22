@@ -102,7 +102,8 @@ public class WindowElement {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
+        //TODO: currentMap temporarily disabled, since it loaded the whole map layout. Find different solution.
+        table.getColumns().addAll(playerColumn, dateTableColumn/*, currentMapTableColumn*/);
 
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
