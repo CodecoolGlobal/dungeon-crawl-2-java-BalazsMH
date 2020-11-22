@@ -29,8 +29,8 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         pokemonDao = new PokemonDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
         inventoryDao = new InventoryDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao, inventoryDao);
     }
 
     public void saveGameState(String map, String storedMap, Date date, String saveName){
@@ -80,6 +80,7 @@ public class GameDatabaseManager {
         inventoryModel.setActivePokemonId(inventory.getActivePokemon().getPokeId());
         inventoryDao.update(inventoryModel);
     }
+
 
     public boolean checkIfInventoryModelExists(){
         return this.inventoryModel != null;

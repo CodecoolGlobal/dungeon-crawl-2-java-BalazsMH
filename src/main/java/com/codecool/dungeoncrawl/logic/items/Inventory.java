@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Inventory {
     private int healthPotionNumber = 0;
@@ -22,6 +23,11 @@ public class Inventory {
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
+    }
+
+    public Inventory(int healthPotionNumber, int pokeBallNumber, boolean key){
+        this.healthPotionNumber = healthPotionNumber;
+        IntStream.range(0, pokeBallNumber).forEach(i -> pokeBallList.add(new PokeBall()));
     }
 
     public Optional<PokeBall> takePokeBall(){

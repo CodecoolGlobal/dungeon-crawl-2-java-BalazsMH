@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.game;
 import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
@@ -14,6 +15,7 @@ import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -29,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -73,6 +76,7 @@ public class Game {
 
     public Game(GameState gameState) {
         PlayerModel playerModel = gameState.getPlayer();
+        InventoryModel inventoryModel = gameState.getInventoryModel();
         int currentLevel = playerModel.getLevel();
         String currentMap = gameState.getCurrentMap();
         String storedMap = gameState.getStoredMap();
@@ -90,7 +94,11 @@ public class Game {
         map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         map1.setPlayer(this.player);
 
-
+        //set inventory for the player. Not all data is updated currently.
+        player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
+                                          inventoryModel.getPokeBallNumber(),
+                                          inventoryModel.hasKey()
+                                          ));
 
 
 

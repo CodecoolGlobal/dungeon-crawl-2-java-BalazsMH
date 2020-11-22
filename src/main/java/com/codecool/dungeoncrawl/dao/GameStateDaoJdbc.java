@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import javax.sql.DataSource;
@@ -11,10 +12,12 @@ import java.util.List;
 public class GameStateDaoJdbc implements GameStateDao {
     private DataSource dataSource;
     private PlayerDao playerDao;
+    private InventoryDao inventoryDao;
 
-    public GameStateDaoJdbc(DataSource dataSource, PlayerDao playerDao) {
+    public GameStateDaoJdbc(DataSource dataSource, PlayerDao playerDao, InventoryDao inventoryDao) {
         this.dataSource = dataSource;
         this.playerDao = playerDao;
+        this.inventoryDao = inventoryDao;
     }
 
 
@@ -82,10 +85,12 @@ public class GameStateDaoJdbc implements GameStateDao {
             ResultSet rss = pst.executeQuery();
             while (rss.next()){
                 PlayerModel pm = playerDao.get(rss.getInt("player_id"));
+                InventoryModel im = inventoryDao.get(rss.getInt("player_id"));
                 GameState gs = new GameState(rss.getString("current_map"),
                         rss.getString("stored_map"),
                         rss.getDate("saved_at"),
                         pm,
+                        im,
                         rss.getString("save_name"));
                 gs.setId(rss.getInt("id"));
                 output.add(gs);

@@ -180,6 +180,10 @@ public class Player extends Actor {
 
     public Inventory getInventory() {return inventory;}
 
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     public boolean getGodMode() { return superUser; }
 
 }
