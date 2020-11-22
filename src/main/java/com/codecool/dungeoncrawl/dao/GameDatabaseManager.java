@@ -99,6 +99,7 @@ public class GameDatabaseManager {
                 .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
                 .collect(Collectors.toList()).get(0);
         playerModel = gameStateModel.getPlayer();
+        //inventoryModel not initialized
     }
 
 /*

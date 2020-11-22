@@ -58,6 +58,7 @@ public class Converter {
         manager.updatePlayer(player);
         sortMaps();
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
+        //inventory is not initialized when the first save is an overwrite
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
     }
