@@ -91,6 +91,8 @@ public class Game {
 
         //create player on the cell it was previously on
         this.player = new Player(map1.getCell(playerModel.getX(), playerModel.getY()));
+        this.player.setUserName(playerModel.getPlayerName());
+        this.player.setSuperUser(playerModel.getGodMode());
         map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         map1.setPlayer(this.player);
 
@@ -100,19 +102,13 @@ public class Game {
                                           inventoryModel.hasKey()
                                           ));
 
-
-
-
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
         converter = new Converter(map1, map2);
-
     }
-
-
 
 
     public Scene showGameScene() {

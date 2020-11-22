@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
@@ -24,6 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -116,6 +118,11 @@ public class WindowElement {
         loadSelectedButton.setOnMouseClicked((event)->{
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
             System.out.println(selectedSave);
+
+            Game game = new Game(selectedSave);
+
+            primaryStage.setScene(game.showGameScene());
+
         });
         loadSelectedButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         loadGamePane.getChildren().addAll(navigateBackButton, table, loadSelectedButton);
