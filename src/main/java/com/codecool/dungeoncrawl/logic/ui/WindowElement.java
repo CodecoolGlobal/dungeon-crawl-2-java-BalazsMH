@@ -58,8 +58,6 @@ public class WindowElement {
     }
 
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu){
-
-
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
@@ -74,6 +72,11 @@ public class WindowElement {
 
         //Get saves and convert result to ObservableList.
         GameDatabaseManager manager = new GameDatabaseManager();
+        try {
+            manager.setup();
+        } catch (SQLException e) {
+            System.out.println("Unable to setup Game Database manager.");
+        }
         List<GameState> saves = manager.getSaves();
 
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
