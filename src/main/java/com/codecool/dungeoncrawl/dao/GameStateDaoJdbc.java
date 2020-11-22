@@ -27,7 +27,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO game_state (current_map, stored_map, saved_at, player_id, save_name)" +
                             "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, state.getCurrentMap());
+            ps.setString(1, state.getActiveMap());
             ps.setString(2, state.getStoredMap());
             ps.setDate(3, state.getSavedAt());
             ps.setInt(4, state.getPlayer().getId());
@@ -46,7 +46,7 @@ public class GameStateDaoJdbc implements GameStateDao {
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE game_state SET current_map = ?, stored_map = ?, saved_at = ? WHERE player_id = ?");
-            ps.setString(1, state.getCurrentMap());
+            ps.setString(1, state.getActiveMap());
             ps.setString(2, state.getStoredMap());
             ps.setDate(3, state.getSavedAt());
             ps.setInt(4, state.getPlayer().getId());

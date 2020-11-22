@@ -48,8 +48,10 @@ public class GameState extends BaseModel {
         this.savedAt = savedAt;
     }
 
-    public String getCurrentMap() {
-        return active;
+    public String getActiveMap() { return active; }
+
+    public String getStoredMap() {
+        return stored;
     }
 
     public void setCurrentMap(String currentMap) {
@@ -57,10 +59,6 @@ public class GameState extends BaseModel {
     }
 
     public void setStoredMap(String storedMap) { this.stored = storedMap; }
-
-    public String getStoredMap() {
-        return stored;
-    }
 
     public PlayerModel getPlayer() {
         return player;
