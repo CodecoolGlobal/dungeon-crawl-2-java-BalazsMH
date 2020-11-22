@@ -1,22 +1,22 @@
 package com.codecool.dungeoncrawl.model;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.sql.Date;
-import java.util.List;
 
 public class GameState extends BaseModel {
     private Date savedAt;
-    private String currentMap;
-    private List<String> discoveredMaps = new ArrayList<>();
+    private String active;
+    private String stored;
     private PlayerModel player;
     private String playerName;
+    private String saveName;
 
-    public GameState(String currentMap, Date savedAt, PlayerModel player) {
-        this.currentMap = currentMap;
+    public GameState(String currentMap, String storedMap, Date savedAt, PlayerModel player, String saveName) {
+        this.active = currentMap;
+        this.stored = storedMap;
         this.savedAt = savedAt;
         this.player = player;
         this.playerName = player.getPlayerName();
+        this.saveName = saveName;
     }
 
     public Date getSavedAt() {
@@ -27,24 +27,26 @@ public class GameState extends BaseModel {
         return playerName;
     }
 
+    public String getSaveName() {
+        return saveName;
+    }
+
     public void setSavedAt(Date savedAt) {
         this.savedAt = savedAt;
     }
 
     public String getCurrentMap() {
-        return currentMap;
+        return active;
     }
 
     public void setCurrentMap(String currentMap) {
-        this.currentMap = currentMap;
+        this.active = currentMap;
     }
 
-    public List<String> getDiscoveredMaps() {
-        return discoveredMaps;
-    }
+    public void setStoredMap(String storedMap) { this.stored = storedMap; }
 
-    public void addDiscoveredMap(String map) {
-        this.discoveredMaps.add(map);
+    public String getStoredMap() {
+        return stored;
     }
 
     public PlayerModel getPlayer() {
@@ -59,8 +61,7 @@ public class GameState extends BaseModel {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("savedAt:").append(this.savedAt).append(",");
-        sb.append("currentMap:").append(this.currentMap).append(",");
-        sb.append("discoveredMaps:").append(this.discoveredMaps).append(",");
+        sb.append("currentMap:").append(this.active).append(",");
         sb.append("playerName:").append(this.player.getPlayerName()).append(",");
         sb.append("x:").append(this.player.getX()).append(",");
         sb.append("y:").append(this.player.getY());

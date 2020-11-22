@@ -28,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Game {
     private final GameMap map1;
@@ -35,7 +36,6 @@ public class Game {
     private Player player;
     private final List<List<Integer>> mapWallsLevel1;
     private final List<List<Integer>> mapWallsLevel2;
-    private final MapChanger mapChanger;
     private final Canvas canvas;
     private final GraphicsContext context;
     private final Label nameLabel = new Label();
@@ -45,7 +45,7 @@ public class Game {
     private int activeMap = 1;
     private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
-
+    private Converter converter;
 
 
 
@@ -61,12 +61,12 @@ public class Game {
 
         this.player = this.map1.getPlayer();
 
-        this.mapChanger = new MapChanger(map1, map2);
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
+        converter = new Converter(map1, map2);
     }
 
     public Game(GameMap map1, GameMap map2) {
@@ -78,7 +78,6 @@ public class Game {
 
         this.player = this.map1.getPlayer();
 
-        this.mapChanger = new MapChanger(map1, map2);
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
@@ -156,9 +155,8 @@ public class Game {
                     this.activeMap = this.activeMap == 1 ? 2 : 1; // change activeMap
 
                     GameMap  nextMap = this.activeMap == 1 ? this.map1 : map2; //the new activeMap will be the next map
+                    player.setLevel(this.activeMap);
                     Player toKeep = map.getPlayer(); //get the player from the original map
-
-                    toKeep.setLevel(this.activeMap);
 
                     Cell doorCell = nextMap.getDoor().getCell();
                     toKeep.setCell(doorCell);
@@ -180,11 +178,38 @@ public class Game {
                 inventory.heal();
                 break;
             case S:
-                // TODO should be Ctrl + S
-                Converter converter = new Converter(mapChanger.getActive(), mapChanger.getStored());
-                converter.run();
+                if (keyEvent.isControlDown()){
+                    while(true){
+                        String saveName = getSaveName();
+                        String playerName = player.getUserName();
+                        if (converter.ifPlayerSaveExists(saveName, playerName)) {
+                            String decision = getDecision();
+                            if (decision.equals("s")) {
+                                converter.run("update", saveName, playerName);
+                                break;
+                            }
+                        } else {
+                            converter.run("save", saveName, playerName);
+                            break;
+                        }
+                    }
+                }
         }
         refresh(inventory);
+    }
+
+    private String getSaveName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter save name: ");
+        if (scanner.hasNextLine()) return scanner.nextLine();
+        return null;
+    }
+
+    private String getDecision(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Save already exists, press S to overwrite or C to cancel: ");
+        if (scanner.hasNextLine()) return scanner.nextLine();
+        return null;
     }
 
     private void refresh(Inventory inventory) {

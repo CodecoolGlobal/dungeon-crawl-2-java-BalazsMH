@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 public class GameMap {
     private final int width;
@@ -108,5 +109,20 @@ public class GameMap {
                 pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
             }
         }
+    }
+
+    public String layoutToString() {
+        StringJoiner mapString = new StringJoiner("\n");
+        for (Cell[] row : cells){
+            StringBuilder r = new StringBuilder();
+            for (Cell cell : row){
+                if(cell.getTileName().equals("floor")) r.append(".");
+                else if (cell.getTileName().equals("wall")) r.append("#");
+                else if (cell.getTileName().equals("empty")) r.append(" ");
+                else if (cell.getTileName().equals("door")) r.append("d");
+            }
+            mapString.add(r.toString());
+        }
+        return mapString.toString();
     }
 }

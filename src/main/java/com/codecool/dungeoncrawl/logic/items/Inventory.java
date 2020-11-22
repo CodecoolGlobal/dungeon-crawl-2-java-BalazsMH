@@ -39,6 +39,7 @@ public class Inventory {
     }
 
     public void addPokemon(Pokemon pokemon){
+        pokemon.setLevel(0);
         pokemonList.add(pokemon);
     }
 
@@ -77,4 +78,10 @@ public class Inventory {
             healthPotionNumber--;
         }
     }
+
+    public List<Pokemon> getAllPokemon() { return pokemonList; }
+
+    public int getHealthPotionNumber() { return healthPotionNumber; }
+
+    public int getPokeBallNumber() { return pokeBallList.size(); }
 }
