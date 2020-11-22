@@ -13,6 +13,8 @@ import com.codecool.dungeoncrawl.logic.map.MapChanger;
 import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -69,20 +71,28 @@ public class Game {
         converter = new Converter(map1, map2);
     }
 
-    public Game(GameMap map1, GameMap map2) {
-        this.map1 = map1;
+    public Game(GameState gameState) {
+        PlayerModel playerModel = gameState.getPlayer();
+        int currentLevel = playerModel.getLevel();
+        String currentMap = gameState.getCurrentMap();
+        String storedMap = gameState.getStoredMap();
+
+        this.map1 = MapLoader.loadMapFromSave(currentMap, currentLevel);
         this.mapWallsLevel1 = map1.getWalls();
 
-        this.map2 = map2;
+        this.map2 = MapLoader.loadMapFromSave(storedMap, currentLevel == 1 ? 2 : 1);
         this.mapWallsLevel2 = map2.getWalls();
 
-        this.player = this.map1.getPlayer();
+
+
 
         this.canvas = new Canvas(
                 map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
+        converter = new Converter(map1, map2);
+
     }
 
 

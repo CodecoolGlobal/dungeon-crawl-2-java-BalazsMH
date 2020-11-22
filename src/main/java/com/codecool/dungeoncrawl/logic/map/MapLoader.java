@@ -11,6 +11,7 @@ import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,4 +99,73 @@ public class MapLoader {
         return walls;
     }
 
+
+    public static GameMap loadMapFromSave(String mapString, int gameLevel) {
+        walls = new ArrayList<>();
+        Scanner scanner = new Scanner(mapString);
+
+        int width = scanner.nextInt();
+        int height = scanner.nextInt();
+
+        scanner.nextLine(); // empty line
+
+        GameMap map = new GameMap(width, height, CellType.EMPTY, gameLevel);
+        for (int y = 0; y < height; y++) {
+            String line = scanner.nextLine();
+            for (int x = 0; x < width; x++) {
+                if (x < line.length()) {
+                    Cell cell = map.getCell(x, y);
+                    switch (line.charAt(x)) {
+                        case ' ':
+                            cell.setType(CellType.EMPTY);
+                            break;
+                        case '#':
+                            cell.setType(CellType.WALL);
+                            List<Integer> tmp = new ArrayList<>(List.of(x, y));
+                            walls.add(tmp);
+                            break;
+                        case 'd':
+                            cell.setType(CellType.DOOR);
+                            map.setDoor(new Door(cell));
+                            break;
+                        case '.':
+                            cell.setType(CellType.FLOOR);
+                            break;
+                        case 'k':
+                            cell.setType(CellType.FLOOR);
+                            new Key(cell);
+                            break;
+                        case '@':
+                            cell.setType(CellType.FLOOR);
+                            map.setPlayer(new Player(cell));
+                            break;
+                        case 'L':
+                            cell.setType(CellType.FLOOR);
+                            new LootBox(cell);
+                            break;
+                        case 'C':
+                            cell.setType(CellType.FLOOR);
+                            map.addPokemon(new Charizard(cell, "Charizard", gameLevel));
+                            break;
+                        case 'S':
+                            cell.setType(CellType.FLOOR);
+                            map.addPokemon(new Slowpoke(cell, "Slowpoke", gameLevel));
+                            break;
+                        case 'B':
+                            cell.setType(CellType.FLOOR);
+                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur", gameLevel));
+                            break;
+                        case 'R':
+                            cell.setType(CellType.FLOOR);
+                            map.setRocketGrunt(new RocketGrunt(cell));
+                            break;
+                        default:
+                            throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
+                    }
+                }
+            }
+        }
+        map.setWalls(walls);
+        return map;
+    }
 }
