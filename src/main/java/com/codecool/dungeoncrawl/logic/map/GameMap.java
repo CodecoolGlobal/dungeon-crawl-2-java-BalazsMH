@@ -113,6 +113,7 @@ public class GameMap {
 
     public String layoutToString() {
         StringJoiner mapString = new StringJoiner("\n");
+        mapString.add(width + " " + height);
         for (Cell[] row : cells){
             StringBuilder r = new StringBuilder();
             for (Cell cell : row){

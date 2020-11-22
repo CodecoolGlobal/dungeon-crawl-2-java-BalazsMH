@@ -191,6 +191,7 @@ public class Game {
                             }
                         } else {
                             converter.run("save", saveName, playerName);
+                            System.out.println("Save succesful");
                             break;
                         }
                     }
