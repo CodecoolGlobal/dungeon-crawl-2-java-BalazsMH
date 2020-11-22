@@ -186,6 +186,7 @@ public class Game {
                             String decision = getDecision();
                             if (decision.equals("s")) {
                                 converter.run("update", saveName, playerName);
+                                System.out.println("Save succesful");
                                 break;
                             }
                         } else {

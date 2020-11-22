@@ -81,6 +81,14 @@ public class GameDatabaseManager {
         inventoryDao.update(inventoryModel);
     }
 
+    public boolean checkIfInventoryModelExists(){
+        return this.inventoryModel != null;
+    }
+
+    public void setInventoryModel(Inventory inventory) {
+        this.inventoryModel = new InventoryModel(inventory);
+    }
+
     public PokemonModel getPokemon(int id){
         return pokemonDao.get(id);
     }
@@ -143,4 +151,6 @@ public class GameDatabaseManager {
 
         return dataSource;
     }
+
+
 }
