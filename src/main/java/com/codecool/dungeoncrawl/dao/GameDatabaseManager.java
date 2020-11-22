@@ -101,6 +101,14 @@ public class GameDatabaseManager {
         playerModel = gameStateModel.getPlayer();
     }
 
+/*
+    public static List<GameState> getSaves2() throws SQLException {
+        DataSource dataSource =  connect2();
+        GameStateDao gameStateDao = new GameStateDaoJdbc(dataSource);
+        return gameStateDao.getAll();
+    }
+*/
+
 
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();

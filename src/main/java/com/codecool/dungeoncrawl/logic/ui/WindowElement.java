@@ -73,13 +73,9 @@ public class WindowElement {
         loadGamePane.requestFocus();
 
         //Get saves and convert result to ObservableList.
+        GameDatabaseManager manager = new GameDatabaseManager();
+        List<GameState> saves = manager.getSaves();
 
-        List<GameState> saves = null;
-        try {
-            saves = GameDatabaseManager.getSaves2();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
 
         //Create columns
@@ -95,7 +91,7 @@ public class WindowElement {
         currentMapTableColumn.setMinWidth(200);
         currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
 
-        //set table properties
+        //Set table properties
         TableView<GameState> table = new TableView<>();
         table.getStyleClass().add("pokeFont"); //stylesheet not added yet
         table.setItems(saves2);
