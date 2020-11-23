@@ -62,8 +62,8 @@ public class Game {
         this.player = this.map1.getPlayer();
 
         this.canvas = new Canvas(
-                map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
-                map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+                map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
         converter = new Converter(map1, map2);
