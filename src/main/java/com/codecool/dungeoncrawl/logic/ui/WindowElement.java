@@ -98,6 +98,7 @@ public class WindowElement {
 
         //Set table properties
         TableView<GameState> table = new TableView<>();
+        table.setPlaceholder(new Label("You do not have any saves yet!"));
         table.getStyleClass().add("pokeFont"); //stylesheet not added yet
         table.setItems(saves2);
         table.setEditable(false);
