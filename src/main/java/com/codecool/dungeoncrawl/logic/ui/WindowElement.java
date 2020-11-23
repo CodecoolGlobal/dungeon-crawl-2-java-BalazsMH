@@ -111,7 +111,6 @@ public class WindowElement {
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         navigateBackButton.setOnMouseClicked((event)->{
             primaryStage.setScene(mainMenu);
-            //TODO:Find a way to get the main menu Scene some other way.
         });
 
         Button loadSelectedButton = new Button("Load selected game");
