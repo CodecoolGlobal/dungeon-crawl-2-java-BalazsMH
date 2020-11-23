@@ -81,6 +81,9 @@ public class Converter {
         getRocketPokemon();
     }
 
+
+
+
     private void sortMaps() {
         active = (player.getLevel() == 1)? map1 : map2;
         stored = (player.getLevel() == 1)? map2 : map1;

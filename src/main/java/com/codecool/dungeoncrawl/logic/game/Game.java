@@ -81,7 +81,6 @@ public class Game {
         String activeMap = gameState.getActiveMap();
         String storedMap = gameState.getStoredMap();
 
-        //TODO: currently there is no way to determine which map the player was on
         //create current map from String, without actors/items placed
         this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel);
         this.mapWallsLevel1 = map1.getWalls();
@@ -108,7 +107,7 @@ public class Game {
                 map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-        //converter = new Converter(map1, map2);
+        converter = new Converter(map1, map2);
     }
 
 
