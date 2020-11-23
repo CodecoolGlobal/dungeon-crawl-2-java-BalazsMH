@@ -78,16 +78,16 @@ public class Game {
         PlayerModel playerModel = gameState.getPlayer();
         InventoryModel inventoryModel = gameState.getInventoryModel();
         int currentLevel = playerModel.getLevel();
-        String currentMap = gameState.getActiveMap();
+        String activeMap = gameState.getActiveMap();
         String storedMap = gameState.getStoredMap();
 
         //TODO: currently there is no way to determine which map the player was on
         //create current map from String, without actors/items placed
-        this.map1 = MapLoader.loadMapFromSave(currentMap, currentLevel);
+        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel);
         this.mapWallsLevel1 = map1.getWalls();
 
         //create stored map from String, without actors/items placed
-        this.map2 = MapLoader.loadMapFromSave(storedMap, currentLevel == 1 ? 2 : 1);
+        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, currentLevel == 1 ? 2 : 1);
         this.mapWallsLevel2 = map2.getWalls();
 
         //create player on the cell it was previously on
