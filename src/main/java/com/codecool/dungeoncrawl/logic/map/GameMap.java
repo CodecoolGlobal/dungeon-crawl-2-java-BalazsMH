@@ -20,8 +20,8 @@ public class GameMap {
     private Door door;
     private final int gameLevel;
     private List<List<Integer>>  walls = new ArrayList<>();
-    private int displayWidth = 32;
-    private int displayHeight = 25;
+    private int displayWidth = 25;
+    private int displayHeight = 30;
 
 
 
