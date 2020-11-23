@@ -67,8 +67,8 @@ public class Game {
         this.player = this.map1.getPlayer();
 
         this.canvas = new Canvas(
-                map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
-                map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+                map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
         converter = new Converter(map1, map2);
@@ -239,14 +239,15 @@ public class Game {
 
     private void refresh(Inventory inventory) {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
+        Cell[][] visibleMap = map.getVisibleMap();
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         WindowElement.refreshInfoWindow(text, currentInfo, map);
         WindowElement.refreshLevelAndInventory(inventory, inv, currentLevel, map);
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
+        for (int x = 0; x < map.getDisplayWidth(); x++) {
+            for (int y = 0; y < map.getDisplayHeight(); y++) {
+                Cell cell = visibleMap[x][y];
                 Tiles.drawTile(context, cell, x, y);
 
                 if (cell.getItem() != null) {
