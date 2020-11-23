@@ -215,14 +215,15 @@ public class Game {
 
     private void refresh(Inventory inventory) {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
+        Cell[][] visibleMap = map.getVisibleMap();
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         WindowElement.refreshInfoWindow(text, currentInfo, map);
         WindowElement.refreshLevelAndInventory(inventory, inv, currentLevel, map);
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
+        for (int x = 0; x < map.getDisplayWidth(); x++) {
+            for (int y = 0; y < map.getDisplayHeight(); y++) {
+                Cell cell = visibleMap[x][y];
                 Tiles.drawTile(context, cell, x, y);
 
                 if (cell.getItem() != null) {

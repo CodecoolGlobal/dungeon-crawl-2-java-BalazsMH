@@ -20,6 +20,9 @@ public class GameMap {
     private Door door;
     private final int gameLevel;
     private List<List<Integer>>  walls = new ArrayList<>();
+    private int displayWidth = 32;
+    private int displayHeight = 25;
+
 
 
     private Player player;
@@ -124,5 +127,46 @@ public class GameMap {
             mapString.add(r.toString());
         }
         return mapString.toString();
+    }
+
+    public Cell[][] getVisibleMap () {
+        Cell[][] visibleCells = new Cell[displayWidth][displayHeight];
+        int x = player.getX();
+        int y = player.getY();
+        int playerRelativeX = displayWidth / 2;
+        int playerRelativeY = displayHeight / 2;
+        int mapOffsetX;
+        int mapOffsetY;
+
+        mapOffsetX = offsetCalculator(x, playerRelativeX, displayWidth, width);
+        mapOffsetY = offsetCalculator(y, playerRelativeY, displayHeight, height);
+
+        for (int i = 0; i < displayWidth; i++) {
+            for (int j = 0; j < displayHeight; j++) {
+                visibleCells[i][j] = cells[i + mapOffsetX][j + mapOffsetY];
+            }
+        }
+        return visibleCells;
+    }
+
+
+    public int getDisplayWidth() {
+        return displayWidth;
+    }
+
+    public int getDisplayHeight() {
+        return displayHeight;
+    }
+
+    private int offsetCalculator (int pos, int relativePos, int displaySize, int mapSize ) {
+        if (pos - relativePos >= 0 && (pos + displaySize - relativePos) < mapSize) {
+            return pos - relativePos;
+        }
+        else if (pos - relativePos < 0) {
+            return 0;
+        }
+        else {
+            return mapSize - displaySize;
+        }
     }
 }
