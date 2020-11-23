@@ -192,6 +192,28 @@ public class WindowElement {
         return rightPane;
     }
 
+    public static void saveWindow(Stage pStage) {
+        Stage savePopup = new Stage();
+        savePopup.initModality(Modality.WINDOW_MODAL);
+        savePopup.initOwner(pStage);
+
+        Label nameLabel = new Label("Name: ");
+        TextField nameField = new TextField();
+        HBox nameBox = new HBox(nameLabel, nameField);
+
+        Button saveButton = new Button("Save");
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(event -> pStage.show());
+        HBox buttonBox = new HBox(saveButton, cancelButton);
+
+        VBox saveBox = new VBox(nameBox, buttonBox);
+
+        Scene saveScene = new Scene(saveBox);
+        savePopup.setScene(saveScene);
+        savePopup.show();
+        System.out.println("end of function");
+    }
+
     public static void gameEndWindow(EndCondition endCondition, Stage pStage) {
         Stage endPopup = new Stage();
         endPopup.initModality(Modality.WINDOW_MODAL);

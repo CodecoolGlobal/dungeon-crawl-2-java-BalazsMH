@@ -25,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
@@ -179,6 +180,8 @@ public class Game {
                 break;
             case S:
                 if (keyEvent.isControlDown()){
+                    WindowElement.saveWindow(Main.getpStage());
+
                     while(true){
                         String saveName = getSaveName();
                         String playerName = player.getUserName();
