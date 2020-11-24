@@ -25,6 +25,7 @@ public class GameDatabaseManager {
     private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private InventoryModel inventoryModel;
     private List<LootBoxModel> lootBoxModels = new ArrayList<>();
+    private List<PokemonModel> pokemonModels = new ArrayList<>();
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -102,17 +103,16 @@ public class GameDatabaseManager {
             lootBoxModels.get(idx).setX(null);
             lootBoxModels.get(idx).setY(null);
         }
-        lootBoxModels.forEach(l -> System.out.println(l.getLevel()));
         lootBoxDao.update(lootBoxModels.get(idx));
     }
 
-    public boolean checkIfInventoryModelExists(){
-        return this.inventoryModel != null;
-    }
+//    public boolean checkIfInventoryModelExists(){
+//        return this.inventoryModel != null;
+//    }
 
-    public void setInventoryModel(Inventory inventory) {
-        this.inventoryModel = new InventoryModel(inventory);
-    }
+//    public void setInventoryModel(Inventory inventory) {
+//        this.inventoryModel = new InventoryModel(inventory);
+//    }
 
     public PokemonModel getPokemon(int id){
         return pokemonDao.get(id);
@@ -132,7 +132,16 @@ public class GameDatabaseManager {
                 .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
                 .collect(Collectors.toList()).get(0);
         playerModel = gameStateModel.getPlayer();
-        //TODO:inventoryModel not initialized
+        inventoryModel = inventoryDao.getAll().stream()
+                .filter(m -> m.getPlayerId() == playerModel.getId())
+                .collect(Collectors.toList())
+                .get(0);
+        pokemonModels = pokemonDao.getAll().stream()
+                .filter(m -> m.getPlayerId() == playerModel.getId())
+                .collect(Collectors.toList());
+        lootBoxModels = lootBoxDao.getAll().stream()
+                .filter(m -> m.getPlayerId() == playerModel.getId())
+                .collect(Collectors.toList());
     }
 
 /*
