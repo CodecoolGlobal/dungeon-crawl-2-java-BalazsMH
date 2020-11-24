@@ -45,4 +45,6 @@ public class LootBox extends Item {
     public int getLootBoxId() {
         return lootBoxId;
     }
+
+    public void setLevel(int level) { this.level = level; }
 }
