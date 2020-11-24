@@ -31,7 +31,7 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         pokemonDao = new PokemonDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao, inventoryDao);
         inventoryDao = new InventoryDaoJdbc(dataSource);
         lootBoxDao = new LootBoxDaoJdbc(dataSource);
     }
@@ -134,7 +134,7 @@ public class GameDatabaseManager {
         lootBoxModels = lootBoxDao.getAll().stream()
                 .filter(m -> m.getPlayerId() == playerModel.getId())
                 .collect(Collectors.toList());
-        gameStateModel.setInventoryModel(inventoryModel);
+//        gameStateModel.setInventoryModel(inventoryModel);
         gameStateModel.setLootBoxModelList(lootBoxModels);
         gameStateModel.setPokemonModelList(pokemonModels);
     }
