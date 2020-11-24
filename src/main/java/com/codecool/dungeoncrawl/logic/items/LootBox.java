@@ -38,11 +38,11 @@ public class LootBox extends Item {
         return cell;
     }
 
-    public int getX() {
-        return cell.getX();
+    public Integer getX() {
+        return (cell != null)? cell.getX() : null;
     }
 
-    public int getY() {
-        return cell.getY();
+    public Integer getY() {
+        return (cell != null)? cell.getY() : null;
     }
 }
