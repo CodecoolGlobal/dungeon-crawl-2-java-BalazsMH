@@ -3,15 +3,14 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
-import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.InventoryModel;
-import com.codecool.dungeoncrawl.model.PlayerModel;
-import com.codecool.dungeoncrawl.model.PokemonModel;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
+import com.codecool.dungeoncrawl.model.*;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +19,12 @@ public class GameDatabaseManager {
     private GameStateDao gameStateDao;
     private PokemonDao pokemonDao;
     private InventoryDao inventoryDao;
+    private LootBoxDao lootBoxDao;
 
     private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
     private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
     private InventoryModel inventoryModel;
+    private List<LootBoxModel> lootBoxModels = new ArrayList<>();
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -31,6 +32,7 @@ public class GameDatabaseManager {
         pokemonDao = new PokemonDaoJdbc(dataSource);
         gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
         inventoryDao = new InventoryDaoJdbc(dataSource);
+        lootBoxDao = new LootBoxDaoJdbc(dataSource);
     }
 
     public void saveGameState(String map, String storedMap, Date date, String saveName){
@@ -79,6 +81,14 @@ public class GameDatabaseManager {
         inventoryModel.setKey(inventory.hasKey());
         inventoryModel.setActivePokemonId(inventory.getActivePokemon().getPokeId());
         inventoryDao.update(inventoryModel);
+    }
+
+    public void saveLootbox(LootBox lootBox){
+        LootBoxModel lootboxModel = new LootBoxModel(lootBox);
+        lootboxModel.setPlayerId(playerModel.getId());
+        lootboxModel.setLevel(playerModel.getLevel());
+        lootBoxModels.add(lootboxModel);
+        lootBoxDao.add(lootboxModel);
     }
 
     public boolean checkIfInventoryModelExists(){

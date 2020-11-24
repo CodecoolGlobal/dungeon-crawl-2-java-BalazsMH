@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.GameState;
 
@@ -24,6 +25,7 @@ public class Converter {
     private final List<Pokemon> pokemonList = new ArrayList<>();
     private final GameDatabaseManager manager;
     private String saveNameStored;
+    private List<LootBox> lootBoxes = new ArrayList<>();
 
     public Converter(GameMap map1, GameMap map2){
         this.map1 = map1;
@@ -48,6 +50,7 @@ public class Converter {
         manager.saveGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()), saveName);
         manager.saveInventory(inventory);
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon);
+        for (LootBox lootBox : lootBoxes) manager.saveLootbox(lootBox);
     }
 
     public void update(String saveName, String playerName) {
@@ -75,8 +78,8 @@ public class Converter {
         player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
         sortMaps();
         inventory = player.getInventory();
-        getPokemonFromField(map1);
-        getPokemonFromField(map2);
+        getPokemonAndLootboxFromField(map1);
+        getPokemonAndLootboxFromField(map2);
         getPokemonFromInventory();
         getRocketPokemon();
     }
@@ -86,10 +89,11 @@ public class Converter {
         stored = (player.getLevel() == 1)? map2 : map1;
     }
 
-    private void getPokemonFromField(GameMap map){
+    private void getPokemonAndLootboxFromField(GameMap map){
         for (Cell[] row : map.getCells()){
             for (Cell cell : row){
                 if (cell.getPokemon() != null) pokemonList.add(cell.getPokemon());
+                if (cell.getItem() instanceof LootBox) lootBoxes.add((LootBox) cell.getItem());
             }
         }
     }
