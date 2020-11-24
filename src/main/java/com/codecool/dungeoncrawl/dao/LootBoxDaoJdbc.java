@@ -3,10 +3,7 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.model.LootBoxModel;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class LootBoxDaoJdbc implements LootBoxDao {
     private DataSource dataSource;
@@ -17,7 +14,28 @@ public class LootBoxDaoJdbc implements LootBoxDao {
 
     @Override
     public void add(LootBoxModel lootBox) {
-
+        try(Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO lootbox (player_id, health_potion_number, poke_ball_number, x, y, level)" +
+                            "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, lootBox.getPlayerId());
+            ps.setInt(2, lootBox.getHealthPotionNumber());
+            ps.setInt(3, lootBox.getPokeBallNumber());
+            if (lootBox.getX() != null){
+                ps.setInt(4, lootBox.getX());
+                ps.setInt(5, lootBox.getY());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+            ps.setInt(6, lootBox.getLevel());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            lootBox.setId(rs.getInt(1));
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -37,7 +55,8 @@ public class LootBoxDaoJdbc implements LootBoxDao {
                     rs.getInt("health_potion_number"),
                     rs.getInt("poke_ball_number"),
                     (rs.getObject("x") != null) ? rs.getInt("x") : null,
-                    (rs.getObject("y") != null) ? rs.getInt("y") : null);
+                    (rs.getObject("y") != null) ? rs.getInt("y") : null,
+                    rs.getInt("level"));
             model.setId(rs.getInt("id"));
             return model;
         } catch (SQLException e){
