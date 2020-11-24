@@ -38,8 +38,9 @@ CREATE TABLE public.lootbox (
     player_id INTEGER NOT NULL,
     health_potion_number INTEGER NOT NULL,
     poke_ball_number INTEGER NOT NULL,
-    x integer,
-    y integer
+    x INTEGER,
+    y INTEGER,
+    level INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS public.player;

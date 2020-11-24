@@ -9,7 +9,7 @@ public class LootBoxModel extends BaseModel {
     private int pokeBallNumber;
     private Integer x;
     private Integer y;
-
+    private int level;
 
     public LootBoxModel(LootBox lootBox){
         this.healthPotionNumber = lootBox.getPotionNumber();
@@ -18,12 +18,13 @@ public class LootBoxModel extends BaseModel {
         this.y = lootBox.getY();
     }
 
-    public LootBoxModel(int playerId, int healthPotionNumber, int pokeBallNumber, Integer x, Integer y){
+    public LootBoxModel(int playerId, int healthPotionNumber, int pokeBallNumber, Integer x, Integer y, int level){
         this.playerId = playerId;
         this.healthPotionNumber = healthPotionNumber;
         this.pokeBallNumber = pokeBallNumber;
         this.x = x;
         this.y = y;
+        this.level = level;
     }
 
 
@@ -65,5 +66,13 @@ public class LootBoxModel extends BaseModel {
 
     public void setY(Integer y) {
         this.y = y;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
