@@ -61,14 +61,6 @@ public class Converter {
         manager.updatePlayer(player);
         sortMaps();
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
-        //TODO:inventory is not initialized when the first save is an overwrite. Below 5 lines fixes it
-
-        player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
-        inventory = inventory != null ? inventory : player.getInventory();
-        if (!manager.checkIfInventoryModelExists()) {
-            manager.setInventoryModel(inventory);
-        }
-
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
         lootBoxes.forEach(manager::updateLootbox);
@@ -76,6 +68,7 @@ public class Converter {
 
     private void extractDataFromMap() {
         pokemonList.clear();
+        lootBoxes.clear();
         player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
         sortMaps();
         inventory = player.getInventory();

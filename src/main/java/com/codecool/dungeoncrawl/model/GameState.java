@@ -1,6 +1,9 @@
 package com.codecool.dungeoncrawl.model;
 
+import com.codecool.dungeoncrawl.logic.items.LootBox;
+
 import java.sql.Date;
+import java.util.List;
 
 public class GameState extends BaseModel {
     private Date savedAt;
@@ -9,6 +12,9 @@ public class GameState extends BaseModel {
     private PlayerModel player;
     private String playerName;
     private String saveName;
+    private InventoryModel inventoryModel;
+    private List<PokemonModel> pokemonModelList;
+    private List<LootBoxModel> lootBoxModelList;
 
     public GameState(String currentMap, String storedMap, Date savedAt, PlayerModel player, String saveName) {
         this.active = currentMap;
@@ -17,6 +23,30 @@ public class GameState extends BaseModel {
         this.player = player;
         this.playerName = player.getPlayerName();
         this.saveName = saveName;
+    }
+
+    public InventoryModel getInventoryModel() {
+        return inventoryModel;
+    }
+
+    public void setInventoryModel(InventoryModel inventoryModel) {
+        this.inventoryModel = inventoryModel;
+    }
+
+    public List<PokemonModel> getPokemonModelList() {
+        return pokemonModelList;
+    }
+
+    public void setPokemonModelList(List<PokemonModel> pokemonModelList) {
+        this.pokemonModelList = pokemonModelList;
+    }
+
+    public List<LootBoxModel> getLootBoxModelList() {
+        return lootBoxModelList;
+    }
+
+    public void setLootBoxModelList(List<LootBoxModel> lootBoxModelList) {
+        this.lootBoxModelList = lootBoxModelList;
     }
 
     public Date getSavedAt() {
