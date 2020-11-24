@@ -68,7 +68,7 @@ public class MapLoader {
                             break;
                         case 'L':
                             cell.setType(CellType.FLOOR);
-                            new LootBox(cell);
+                            new LootBox(cell, gameLevel);
                             break;
                         case 'C':
                             cell.setType(CellType.FLOOR);
