@@ -71,6 +71,7 @@ public class Converter {
 
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
+        lootBoxes.forEach(manager::updateLootbox);
     }
 
     private void extractDataFromMap() {

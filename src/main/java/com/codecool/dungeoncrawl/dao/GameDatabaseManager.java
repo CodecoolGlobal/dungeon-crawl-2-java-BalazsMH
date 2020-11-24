@@ -86,9 +86,24 @@ public class GameDatabaseManager {
     public void saveLootbox(LootBox lootBox){
         LootBoxModel lootboxModel = new LootBoxModel(lootBox);
         lootboxModel.setPlayerId(playerModel.getId());
-        lootboxModel.setLevel(playerModel.getLevel());
         lootBoxModels.add(lootboxModel);
         lootBoxDao.add(lootboxModel);
+    }
+
+    public void updateLootbox(LootBox lootBox){
+        int idx = lootBoxModels.indexOf(lootBoxModels.stream()
+                .filter(l -> l.getLootBoxId() == lootBox.getLootBoxId())
+                .collect(Collectors.toList())
+                .get(0));
+        System.out.println("current box: " +lootBoxModels.get(idx).getLevel());
+        if (lootBox.getLevel() == 0){
+            System.out.println("found");
+            lootBoxModels.get(idx).setLevel(0);
+            lootBoxModels.get(idx).setX(null);
+            lootBoxModels.get(idx).setY(null);
+        }
+        lootBoxModels.forEach(l -> System.out.println(l.getLevel()));
+        lootBoxDao.update(lootBoxModels.get(idx));
     }
 
     public boolean checkIfInventoryModelExists(){

@@ -41,6 +41,23 @@ public class LootBoxDaoJdbc implements LootBoxDao {
 
     @Override
     public void update(LootBoxModel lootBox) {
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("UPDATE lootbox SET x = ?, y = ?, level = ? " +
+                    "WHERE lootbox_id = ? AND player_id = ?");
+            if (lootBox.getX() != null){
+                ps.setInt(1, lootBox.getX());
+                ps.setInt(2, lootBox.getY());
+            } else {
+                ps.setNull(1, java.sql.Types.INTEGER);
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+            ps.setInt(3, lootBox.getLevel());
+            ps.setInt(4, lootBox.getLootBoxId());
+            ps.setInt(5, lootBox.getPlayerId());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
 
     }
 
