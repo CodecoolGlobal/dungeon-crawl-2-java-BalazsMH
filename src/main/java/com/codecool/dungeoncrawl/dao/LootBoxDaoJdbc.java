@@ -1,9 +1,12 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.LootBoxModel;
+import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LootBoxDaoJdbc implements LootBoxDao {
     private DataSource dataSource;
@@ -68,19 +71,36 @@ public class LootBoxDaoJdbc implements LootBoxDao {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (! rs.next()) return null;
-            LootBoxModel model = new LootBoxModel(
-                    rs.getInt("player_id"),
-                    rs.getInt("health_potion_number"),
-                    rs.getInt("poke_ball_number"),
-                    (rs.getObject("x") != null) ? rs.getInt("x") : null,
-                    (rs.getObject("y") != null) ? rs.getInt("y") : null,
-                    rs.getInt("level"),
-                    rs.getInt("lootbox_id"));
-            model.setId(rs.getInt("id"));
+            LootBoxModel model = createLootboxModel(rs);
             return model;
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public List<LootBoxModel> getAll(){
+        List<LootBoxModel> lootboxList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM lootbox");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) lootboxList.add(createLootboxModel(rs));
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return lootboxList;
+    }
+
+    private LootBoxModel createLootboxModel(ResultSet rs) throws SQLException {
+        LootBoxModel model = new LootBoxModel(
+                rs.getInt("player_id"),
+                rs.getInt("health_potion_number"),
+                rs.getInt("poke_ball_number"),
+                (rs.getObject("x") != null) ? rs.getInt("x") : null,
+                (rs.getObject("y") != null) ? rs.getInt("y") : null,
+                rs.getInt("level"),
+                rs.getInt("lootbox_id"));
+        model.setId(rs.getInt("id"));
+        return model;
     }
 }
