@@ -40,7 +40,8 @@ CREATE TABLE public.lootbox (
     poke_ball_number INTEGER NOT NULL,
     x INTEGER,
     y INTEGER,
-    level INTEGER NOT NULL
+    level INTEGER NOT NULL,
+    lootbox_id INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS public.player;

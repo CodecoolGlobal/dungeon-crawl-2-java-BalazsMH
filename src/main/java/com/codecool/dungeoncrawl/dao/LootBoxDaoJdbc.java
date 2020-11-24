@@ -16,8 +16,8 @@ public class LootBoxDaoJdbc implements LootBoxDao {
     public void add(LootBoxModel lootBox) {
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO lootbox (player_id, health_potion_number, poke_ball_number, x, y, level)" +
-                            "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "INSERT INTO lootbox (player_id, health_potion_number, poke_ball_number, x, y, level, lootbox_id)" +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, lootBox.getPlayerId());
             ps.setInt(2, lootBox.getHealthPotionNumber());
             ps.setInt(3, lootBox.getPokeBallNumber());
@@ -29,6 +29,7 @@ public class LootBoxDaoJdbc implements LootBoxDao {
                 ps.setNull(5, java.sql.Types.INTEGER);
             }
             ps.setInt(6, lootBox.getLevel());
+            ps.setInt(7, lootBox.getLootBoxId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
@@ -56,7 +57,8 @@ public class LootBoxDaoJdbc implements LootBoxDao {
                     rs.getInt("poke_ball_number"),
                     (rs.getObject("x") != null) ? rs.getInt("x") : null,
                     (rs.getObject("y") != null) ? rs.getInt("y") : null,
-                    rs.getInt("level"));
+                    rs.getInt("level"),
+                    rs.getInt("lootbox_id"));
             model.setId(rs.getInt("id"));
             return model;
         } catch (SQLException e){

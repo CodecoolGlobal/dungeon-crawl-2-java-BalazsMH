@@ -9,10 +9,14 @@ import java.util.List;
 public class LootBox extends Item {
     private final int potionNumber;
     private List<PokeBall> pokeBallList;
-    private Cell cell;
+    private int level;
+    private int lootBoxId;
+    private static int counter;
 
-    public LootBox(Cell cell) {
+    public LootBox(Cell cell, int level) {
         super(cell);
+        lootBoxId = counter++;
+        this.level = level;
         this.potionNumber = (int) Math.floor(Math.random()*(8.00 - 2.00) + 2.00);
         this.pokeBallList = new ArrayList<PokeBall>();
         int pokeBallCount = (int) Math.floor(Math.random()*(8.00 - 2.00) + 2.00);
@@ -34,15 +38,11 @@ public class LootBox extends Item {
         return "lootbox";
     }
 
-    public Cell getCell() {
-        return cell;
+    public int getLevel() {
+        return level;
     }
 
-    public Integer getX() {
-        return (cell != null)? cell.getX() : null;
-    }
-
-    public Integer getY() {
-        return (cell != null)? cell.getY() : null;
+    public int getLootBoxId() {
+        return lootBoxId;
     }
 }
