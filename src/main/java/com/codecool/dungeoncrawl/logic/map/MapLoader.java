@@ -182,14 +182,17 @@ public class MapLoader {
                                 case "Charizard":
                                     pokemon = new Charizard(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
                                     cell.setPokemon(pokemon);
+                                    map.addPokemon(pokemon);
                                     break;
                                 case "Bulbasaur":
                                     pokemon = new Bulbasaur(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
                                     cell.setPokemon(pokemon);
+                                    map.addPokemon(pokemon);
                                     break;
                                 case "Slowpoke":
                                     pokemon = new Slowpoke(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
                                     cell.setPokemon(pokemon);
+                                    map.addPokemon(pokemon);
                                     break;
                             }
                         }
