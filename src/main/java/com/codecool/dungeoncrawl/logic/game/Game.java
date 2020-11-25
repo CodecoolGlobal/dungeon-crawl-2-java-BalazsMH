@@ -83,11 +83,11 @@ public class Game {
         String storedMap = gameState.getStoredMap();
 
         //create current map from String, without actors/items placed
-        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel);
+        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, currentLevel);
         this.mapWallsLevel1 = map1.getWalls();
 
         //create stored map from String, without actors/items placed
-        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, currentLevel == 1 ? 2 : 1);
+        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel == 1 ? 2 : 1);
         this.mapWallsLevel2 = map2.getWalls();
 
         //create player on the cell it was previously on
