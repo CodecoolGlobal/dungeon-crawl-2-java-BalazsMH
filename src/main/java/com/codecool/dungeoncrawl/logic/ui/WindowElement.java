@@ -203,7 +203,8 @@ public class WindowElement {
         return rightPane;
     }
 
-    public static void saveWindow(Stage pStage) {
+    public static String saveWindow(Stage pStage) {
+        StringBuilder inputtedName = new StringBuilder();
         Stage savePopup = new Stage();
         savePopup.initModality(Modality.APPLICATION_MODAL);
         savePopup.initOwner(pStage);
@@ -214,7 +215,10 @@ public class WindowElement {
 
         Button saveButton = new Button("Save");
         Button cancelButton = new Button("Cancel");
-
+        saveButton.setOnAction(event -> {
+            inputtedName.append(nameField.getText());
+            savePopup.close();
+        });
         cancelButton.setOnAction(event -> savePopup.close());
         HBox buttonBox = new HBox(saveButton, cancelButton);
 
@@ -223,6 +227,7 @@ public class WindowElement {
         Scene saveScene = new Scene(saveBox);
         savePopup.setScene(saveScene);
         savePopup.showAndWait();
+        return (inputtedName.toString().equals(""))? null : inputtedName.toString();
     }
 
     public static void gameEndWindow(EndCondition endCondition, Stage pStage) {

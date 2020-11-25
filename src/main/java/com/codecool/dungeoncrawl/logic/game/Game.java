@@ -203,10 +203,11 @@ public class Game {
                 break;
             case S:
                 if (keyEvent.isControlDown()){
-                    WindowElement.saveWindow(Main.getpStage());
 
                     while(true){
-                        String saveName = getSaveName();
+                        String saveName = WindowElement.saveWindow(Main.getpStage());
+                        System.out.println(saveName);
+                        if (saveName == null) break;
                         String playerName = player.getUserName();
                         if (converter.ifPlayerSaveExists(saveName, playerName)) {
                             String decision = getDecision();
