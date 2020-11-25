@@ -117,13 +117,13 @@ public class GameMap {
     public String layoutToString() {
         StringJoiner mapString = new StringJoiner("\n");
         mapString.add(width + " " + height);
-        for (Cell[] row : cells){
+        for (int y = 0; y<height;y++){
             StringBuilder r = new StringBuilder();
-            for (Cell cell : row){
-                if(cell.getTileName().equals("floor")) r.append(".");
-                else if (cell.getTileName().equals("wall")) r.append("#");
-                else if (cell.getTileName().equals("empty")) r.append(" ");
-                else if (cell.getTileName().equals("door")) r.append("d");
+            for (int x = 0; x<width;x++){
+                if(cells[x][y].getTileName().equals("floor")) r.append(".");
+                else if (cells[x][y].getTileName().equals("wall")) r.append("#");
+                else if (cells[x][y].getTileName().equals("empty")) r.append(" ");
+                else if (cells[x][y].getTileName().equals("door")) r.append("d");
             }
             mapString.add(r.toString());
         }
