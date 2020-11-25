@@ -17,6 +17,7 @@ import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.codecool.dungeoncrawl.model.PokemonModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -97,11 +98,19 @@ public class Game {
         map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         map1.setPlayer(this.player);
 
+        //create pokemon
+        for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
+
+        }
+
+
         //set inventory for the player. Not all data is updated currently.
         player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
                                           inventoryModel.getPokeBallNumber(),
                                           inventoryModel.hasKey()
                                           ));
+
+
 
         this.canvas = new Canvas(
                 map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,

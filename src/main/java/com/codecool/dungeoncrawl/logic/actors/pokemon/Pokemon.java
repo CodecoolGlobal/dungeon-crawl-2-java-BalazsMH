@@ -79,6 +79,10 @@ public abstract class Pokemon implements Drawable {
         return pokeId;
     }
 
+    public void setPokeId(int pokeId) {
+        this.pokeId = pokeId;
+    }
+
     /***
      * Aim: make sure that info is updated everywhere it needs to be updated
      * @param moveTo this Cell has to be determined for each pokemon depending on their moving patterns (e.g. chasing, random...)
