@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
@@ -24,6 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -58,8 +60,6 @@ public class WindowElement {
     }
 
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu){
-
-
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
@@ -74,6 +74,11 @@ public class WindowElement {
 
         //Get saves and convert result to ObservableList.
         GameDatabaseManager manager = new GameDatabaseManager();
+        try {
+            manager.setup();
+        } catch (SQLException e) {
+            System.out.println("Unable to setup Game Database manager.");
+        }
         List<GameState> saves = manager.getSaves();
 
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
@@ -93,25 +98,31 @@ public class WindowElement {
 
         //Set table properties
         TableView<GameState> table = new TableView<>();
+        table.setPlaceholder(new Label("You do not have any saves yet!"));
         table.getStyleClass().add("pokeFont"); //stylesheet not added yet
         table.setItems(saves2);
         table.setEditable(false);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        table.getColumns().addAll(playerColumn, dateTableColumn, currentMapTableColumn);
+        //TODO: currentMap temporarily disabled, since it loaded the whole map layout. Find different solution.
+        table.getColumns().addAll(playerColumn, dateTableColumn/*, currentMapTableColumn*/);
 
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         navigateBackButton.setOnMouseClicked((event)->{
             primaryStage.setScene(mainMenu);
-            //TODO:Find a way to get the main menu Scene some other way.
         });
 
         Button loadSelectedButton = new Button("Load selected game");
         loadSelectedButton.setOnMouseClicked((event)->{
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
             System.out.println(selectedSave);
+
+            Game game = new Game(selectedSave);
+
+            primaryStage.setScene(game.showGameScene());
+
         });
         loadSelectedButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         loadGamePane.getChildren().addAll(navigateBackButton, table, loadSelectedButton);

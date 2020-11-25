@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Inventory {
     private int healthPotionNumber = 0;
@@ -15,6 +16,7 @@ public class Inventory {
     private List<Pokemon> pokemonList = new ArrayList<Pokemon>();
     private Key key;
     private Pokemon activePokemon;
+    private boolean legacyKey;
 
     public Inventory(){
         pokemonList.add(new Slowpoke("Slowpoke"));
@@ -22,6 +24,15 @@ public class Inventory {
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
         pokeBallList.add(new PokeBall());
+    }
+
+    public Inventory(int healthPotionNumber, int pokeBallNumber, boolean key){
+        this.healthPotionNumber = healthPotionNumber;
+        IntStream.range(0, pokeBallNumber).forEach(i -> pokeBallList.add(new PokeBall()));
+        //TODO: temporarily added new Slowpoke until active pokemon load is fixed.
+        pokemonList.add(new Slowpoke("Slowpoke"));
+        activePokemon = pokemonList.get(0);
+        this.legacyKey = key;
     }
 
     public Optional<PokeBall> takePokeBall(){
@@ -54,7 +65,8 @@ public class Inventory {
     public void addKey(Cell cell){
         key = (Key)cell.getItem();
     }
-    public boolean hasKey(){return key != null;}
+
+    public boolean hasKey(){return key != null || legacyKey;}
 
     public void changeActivePokemon(){
         int idx = (pokemonList.indexOf(activePokemon) + 1 < pokemonList.size()) ? pokemonList.indexOf(activePokemon) + 1 : 0;

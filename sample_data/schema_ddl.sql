@@ -32,6 +32,18 @@ CREATE TABLE public.inventory (
     active_pokemon_id INTEGER NOT NULL
 );
 
+DROP TABLE IF EXISTS public.lootbox;
+CREATE TABLE public.lootbox (
+    id serial NOT NULL PRIMARY KEY,
+    player_id INTEGER NOT NULL,
+    health_potion_number INTEGER NOT NULL,
+    poke_ball_number INTEGER NOT NULL,
+    x INTEGER,
+    y INTEGER,
+    level INTEGER NOT NULL,
+    lootbox_id INTEGER NOT NULL
+);
+
 DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.player (
     id serial NOT NULL PRIMARY KEY,
@@ -49,4 +61,7 @@ ALTER TABLE ONLY public.pokemon
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);
 
 ALTER TABLE ONLY public.inventory
+    ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);
+
+ALTER TABLE ONLY public.lootbox
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);

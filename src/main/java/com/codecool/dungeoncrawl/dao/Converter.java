@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.GameState;
 
@@ -24,6 +25,7 @@ public class Converter {
     private final List<Pokemon> pokemonList = new ArrayList<>();
     private final GameDatabaseManager manager;
     private String saveNameStored;
+    private List<LootBox> lootBoxes = new ArrayList<>();
 
     public Converter(GameMap map1, GameMap map2){
         this.map1 = map1;
@@ -48,6 +50,7 @@ public class Converter {
         manager.saveGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()), saveName);
         manager.saveInventory(inventory);
         for (Pokemon pokemon : pokemonList) manager.savePokemon(pokemon);
+        for (LootBox lootBox : lootBoxes) manager.saveLootbox(lootBox);
     }
 
     public void update(String saveName, String playerName) {
@@ -58,38 +61,36 @@ public class Converter {
         manager.updatePlayer(player);
         sortMaps();
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
-        //TODO:inventory is not initialized when the first save is an overwrite. Below 5 lines fixes it
-
-        player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
-        inventory = inventory != null ? inventory : player.getInventory();
-        if (!manager.checkIfInventoryModelExists()) {
-            manager.setInventoryModel(inventory);
-        }
-
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
+        lootBoxes.forEach(manager::updateLootbox);
     }
 
     private void extractDataFromMap() {
         pokemonList.clear();
+        lootBoxes.clear();
         player = (map1.getPlayer() != null)? map1.getPlayer() : map2.getPlayer();
         sortMaps();
         inventory = player.getInventory();
-        getPokemonFromField(map1);
-        getPokemonFromField(map2);
+        getPokemonAndLootboxFromField(map1);
+        getPokemonAndLootboxFromField(map2);
         getPokemonFromInventory();
         getRocketPokemon();
     }
+
+
+
 
     private void sortMaps() {
         active = (player.getLevel() == 1)? map1 : map2;
         stored = (player.getLevel() == 1)? map2 : map1;
     }
 
-    private void getPokemonFromField(GameMap map){
+    private void getPokemonAndLootboxFromField(GameMap map){
         for (Cell[] row : map.getCells()){
             for (Cell cell : row){
                 if (cell.getPokemon() != null) pokemonList.add(cell.getPokemon());
+                if (cell.getItem() instanceof LootBox) lootBoxes.add((LootBox) cell.getItem());
             }
         }
     }

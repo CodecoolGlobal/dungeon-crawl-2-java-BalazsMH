@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.game;
 import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
@@ -13,6 +14,9 @@ import com.codecool.dungeoncrawl.logic.map.MapChanger;
 import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -28,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -70,23 +75,41 @@ public class Game {
         converter = new Converter(map1, map2);
     }
 
-    public Game(GameMap map1, GameMap map2) {
-        this.map1 = map1;
+    public Game(GameState gameState) {
+        PlayerModel playerModel = gameState.getPlayer();
+        InventoryModel inventoryModel = gameState.getInventoryModel();
+        int currentLevel = playerModel.getLevel();
+        String activeMap = gameState.getActiveMap();
+        String storedMap = gameState.getStoredMap();
+
+        //create current map from String, without actors/items placed
+        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel);
         this.mapWallsLevel1 = map1.getWalls();
 
-        this.map2 = map2;
+        //create stored map from String, without actors/items placed
+        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, currentLevel == 1 ? 2 : 1);
         this.mapWallsLevel2 = map2.getWalls();
 
-        this.player = this.map1.getPlayer();
+        //create player on the cell it was previously on
+        this.player = new Player(map1.getCell(playerModel.getX(), playerModel.getY()));
+        this.player.setUserName(playerModel.getPlayerName());
+        this.player.setSuperUser(playerModel.getGodMode());
+        map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
+        map1.setPlayer(this.player);
+
+        //set inventory for the player. Not all data is updated currently.
+        player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
+                                          inventoryModel.getPokeBallNumber(),
+                                          inventoryModel.hasKey()
+                                          ));
 
         this.canvas = new Canvas(
-                map1.getWidth() * Tiles.DEFAULT_TILE_WIDTH,
-                map1.getHeight() * Tiles.DEFAULT_TILE_WIDTH);
+                map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,
+                map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
+        converter = new Converter(map1, map2);
     }
-
-
 
 
     public Scene showGameScene() {
@@ -194,6 +217,7 @@ public class Game {
                             }
                         } else {
                             converter.run("save", saveName, playerName);
+                            System.out.println("Save succesful");
                             break;
                         }
                     }

@@ -74,6 +74,7 @@ public class InventoryDaoJdbc implements InventoryDao {
         return null;
     }
 
+
     @Override
     public List<InventoryModel> getAll() {
         List<InventoryModel> output = new ArrayList<>();

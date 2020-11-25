@@ -76,6 +76,7 @@ public class Player extends Actor {
 
     public void pickupItem(StringBuilder text) {
         if (cell.getItem() instanceof LootBox) {
+            ((LootBox) cell.getItem()).setLevel(0);
             LootBox lootbox = (LootBox) cell.getItem();
             int pickedUpPotions = lootbox.getPotionNumber();
             List<PokeBall> pickedUpPokeBalls = lootbox.getPokeBallList();
@@ -179,6 +180,10 @@ public class Player extends Actor {
     }
 
     public Inventory getInventory() {return inventory;}
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
 
     public boolean getGodMode() { return superUser; }
 
