@@ -203,7 +203,7 @@ public class WindowElement {
         return rightPane;
     }
 
-    public static String saveWindow(Stage pStage) {
+    public static String saveWindow(Stage pStage, String defaultName) {
         StringBuilder inputtedName = new StringBuilder();
         Stage savePopup = new Stage();
         savePopup.initModality(Modality.APPLICATION_MODAL);
@@ -211,6 +211,7 @@ public class WindowElement {
 
         Label nameLabel = new Label("Name: ");
         TextField nameField = new TextField();
+        nameField.setText(defaultName);
         HBox nameBox = new HBox(nameLabel, nameField);
 
         Button saveButton = new Button("Save");
@@ -228,6 +229,22 @@ public class WindowElement {
         savePopup.setScene(saveScene);
         savePopup.showAndWait();
         return (inputtedName.toString().equals(""))? null : inputtedName.toString();
+    }
+
+    public static boolean confirmSaveWindow(Stage pStage){
+        final boolean[] answer = new boolean[1];
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Save name already exists.");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Do you want to overwrite previous gamestate?");
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        confirmAlert.getButtonTypes().setAll(noButton, yesButton);
+        confirmAlert.showAndWait().ifPresent(type -> {
+            if (type.getButtonData() == ButtonBar.ButtonData.YES) answer[0] = true;
+            else answer[0] = false;
+        });
+        return answer[0];
     }
 
     public static void gameEndWindow(EndCondition endCondition, Stage pStage) {

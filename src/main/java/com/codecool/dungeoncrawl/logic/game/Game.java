@@ -203,42 +203,26 @@ public class Game {
                 break;
             case S:
                 if (keyEvent.isControlDown()){
+                    String saveName = "";
 
                     while(true){
-                        String saveName = WindowElement.saveWindow(Main.getpStage());
-                        System.out.println(saveName);
+                        saveName = WindowElement.saveWindow(Main.getpStage(), saveName);
                         if (saveName == null) break;
                         String playerName = player.getUserName();
                         if (converter.ifPlayerSaveExists(saveName, playerName)) {
-                            String decision = getDecision();
-                            if (decision.equals("s")) {
+                            boolean answer = WindowElement.confirmSaveWindow(Main.getpStage());
+                            if (answer){
                                 converter.run("update", saveName, playerName);
-                                System.out.println("Save succesful");
                                 break;
                             }
                         } else {
                             converter.run("save", saveName, playerName);
-                            System.out.println("Save succesful");
                             break;
                         }
                     }
                 }
         }
         refresh(inventory);
-    }
-
-    private String getSaveName() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter save name: ");
-        if (scanner.hasNextLine()) return scanner.nextLine();
-        return null;
-    }
-
-    private String getDecision(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Save already exists, press S to overwrite or C to cancel: ");
-        if (scanner.hasNextLine()) return scanner.nextLine();
-        return null;
     }
 
     private void refresh(Inventory inventory) {
