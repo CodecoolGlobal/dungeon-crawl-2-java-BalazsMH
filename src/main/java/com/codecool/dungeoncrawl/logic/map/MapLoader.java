@@ -4,10 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.*;
 import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
@@ -181,20 +178,26 @@ public class MapLoader {
                             switch (pokemonModel.getPokeName()) {
                                 case "Charizard":
                                     pokemon = new Charizard(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    cell.setPokemon(pokemon);
-                                    map.addPokemon(pokemon);
                                     break;
                                 case "Bulbasaur":
                                     pokemon = new Bulbasaur(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    cell.setPokemon(pokemon);
-                                    map.addPokemon(pokemon);
                                     break;
                                 case "Slowpoke":
+                                default:
                                     pokemon = new Slowpoke(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    cell.setPokemon(pokemon);
-                                    map.addPokemon(pokemon);
+                                    break;
+                                case "Arbok":
+                                    pokemon = new Arbok(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
+                                    break;
+                                case "Dustox":
+                                    pokemon = new Dustox(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
+                                    break;
+                                case "Koffing":
+                                    pokemon = new Koffing(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
                                     break;
                             }
+                            cell.setPokemon(pokemon);
+                            map.addPokemon(pokemon);
                         }
                     }
                 }
