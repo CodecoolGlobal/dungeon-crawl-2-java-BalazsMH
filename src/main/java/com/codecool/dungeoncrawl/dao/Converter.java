@@ -63,7 +63,12 @@ public class Converter {
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
-        lootBoxes.forEach(manager::updateLootbox);
+        try {
+            //TODO: temporarily in a try-catch block. lootboxmodels is null within updatelootbox.
+            lootBoxes.forEach(manager::updateLootbox);
+        } catch (Exception e) {
+            System.out.println("Lootboxmodels is null.");
+        }
     }
 
     private void extractDataFromMap() {

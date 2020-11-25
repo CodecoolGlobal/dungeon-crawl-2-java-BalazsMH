@@ -9,4 +9,5 @@ public interface PokemonDao {
     void update(PokemonModel pokemon, int playerId);
     PokemonModel get(int id);
     List<PokemonModel> getAll();
+    List<PokemonModel> getPokemonModelsForPlayer(int playerId);
 }

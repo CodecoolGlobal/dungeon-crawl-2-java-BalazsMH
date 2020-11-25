@@ -94,6 +94,20 @@ public class PokemonDaoJdbc implements PokemonDao{
     }
 
     @Override
+    public List<PokemonModel> getPokemonModelsForPlayer(int playerId) {
+        List<PokemonModel> pokemonList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM pokemon WHERE player_id = ?");
+            ps.setInt(1, playerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) pokemonList.add(createPokemonModel(rs));
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return pokemonList;
+    }
+
+    @Override
     public List<PokemonModel> getAll() {
         List<PokemonModel> pokemonList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()){

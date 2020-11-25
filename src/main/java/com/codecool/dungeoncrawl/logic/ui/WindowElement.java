@@ -117,6 +117,7 @@ public class WindowElement {
         Button loadSelectedButton = new Button("Load selected game");
         loadSelectedButton.setOnMouseClicked((event)->{
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
+            selectedSave.setPokemonModelList(manager.getPokemonModels(selectedSave.getPlayer().getId()));
             System.out.println(selectedSave);
 
             Game game = new Game(selectedSave);

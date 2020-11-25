@@ -110,6 +110,10 @@ public class GameDatabaseManager {
         return pokemonDao.get(id);
     }
 
+    public List<PokemonModel> getPokemonModels(int playerId) {
+        return pokemonDao.getPokemonModelsForPlayer(playerId);
+    }
+
     public List<PokemonModel> getAllPokemon(){
         return pokemonDao.getAll();
     }

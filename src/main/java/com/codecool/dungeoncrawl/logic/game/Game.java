@@ -7,6 +7,10 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -99,9 +103,9 @@ public class Game {
         map1.setPlayer(this.player);
 
         //create pokemon
-        for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
+        MapLoader.placePokemons(map1, gameState);
+        MapLoader.placePokemons(map2, gameState);
 
-        }
 
 
         //set inventory for the player. Not all data is updated currently.

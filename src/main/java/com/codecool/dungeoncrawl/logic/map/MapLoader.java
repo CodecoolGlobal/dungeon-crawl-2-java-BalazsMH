@@ -6,10 +6,13 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -167,5 +170,32 @@ public class MapLoader {
         }
         map.setWalls(walls);
         return map;
+    }
+    public static void placePokemons(GameMap map, GameState gameState) {
+        for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
+            for (Cell[] row : map.getCells()) {
+                for (Cell cell : row) {
+                    if (pokemonModel.getGameLevel() == map.getLevel()) {
+                        if (pokemonModel.getX() == cell.getX() && pokemonModel.getY() == cell.getY()) {
+                            Pokemon pokemon;
+                            switch (pokemonModel.getPokeName()) {
+                                case "Charizard":
+                                    pokemon = new Charizard(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
+                                    cell.setPokemon(pokemon);
+                                    break;
+                                case "Bulbasaur":
+                                    pokemon = new Bulbasaur(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
+                                    cell.setPokemon(pokemon);
+                                    break;
+                                case "Slowpoke":
+                                    pokemon = new Slowpoke(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
+                                    cell.setPokemon(pokemon);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
