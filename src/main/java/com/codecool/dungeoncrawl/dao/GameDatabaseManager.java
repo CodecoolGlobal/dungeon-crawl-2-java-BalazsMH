@@ -31,8 +31,8 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         pokemonDao = new PokemonDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao, inventoryDao);
         inventoryDao = new InventoryDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao, inventoryDao);
         lootBoxDao = new LootBoxDaoJdbc(dataSource);
     }
 
