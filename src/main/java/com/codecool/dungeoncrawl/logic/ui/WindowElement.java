@@ -29,8 +29,8 @@ import java.util.List;
 public class WindowElement {
 
 
-    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton ) {
-        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton);
+    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton, Button exportGameButton, Button importGameButton ) {
+        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton, exportGameButton, importGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -52,6 +52,18 @@ public class WindowElement {
 
     public static Button createLoadGameButton() {
         Button loadGameButton = new Button("Load Game");
+        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        return loadGameButton;
+    }
+
+    public static Button createImportGameButton() {
+        Button loadGameButton = new Button("Import Game");
+        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+        return loadGameButton;
+    }
+
+    public static Button createExportGameButton() {
+        Button loadGameButton = new Button("Export Game");
         loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         return loadGameButton;
     }
