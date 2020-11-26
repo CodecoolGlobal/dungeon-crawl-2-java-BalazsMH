@@ -76,7 +76,7 @@ public class PlayerDaoJdbc implements PlayerDao {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM player WHERE player_name = ?");
             ps.setString(1, playerName);
             ResultSet rs = ps.executeQuery();
-            while(! rs.next()) {
+            while(rs.next()) {
                 PlayerModel playerModel = new PlayerModel(rs.getString(2), rs.getBoolean(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
                 playerModel.setId(rs.getInt(1));
                 players.add(playerModel);
