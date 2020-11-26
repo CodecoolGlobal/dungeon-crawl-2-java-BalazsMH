@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Converter {
-    private final GameMap map1;
-    private final GameMap map2;
+    private GameMap map1;
+    private GameMap map2;
     private GameMap active;
     private GameMap stored;
     private Player player;
@@ -27,9 +27,7 @@ public class Converter {
     private String saveNameStored;
     private List<LootBox> lootBoxes = new ArrayList<>();
 
-    public Converter(GameMap map1, GameMap map2){
-        this.map1 = map1;
-        this.map2 = map2;
+    public Converter(){
         manager = new GameDatabaseManager();
         try {
             manager.setup();
@@ -37,6 +35,9 @@ public class Converter {
             System.out.println(e.getMessage());
         }
     }
+
+    public void setMap1(GameMap map1){ this.map1 = map1; }
+    public void setMap2(GameMap map2){ this.map2 = map2; }
 
     public void run(String mode, String saveName, String playerName) {
         if (mode.equals("save")) save(saveName);
@@ -122,5 +123,14 @@ public class Converter {
     private void loadPreviousGame(String playerName, String saveName){
         extractDataFromMap(); // sets up objects in Converter
         manager.loadGame(playerName, saveName); // sets up models in GameDatabaseManager
+    }
+
+    public List<GameState> getAllSaves(){
+        return manager.getSaves();
+    }
+
+    public GameState returnFullGameStateOf(String playerName, String saveName){
+        manager.loadGame(playerName, saveName);
+        return manager.getGameStateModel();
     }
 }
