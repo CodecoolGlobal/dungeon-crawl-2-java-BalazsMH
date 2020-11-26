@@ -107,9 +107,7 @@ public class WindowElement {
         Button loadSelectedButton = new Button("Load selected game");
         loadSelectedButton.setOnMouseClicked((event)->{
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
-            String playerName = selectedSave.getPlayerName();
-            String saveName = selectedSave.getSaveName();
-            selectedSave = converter.returnFullGameStateOf(playerName, saveName);
+            selectedSave = converter.returnFullGameStateOf(selectedSave.getId());
             System.out.println(selectedSave);
 
             Game game = new Game(selectedSave, converter);

@@ -129,8 +129,8 @@ public class Converter {
         return manager.getSaves();
     }
 
-    public GameState returnFullGameStateOf(String playerName, String saveName){
-        manager.loadGame(playerName, saveName);
+    public GameState returnFullGameStateOf(int gameId){
+        manager.loadGame(gameId);
         return manager.getGameStateModel();
     }
 }
