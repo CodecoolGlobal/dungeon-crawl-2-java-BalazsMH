@@ -21,8 +21,8 @@ public class GameDatabaseManager {
     private InventoryDao inventoryDao;
     private LootBoxDao lootBoxDao;
 
-    private PlayerModel playerModel; // this has the database generated ID after first save, gets updated with every save
-    private GameState gameStateModel; // this has the database generated ID after first save, gets updated with every save
+    private PlayerModel playerModel;
+    private GameState gameStateModel;
     private InventoryModel inventoryModel;
     private List<LootBoxModel> lootBoxModels = new ArrayList<>();
     private List<PokemonModel> pokemonModels = new ArrayList<>();
@@ -123,22 +123,19 @@ public class GameDatabaseManager {
     }
 
     public void loadGame(String playerName, String saveName) {
-        List<GameState> saves = gameStateDao.getAll();
-        gameStateModel = saves.stream()
-                .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
-                .collect(Collectors.toList()).get(0);
+        gameStateModel = gameStateDao.getByPlayerSave(playerName, saveName);
+        fillUpAllModels();
+    }
+    public void loadGame(int gameId) {
+        gameStateModel = gameStateDao.get(gameId);
+        fillUpAllModels();
+    }
+
+    private void fillUpAllModels(){
         playerModel = gameStateModel.getPlayer();
-        inventoryModel = inventoryDao.getAll().stream()
-                .filter(m -> m.getPlayerId() == playerModel.getId())
-                .collect(Collectors.toList())
-                .get(0);
-        pokemonModels = pokemonDao.getAll().stream()
-                .filter(m -> m.getPlayerId() == playerModel.getId())
-                .collect(Collectors.toList());
-        lootBoxModels = lootBoxDao.getAll().stream()
-                .filter(m -> m.getPlayerId() == playerModel.getId())
-                .collect(Collectors.toList());
-//        gameStateModel.setInventoryModel(inventoryModel);
+        inventoryModel = gameStateModel.getInventoryModel();
+        pokemonModels = pokemonDao.getPokemonModelsForPlayer(playerModel.getId());
+        lootBoxModels = lootBoxDao.getAllForPlayerId(playerModel.getId());
         gameStateModel.setLootBoxModelList(lootBoxModels);
         gameStateModel.setPokemonModelList(pokemonModels);
     }
