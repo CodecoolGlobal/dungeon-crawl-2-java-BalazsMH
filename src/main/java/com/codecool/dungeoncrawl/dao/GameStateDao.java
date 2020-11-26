@@ -9,5 +9,5 @@ public interface GameStateDao {
     void update(GameState state);
     GameState get(int id);
     List<GameState> getAll();
-    GameState getByPlayerSave(String playerName, String saveName);
+    GameState getByPlayerSave(int playerId, String saveName);
 }

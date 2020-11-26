@@ -85,10 +85,10 @@ public class GameStateDaoJdbc implements GameStateDao {
         return output;
     }
 
-    public GameState getByPlayerSave(String playerName, String saveName){
+    public GameState getByPlayerSave(int playerId, String saveName){
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM game_state WHERE player_name = ? AND save_name = ?");
-            pst.setString(1, playerName);
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM game_state WHERE player_id = ? AND save_name = ?");
+            pst.setInt(1, playerId);
             pst.setString(2, saveName);
             ResultSet rss = pst.executeQuery();
             if (! rss.next()) return null;
