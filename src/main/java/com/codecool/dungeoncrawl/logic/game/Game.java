@@ -61,7 +61,7 @@ public class Game {
 
 
 
-    public Game() {
+    public Game(Converter converter) {
         MapGenerator.generateMap(1);
         this.map1 = MapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
@@ -77,10 +77,13 @@ public class Game {
                 map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-        converter = new Converter(map1, map2);
+//        converter = new Converter(map1, map2);
+        this.converter = converter;
+        this.converter.setMap1(map1);
+        this.converter.setMap2(map2);
     }
 
-    public Game(GameState gameState) {
+    public Game(GameState gameState, Converter converter) {
         PlayerModel playerModel = gameState.getPlayer();
         InventoryModel inventoryModel = gameState.getInventoryModel();
         int currentLevel = playerModel.getLevel();
@@ -121,7 +124,9 @@ public class Game {
                 map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-        converter = new Converter(map1, map2);
+        this.converter = converter;
+        this.converter.setMap1(map1);
+        this.converter.setMap2(map2);
     }
 
 
