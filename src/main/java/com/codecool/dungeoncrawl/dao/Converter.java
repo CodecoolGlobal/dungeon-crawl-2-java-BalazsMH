@@ -8,6 +8,7 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import java.sql.SQLException;
 import java.sql.Date;
@@ -111,18 +112,15 @@ public class Converter {
     }
 
     public boolean ifPlayerSaveExists(String saveName, String playerName) {
-        List<GameState> gameStates = manager.getSaves();
-        List<GameState> previous = gameStates.stream()
-                .filter(g -> g.getPlayerName().equals(playerName) && g.getSaveName().equals(saveName))
-                .collect(Collectors.toList());
-        return previous.size() != 0;
+        return manager.findPlayerId(playerName, saveName) != null;
     }
 
     /** I use this to create the gameStateModel and playerModel objects, so I have access to the database ID-s
      * Only used when player doesn't start game by loading prior game, but then chooses to overwrite a prior game*/
     private void loadPreviousGame(String playerName, String saveName){
         extractDataFromMap(); // sets up objects in Converter
-        manager.loadGame(playerName, saveName); // sets up models in GameDatabaseManager
+        Integer playerId = manager.findPlayerId(playerName, saveName);
+        manager.loadGame(playerId, saveName); // sets up models in GameDatabaseManager
     }
 
     public List<GameState> getAllSaves(){

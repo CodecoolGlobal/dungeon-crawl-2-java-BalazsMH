@@ -122,8 +122,8 @@ public class GameDatabaseManager {
         return gameStateDao.getAll();
     }
 
-    public void loadGame(String playerName, String saveName) {
-        gameStateModel = gameStateDao.getByPlayerSave(playerName, saveName);
+    public void loadGame(Integer playerId, String saveName) {
+        gameStateModel = gameStateDao.getByPlayerSave(playerId, saveName);
         fillUpAllModels();
     }
     public void loadGame(int gameId) {
@@ -144,6 +144,13 @@ public class GameDatabaseManager {
         return gameStateModel;
     }
 
+    public Integer findPlayerId(String playerName, String saveName){
+        List<PlayerModel> playersWithName = playerDao.getByPlayerName(playerName);
+        for (PlayerModel player : playersWithName){
+            if (gameStateDao.getByPlayerSave(player.getId(), saveName) != null) return player.getId();
+        }
+        return null;
+    }
 
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
