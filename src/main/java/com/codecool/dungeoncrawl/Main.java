@@ -20,7 +20,10 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 
 public class Main extends Application {
@@ -71,6 +74,8 @@ public class Main extends Application {
         newGameButton.setOnMouseClicked((event)-> this.onNewGamePressed(primaryStage, nameInput));
         loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
         importGameButton.setOnMouseClicked((event)-> this.onImportPressed());
+        exportGameButton.setOnMouseClicked((event)-> this.onExportPressed());
+
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, exportGameButton, importGameButton);
 
         return new Scene(mainPane);
@@ -98,7 +103,7 @@ public class Main extends Application {
     public static Stage getpStage() {
         return pStage;
     }
-    
+
     private void onImportPressed() {
         String fileExtension = null;
         FileChooser fileChooser = new FileChooser();
@@ -134,5 +139,28 @@ public class Main extends Application {
             popupWindow.show();
         }
 
+    }
+
+    private void onExportPressed() {
+        String sample = "Sample text";
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File file = fileChooser.showSaveDialog(pStage);
+        if (file != null) {
+            saveTextToFile(sample, file);
+        }
+    }
+
+    private void saveTextToFile(String content, File file) {
+        try {
+            PrintWriter writer;
+            writer = new PrintWriter(file);
+            writer.println(content);
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println("Null");
+        }
     }
 }
