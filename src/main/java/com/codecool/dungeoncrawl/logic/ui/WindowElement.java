@@ -1,8 +1,7 @@
 package com.codecool.dungeoncrawl.logic.ui;
 
-import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
+import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.game.Game;
@@ -24,8 +23,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -59,7 +56,7 @@ public class WindowElement {
         return loadGameButton;
     }
 
-    public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu){
+    public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu, Converter converter){
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
@@ -73,14 +70,7 @@ public class WindowElement {
         loadGamePane.requestFocus();
 
         //Get saves and convert result to ObservableList.
-        GameDatabaseManager manager = new GameDatabaseManager();
-        try {
-            manager.setup();
-        } catch (SQLException e) {
-            System.out.println("Unable to setup Game Database manager.");
-        }
-        List<GameState> saves = manager.getSaves();
-
+        List<GameState> saves = converter.getAllSaves();
         ObservableList<GameState> saves2 = FXCollections.observableArrayList(saves);
 
         //Create columns
@@ -117,10 +107,12 @@ public class WindowElement {
         Button loadSelectedButton = new Button("Load selected game");
         loadSelectedButton.setOnMouseClicked((event)->{
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
-            selectedSave.setPokemonModelList(manager.getPokemonModels(selectedSave.getPlayer().getId()));
+            String playerName = selectedSave.getPlayerName();
+            String saveName = selectedSave.getSaveName();
+            selectedSave = converter.returnFullGameStateOf(playerName, saveName);
             System.out.println(selectedSave);
 
-            Game game = new Game(selectedSave);
+            Game game = new Game(selectedSave, converter);
 
             primaryStage.setScene(game.showGameScene());
 
