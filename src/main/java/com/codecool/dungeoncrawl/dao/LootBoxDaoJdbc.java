@@ -91,6 +91,21 @@ public class LootBoxDaoJdbc implements LootBoxDao {
         return lootboxList;
     }
 
+    @Override
+    public List<LootBoxModel> getAllForPlayerId(int playerId) {
+        List<LootBoxModel> lootboxList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM lootbox WHERE player_id = ?");
+            ps.setInt(1, playerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) lootboxList.add(createLootboxModel(rs));
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return lootboxList;
+    }
+
+
     private LootBoxModel createLootboxModel(ResultSet rs) throws SQLException {
         LootBoxModel model = new LootBoxModel(
                 rs.getInt("player_id"),

@@ -10,4 +10,5 @@ public interface LootBoxDao {
     void update(LootBoxModel lootBox);
     LootBoxModel get(int id);
     List<LootBoxModel> getAll();
+    List<LootBoxModel> getAllForPlayerId(int playerId);
 }
