@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class Main extends Application {
     private static Scene gameScene;
     private static Scene loadGameMenu;
     private static Scene mainMenu;
+    private Converter converter = new Converter();
 
 
 
@@ -63,7 +65,7 @@ public class Main extends Application {
 
 
     private void onNewGamePressed(Stage primaryStage,TextField nameInput) {
-        Game game = new Game();
+        Game game = new Game(converter);
         String enteredName = nameInput.getText();
         game.getMap1().getPlayer().setUserName(enteredName);
 
@@ -76,7 +78,7 @@ public class Main extends Application {
     }
 
     private void onLoadPressed(Stage primaryStage) {
-        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage, mainMenu);
+        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage, mainMenu, converter);
         primaryStage.setScene(loadGameScene);
     }
 
