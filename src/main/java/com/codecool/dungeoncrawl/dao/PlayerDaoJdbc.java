@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDaoJdbc implements PlayerDao {
@@ -66,5 +67,23 @@ public class PlayerDaoJdbc implements PlayerDao {
     @Override
     public List<PlayerModel> getAll() {
         return null;
+    }
+
+    @Override
+    public List<PlayerModel> getByPlayerName(String playerName) {
+        List<PlayerModel> players = new ArrayList<>();
+        try(Connection connection = dataSource.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM player WHERE player_name = ?");
+            ps.setString(1, playerName);
+            ResultSet rs = ps.executeQuery();
+            while(! rs.next()) {
+                PlayerModel playerModel = new PlayerModel(rs.getString(2), rs.getBoolean(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+                playerModel.setId(rs.getInt(1));
+                players.add(playerModel);
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return players;
     }
 }
