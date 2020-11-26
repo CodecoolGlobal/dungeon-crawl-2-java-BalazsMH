@@ -63,17 +63,10 @@ public class GameStateDaoJdbc implements GameStateDao {
             pst.setInt(1, id);
             ResultSet rss = pst.executeQuery();
             if (! rss.next()) return null;
-            PlayerModel pm = playerDao.get(rss.getInt("player_id"));
-            GameState gs = new GameState(rss.getString("current_map"),
-                    rss.getString("stored_map"),
-                    rss.getDate("saved_at"),
-                    pm,
-                    rss.getString("save_name"));
-            gs.setId(rss.getInt("id"));
+            return createGameState(rss);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -84,20 +77,37 @@ public class GameStateDaoJdbc implements GameStateDao {
             PreparedStatement pst = conn.prepareStatement("SELECT * FROM game_state");
             ResultSet rss = pst.executeQuery();
             while (rss.next()){
-                PlayerModel pm = playerDao.get(rss.getInt("player_id"));
-                InventoryModel im = inventoryDao.get(rss.getInt("player_id"));
-                GameState gs = new GameState(rss.getString("current_map"),
-                        rss.getString("stored_map"),
-                        rss.getDate("saved_at"),
-                        pm,
-                        im,
-                        rss.getString("save_name"));
-                gs.setId(rss.getInt("id"));
-                output.add(gs);
+                output.add(createGameState(rss));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return output;
+    }
+
+    public GameState getByPlayerSave(String playerName, String saveName){
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM game_state WHERE player_name = ? AND save_name = ?");
+            pst.setString(1, playerName);
+            pst.setString(2, saveName);
+            ResultSet rss = pst.executeQuery();
+            if (! rss.next()) return null;
+            return createGameState(rss);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private GameState createGameState(ResultSet rss) throws SQLException {
+        PlayerModel pm = playerDao.get(rss.getInt("player_id"));
+        InventoryModel im = inventoryDao.get(rss.getInt("player_id"));
+        GameState gs = new GameState(rss.getString("current_map"),
+                rss.getString("stored_map"),
+                rss.getDate("saved_at"),
+                pm,
+                im,
+                rss.getString("save_name"));
+        gs.setId(rss.getInt("id"));
+        return gs;
     }
 }
