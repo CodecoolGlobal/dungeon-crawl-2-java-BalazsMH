@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class MapLoader {
@@ -203,5 +204,19 @@ public class MapLoader {
                 }
             }
         }
+    }
+
+    public static void placeKey(GameMap map) {
+        ArrayList<Cell> possibleCells = new ArrayList<>();
+        for (Cell[] row : map.getCells()) {
+            for (Cell cell : row) {
+                if (cell.getType() == CellType.FLOOR) {
+                    possibleCells.add(cell);
+                }
+            }
+        }
+        Random random = new Random();
+        Cell selectedCell = possibleCells.get(random.nextInt(possibleCells.size()));
+        selectedCell.setItem(new Key(selectedCell));
     }
 }

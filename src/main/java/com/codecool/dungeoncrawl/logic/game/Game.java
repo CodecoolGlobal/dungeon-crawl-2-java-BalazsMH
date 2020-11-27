@@ -109,7 +109,10 @@ public class Game {
         MapLoader.placePokemons(map1, gameState);
         MapLoader.placePokemons(map2, gameState);
 
-
+        //place key randomly if player did not have one
+        if (!inventoryModel.hasKey()) {
+            MapLoader.placeKey(map1);
+        }
 
         //set inventory for the player. Not all data is updated currently.
         player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
