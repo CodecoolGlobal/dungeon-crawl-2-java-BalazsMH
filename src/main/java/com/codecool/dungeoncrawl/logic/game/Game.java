@@ -114,13 +114,14 @@ public class Game {
             MapLoader.placeKey(map1);
         }
 
+        //place RocketGrunt randomly regardless of it being defeated previously.
+        MapLoader.placeGrunt(map2);
+
         //set inventory for the player. Not all data is updated currently.
         player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
                                           inventoryModel.getPokeBallNumber(),
                                           inventoryModel.hasKey()
                                           ));
-
-
 
         this.canvas = new Canvas(
                 map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,

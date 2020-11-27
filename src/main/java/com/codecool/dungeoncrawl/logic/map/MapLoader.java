@@ -206,7 +206,7 @@ public class MapLoader {
         }
     }
 
-    public static void placeKey(GameMap map) {
+    private static ArrayList<Cell> getEmptyCells(GameMap map) {
         ArrayList<Cell> possibleCells = new ArrayList<>();
         for (Cell[] row : map.getCells()) {
             for (Cell cell : row) {
@@ -215,8 +215,23 @@ public class MapLoader {
                 }
             }
         }
+        return possibleCells;
+    }
+
+    private static Cell getRandomCell(ArrayList<Cell> possibleCells) {
         Random random = new Random();
-        Cell selectedCell = possibleCells.get(random.nextInt(possibleCells.size()));
+        return possibleCells.get(random.nextInt(possibleCells.size()));
+    }
+
+    public static void placeKey(GameMap map) {
+        ArrayList<Cell> possibleCells = getEmptyCells(map);
+        Cell selectedCell = getRandomCell(possibleCells);
         selectedCell.setItem(new Key(selectedCell));
+    }
+
+    public static void placeGrunt(GameMap map) {
+        ArrayList<Cell> possibleCells = getEmptyCells(map);
+        Cell selectedCell = getRandomCell(possibleCells);
+        selectedCell.setActor(new RocketGrunt(selectedCell));
     }
 }
