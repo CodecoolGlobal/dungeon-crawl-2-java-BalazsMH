@@ -97,13 +97,21 @@ public class Game {
         //create stored map from String, without actors/items placed
         this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel == 1 ? 2 : 1);
         this.mapWallsLevel2 = map2.getWalls();
+        this.activeMap = (currentLevel == 2)? 2 : 1;
 
         //create player on the cell it was previously on
-        this.player = new Player(map1.getCell(playerModel.getX(), playerModel.getY()));
+
+        if (this.activeMap == 1){
+            this.player = new Player(map1.getCell(playerModel.getX(), playerModel.getY()));
+            map1.setPlayer(this.player);
+            map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
+        } else {
+            this.player = new Player((map2.getCell(playerModel.getX(), playerModel.getY())));
+            map2.setPlayer(this.player);
+            map2.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
+        }
         this.player.setUserName(playerModel.getPlayerName());
         this.player.setSuperUser(playerModel.getGodMode());
-        map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
-        map1.setPlayer(this.player);
 
         //create pokemon
         MapLoader.placePokemons(map1, gameState);
