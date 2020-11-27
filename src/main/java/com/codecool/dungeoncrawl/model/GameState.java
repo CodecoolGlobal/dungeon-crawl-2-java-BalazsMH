@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
+import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 
 import java.sql.Date;
@@ -15,6 +16,8 @@ public class GameState extends BaseModel {
     private InventoryModel inventoryModel;
     private List<PokemonModel> pokemonModelList;
     private List<LootBoxModel> lootBoxModelList;
+
+    public GameState() {}
 
     public GameState(String currentMap, String storedMap, Date savedAt, PlayerModel player, String saveName) {
         this.active = currentMap;

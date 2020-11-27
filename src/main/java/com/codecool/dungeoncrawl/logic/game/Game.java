@@ -7,21 +7,24 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.logic.map.MapChanger;
 import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
-import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.InventoryModel;
-import com.codecool.dungeoncrawl.model.PlayerModel;
-import com.codecool.dungeoncrawl.model.PokemonModel;
+import com.codecool.dungeoncrawl.model.*;
+import com.codecool.dungeoncrawl.serialization.GameSerialization;
+import com.codecool.dungeoncrawl.serialization.SerializeMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -38,6 +41,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,6 +61,7 @@ public class Game {
     private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
     private Converter converter;
+    private GameSerialization serializaton = new GameSerialization();
 
 
 
@@ -219,8 +224,72 @@ public class Game {
             case H:
                 inventory.heal();
                 break;
+            case C:
+                StringBuilder sb = new StringBuilder("[");
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                PlayerModel playerModel = new PlayerModel(player);
+                String playerJsonString = gson.toJson(playerModel);
+                sb.append(playerJsonString);
+                sb.append(",");
+                InventoryModel inventoryModel = new InventoryModel(inventory);
+                String inventoryJsonString = gson.toJson(inventoryModel);
+                sb.append(inventoryJsonString);
+                sb.append(",");
+                List<Pokemon> pokemonList = map.getPokemonList();
+                PokemonModel pokemonModel;
+                String pokemonJsonString;
+                for (Pokemon pokemon : pokemonList) {
+                    pokemonModel = new PokemonModel(pokemon);
+                    pokemonJsonString = gson.toJson(pokemonModel);
+                    sb.append(pokemonJsonString);
+                    sb.append(",");
+                }
+
+                RocketGrunt rocketGrunt = (map1.getRocketGrunt() != null)? map1.getRocketGrunt() : map2.getRocketGrunt();
+                List<Pokemon> rocketGruntList = rocketGrunt.getRocketPokemonList();
+                for (Pokemon pokemon : rocketGruntList) {
+                    pokemonModel = new PokemonModel(pokemon);
+                    pokemonJsonString = gson.toJson(pokemonModel);
+                    sb.append(pokemonJsonString);
+                    sb.append(",");
+                }
+
+
+                List<LootBox> lootBoxList = new ArrayList<>();
+                for (Cell[] row : map1.getCells()){
+                    for (Cell cell : row){
+                        if (cell.getItem() instanceof LootBox) lootBoxList.add((LootBox) cell.getItem());
+                    }
+                }
+
+                for (Cell[] row : map2.getCells()){
+                    for (Cell cell : row){
+                        if (cell.getItem() instanceof LootBox) lootBoxList.add((LootBox) cell.getItem());
+                    }
+                }
+
+                LootBoxModel lootBoxModel;
+                String lootBoxJsonString;
+                for (LootBox lootBox : lootBoxList) {
+                    lootBoxModel = new LootBoxModel(lootBox);
+                    lootBoxJsonString = gson.toJson(lootBoxModel);
+                    sb.append(lootBoxJsonString);
+                    sb.append(",");
+                }
+
+                String map1String = map1.layoutToString();
+                String map2String = map2.layoutToString();
+
+                SerializeMap serializeMap = new SerializeMap(map1String, map2String);
+                String mapJsonString = gson.toJson(serializeMap);
+
+                sb.append(mapJsonString);
+                sb.append("]");
+
+                serializaton.onExportPressed(converter, Main.getpStage(), sb.toString());
+                break;
             case S:
-                if (keyEvent.isControlDown()){
+                //if (keyEvent.isControlDown()){
                     String saveName = "";
 
                     while(true){
@@ -238,7 +307,7 @@ public class Game {
                             break;
                         }
                     }
-                }
+                //}
         }
         refresh(inventory);
     }

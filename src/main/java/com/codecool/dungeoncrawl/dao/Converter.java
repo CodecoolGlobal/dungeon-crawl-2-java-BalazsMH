@@ -131,4 +131,12 @@ public class Converter {
         manager.loadGame(gameId);
         return manager.getGameStateModel();
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public List<LootBox> getLootBoxes() {
+        return lootBoxes;
+    }
 }

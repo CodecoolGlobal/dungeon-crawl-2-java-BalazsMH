@@ -29,8 +29,8 @@ import java.util.List;
 public class WindowElement {
 
 
-    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton, Button exportGameButton, Button importGameButton ) {
-        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton, exportGameButton, importGameButton);
+    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton, Button importGameButton ) {
+        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton, importGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,

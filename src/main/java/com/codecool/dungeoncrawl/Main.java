@@ -1,8 +1,11 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.dao.Converter;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
+import com.codecool.dungeoncrawl.serialization.GameSerialization;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,6 +35,7 @@ public class Main extends Application {
     private static Scene loadGameMenu;
     private static Scene mainMenu;
     private Converter converter = new Converter();
+    private GameSerialization serialization = new GameSerialization();
 
 
 
@@ -67,16 +71,14 @@ public class Main extends Application {
         TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
-        Button exportGameButton = WindowElement.createExportGameButton();
         Button importGameButton = WindowElement.createImportGameButton();
 
         //TODO: implement functionality for load game button.
         newGameButton.setOnMouseClicked((event)-> this.onNewGamePressed(primaryStage, nameInput));
         loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
-        importGameButton.setOnMouseClicked((event)-> this.onImportPressed());
-        exportGameButton.setOnMouseClicked((event)-> this.onExportPressed());
+        importGameButton.setOnMouseClicked((event)-> this.serialization.onImportPressed(pStage));
 
-        VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, exportGameButton, importGameButton);
+        VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, importGameButton);
 
         return new Scene(mainPane);
     }
@@ -104,63 +106,4 @@ public class Main extends Application {
         return pStage;
     }
 
-    private void onImportPressed() {
-        String fileExtension = null;
-        FileChooser fileChooser = new FileChooser();
-        File selectedFile = fileChooser.showOpenDialog(pStage);
-        if (selectedFile != null) {
-
-            String fileName = selectedFile.getName();
-            fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, selectedFile.getName().length());
-        }
-
-        if (!fileExtension.equals("json")) {
-
-            Stage popupWindow=new Stage();
-            popupWindow.initModality(Modality.APPLICATION_MODAL);
-            popupWindow.setTitle("IMPORT ERROR! Unfortunately the given file is in wrong format. Please try another one!");
-            Label label1= new Label("IMPORT ERROR!");
-
-            Button cancelButton = new Button("Cancel");
-            Button okButton = new Button("Ok");
-
-            cancelButton.setOnAction(e -> popupWindow.close());
-            okButton.setOnAction(e -> onImportPressed());
-
-            VBox layout= new VBox(10);
-
-            layout.getChildren().addAll(label1, cancelButton, okButton);
-
-            layout.setAlignment(Pos.CENTER);
-
-            Scene scene1= new Scene(layout, 300, 250);
-
-            popupWindow.setScene(scene1);
-            popupWindow.show();
-        }
-
-    }
-
-    private void onExportPressed() {
-        String sample = "Sample text";
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        File file = fileChooser.showSaveDialog(pStage);
-        if (file != null) {
-            saveTextToFile(sample, file);
-        }
-    }
-
-    private void saveTextToFile(String content, File file) {
-        try {
-            PrintWriter writer;
-            writer = new PrintWriter(file);
-            writer.println(content);
-            writer.close();
-        } catch (IOException ex) {
-            System.out.println("Null");
-        }
-    }
 }

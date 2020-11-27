@@ -111,6 +111,7 @@ public class GameMap {
             else {
                 pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
             }
+
         }
     }
 
@@ -169,5 +170,9 @@ public class GameMap {
         else {
             return mapSize - displaySize;
         }
+    }
+
+    public List<Pokemon> getPokemonList() {
+        return pokemonList;
     }
 }
