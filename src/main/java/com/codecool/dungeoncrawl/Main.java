@@ -76,7 +76,13 @@ public class Main extends Application {
         //TODO: implement functionality for load game button.
         newGameButton.setOnMouseClicked((event)-> this.onNewGamePressed(primaryStage, nameInput));
         loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
-        importGameButton.setOnMouseClicked((event)-> this.serialization.onImportPressed(pStage));
+        importGameButton.setOnMouseClicked((event)-> {
+            try {
+                this.serialization.onImportPressed(pStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, importGameButton);
 

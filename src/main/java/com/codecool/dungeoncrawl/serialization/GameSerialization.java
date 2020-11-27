@@ -2,8 +2,8 @@ package com.codecool.dungeoncrawl.serialization;
 
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.game.Game;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,12 +16,18 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameSerialization {
+    private Player player;
 
     public GameSerialization() {}
 
-    public void onImportPressed(Stage stage) {
+    public void onImportPressed(Stage stage) throws IOException {
         String fileExtension = null;
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
@@ -44,7 +50,11 @@ public class GameSerialization {
             cancelButton.setOnAction(e -> popupWindow.close());
             okButton.setOnAction(e -> {
                 popupWindow.close();
-                onImportPressed(stage);
+                try {
+                    onImportPressed(stage);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             });
 
             VBox layout= new VBox(10);
@@ -60,7 +70,13 @@ public class GameSerialization {
         }
 
         else {
+            String path = selectedFile.getAbsolutePath();
             System.out.println("I got JSON file");
+            Type type = new TypeToken<ArrayList<Object>>(){}.getType();
+            Gson gson = new Gson();
+            String s = new String(Files.readAllBytes(Paths.get(path)));
+            List<Object> objectList = gson.fromJson(s, type);
+            System.out.println(objectList.size());
         }
 
     }
@@ -68,7 +84,7 @@ public class GameSerialization {
     public void onExportPressed(Converter converter, Stage stage, String gameState) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.json", "*.json"));
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             saveTextToFile(gameState, file);
