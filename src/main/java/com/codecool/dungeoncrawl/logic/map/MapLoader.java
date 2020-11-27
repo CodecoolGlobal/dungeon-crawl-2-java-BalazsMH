@@ -232,6 +232,8 @@ public class MapLoader {
     public static void placeGrunt(GameMap map) {
         ArrayList<Cell> possibleCells = getEmptyCells(map);
         Cell selectedCell = getRandomCell(possibleCells);
-        selectedCell.setActor(new RocketGrunt(selectedCell));
+        RocketGrunt grunt = new RocketGrunt(selectedCell);
+        selectedCell.setActor(grunt);
+        map.setRocketGrunt(grunt);
     }
 }
