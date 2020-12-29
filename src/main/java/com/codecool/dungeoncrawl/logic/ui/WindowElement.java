@@ -23,6 +23,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -62,11 +63,11 @@ public class WindowElement {
         return loadGameButton;
     }
 
-    public static Button createExportGameButton() {
-        Button loadGameButton = new Button("Export Game");
-        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return loadGameButton;
-    }
+//    public static Button createExportGameButton() {
+//        Button loadGameButton = new Button("Export Game");
+//        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+//        return loadGameButton;
+//    }
 
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu, Converter converter){
         VBox loadGamePane = new VBox(20);
@@ -248,6 +249,30 @@ public class WindowElement {
             else answer[0] = false;
         });
         return answer[0];
+    }
+
+    public static void importErrorWindow(Stage pStage) {
+        Stage importPopup = new Stage();
+        importPopup.initModality(Modality.APPLICATION_MODAL);
+        importPopup.initOwner(pStage);
+
+        importPopup.setTitle("IMPORT ERROR!");
+        Label label1= new Label("IMPORT ERROR! Unfortunately the given file is in wrong format. Please try another one!");
+        label1.setMaxWidth(200);
+        label1.setWrapText(true);
+
+        Button cancelButton = new Button("Cancel");
+        Button okButton = new Button("Ok");
+
+        cancelButton.setOnAction(e -> importPopup.close());
+        okButton.setOnAction(e -> importPopup.close());
+        VBox layout= new VBox(10);
+        layout.getChildren().addAll(label1, cancelButton, okButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1= new Scene(layout, 300, 250);
+        importPopup.setScene(scene1);
+        importPopup.showAndWait();
     }
 
     public static void gameEndWindow(EndCondition endCondition, Stage pStage) {
