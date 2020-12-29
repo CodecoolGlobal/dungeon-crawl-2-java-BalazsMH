@@ -7,8 +7,10 @@ import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
-import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.codecool.dungeoncrawl.model.*;
+import com.codecool.dungeoncrawl.serialization.GameSerialization;
+import com.google.gson.Gson;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.sql.Date;
@@ -25,20 +27,19 @@ public class Converter {
     private Inventory inventory;
     private final List<Pokemon> pokemonList = new ArrayList<>();
     private final GameDatabaseManager manager;
+    private GameSerialization serializaton;
     private String saveNameStored;
     private List<LootBox> lootBoxes = new ArrayList<>();
 
     public Converter(){
         manager = new GameDatabaseManager();
+        serializaton = new GameSerialization();
         try {
             manager.setup();
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }
-
-    public void setMap1(GameMap map1){ this.map1 = map1; }
-    public void setMap2(GameMap map2){ this.map2 = map2; }
 
     public void save(String saveName) {
         saveNameStored = saveName;
@@ -60,12 +61,17 @@ public class Converter {
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
-        try {
-            //TODO: temporarily in a try-catch block. lootboxmodels is null within updatelootbox.
-            lootBoxes.forEach(manager::updateLootbox);
-        } catch (Exception e) {
-            System.out.println("Lootboxmodels is null.");
-        }
+        if (lootBoxes != null) lootBoxes.forEach(manager::updateLootbox);
+    }
+
+    public void export(Stage stage){
+        extractDataFromMap();
+        GameState gameState = new GameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()),
+                new PlayerModel(player), new InventoryModel(inventory), null);
+        gameState.setPokemonModelList(pokemonList.stream().map(p -> new PokemonModel(p)).collect(Collectors.toList()));
+        gameState.setLootBoxModelList(lootBoxes.stream().map(l -> new LootBoxModel(l)).collect(Collectors.toList()));
+        Gson gson = new Gson();
+        serializaton.onExportPressed(stage, gson.toJson(gameState));
     }
 
     private void extractDataFromMap() {
@@ -79,8 +85,6 @@ public class Converter {
         getPokemonFromInventory();
         getRocketPokemon();
     }
-
-
 
 
     private void sortMaps() {
@@ -134,4 +138,8 @@ public class Converter {
     public List<LootBox> getLootBoxes() {
         return lootBoxes;
     }
+
+
+    public void setMap1(GameMap map1){ this.map1 = map1; }
+    public void setMap2(GameMap map2){ this.map2 = map2; }
 }

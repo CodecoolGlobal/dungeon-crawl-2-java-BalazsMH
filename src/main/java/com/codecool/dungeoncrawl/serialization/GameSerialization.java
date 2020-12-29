@@ -1,9 +1,8 @@
 package com.codecool.dungeoncrawl.serialization;
 
-import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.model.GameState;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,14 +15,10 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameSerialization {
-    private Player player;
 
     public GameSerialization() {}
 
@@ -72,16 +67,15 @@ public class GameSerialization {
         else {
             String path = selectedFile.getAbsolutePath();
             System.out.println("I got JSON file");
-            Type type = new TypeToken<ArrayList<Object>>(){}.getType();
             Gson gson = new Gson();
             String s = new String(Files.readAllBytes(Paths.get(path)));
-            List<Object> objectList = gson.fromJson(s, type);
-            System.out.println(objectList.size());
+            GameState gameState = gson.fromJson(s, GameState.class);
+            System.out.println(gameState.getPlayer());
         }
 
     }
 
-    public void onExportPressed(Converter converter, Stage stage, String gameState) {
+    public void onExportPressed(Stage stage, String gameState) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.json", "*.json"));
