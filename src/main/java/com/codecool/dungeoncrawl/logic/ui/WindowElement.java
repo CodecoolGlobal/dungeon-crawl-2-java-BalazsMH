@@ -2,7 +2,6 @@ package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -267,7 +266,7 @@ public class WindowElement {
         importPopup.showAndWait();
     }
 
-    public static void gameEndWindow(EndCondition endCondition, Stage pStage) {
+    public static void gameEndWindow(int endCondition, Stage pStage) {
         Stage endPopup = new Stage();
         endPopup.initModality(Modality.WINDOW_MODAL);
         endPopup.initOwner(pStage);
@@ -275,7 +274,7 @@ public class WindowElement {
         Scene endScene = new Scene(endContent);
         Text winText = new Text("Congratulations! You won!");
         Text loseText = new Text("You lost. Try again!");
-        Text displayedText = endCondition == EndCondition.WIN? winText : loseText;
+        Text displayedText = endCondition == -1? winText : loseText;
         Button closeWindow = new Button("Quit game");
         closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));
@@ -293,7 +292,7 @@ public class WindowElement {
         endContent.getChildren().addAll(displayedText, closeWindow);
         endContent.setPrefSize(800.0/2,761.0/2);
         Background background = new Background(new BackgroundImage(
-                new Image(endCondition == EndCondition.LOSE? "/lose.png": "/win.png"),
+                new Image(endCondition == -1? "/lose.png": "/win.png"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,

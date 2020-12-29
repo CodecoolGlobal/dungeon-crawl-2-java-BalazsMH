@@ -3,7 +3,6 @@ package com.codecool.dungeoncrawl.logic.game;
 import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -278,9 +277,9 @@ public class Game {
 
     public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
-            WindowElement.gameEndWindow(EndCondition.LOSE, pStage);
+            WindowElement.gameEndWindow(-1, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            WindowElement.gameEndWindow(EndCondition.WIN, pStage);
+            WindowElement.gameEndWindow(1, pStage);
         }
     }
     private void addEnemyMoveHandler() {
