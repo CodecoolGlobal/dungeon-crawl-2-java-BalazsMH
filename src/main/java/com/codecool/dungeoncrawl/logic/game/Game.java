@@ -61,7 +61,7 @@ public class Game {
     private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
     private Converter converter;
-    private GameSerialization serializaton = new GameSerialization();
+//    private GameSerialization serializaton = new GameSerialization();
 
 
 
@@ -82,7 +82,6 @@ public class Game {
                 map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
         this.context = canvas.getGraphicsContext2D();
         this.addEnemyMoveHandler();
-//        converter = new Converter(map1, map2);
         this.converter = converter;
         this.converter.setMap1(map1);
         this.converter.setMap2(map2);
@@ -235,68 +234,7 @@ public class Game {
                 inventory.heal();
                 break;
             case C:
-                StringBuilder sb = new StringBuilder("[");
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                PlayerModel playerModel = new PlayerModel(player);
-                String playerJsonString = gson.toJson(playerModel);
-                sb.append(playerJsonString);
-                sb.append(",");
-                InventoryModel inventoryModel = new InventoryModel(inventory);
-                String inventoryJsonString = gson.toJson(inventoryModel);
-                sb.append(inventoryJsonString);
-                sb.append(",");
-                List<Pokemon> pokemonList = map.getPokemonList();
-                PokemonModel pokemonModel;
-                String pokemonJsonString;
-                for (Pokemon pokemon : pokemonList) {
-                    pokemonModel = new PokemonModel(pokemon);
-                    pokemonJsonString = gson.toJson(pokemonModel);
-                    sb.append(pokemonJsonString);
-                    sb.append(",");
-                }
-
-                RocketGrunt rocketGrunt = (map1.getRocketGrunt() != null)? map1.getRocketGrunt() : map2.getRocketGrunt();
-                List<Pokemon> rocketGruntList = rocketGrunt.getRocketPokemonList();
-                for (Pokemon pokemon : rocketGruntList) {
-                    pokemonModel = new PokemonModel(pokemon);
-                    pokemonJsonString = gson.toJson(pokemonModel);
-                    sb.append(pokemonJsonString);
-                    sb.append(",");
-                }
-
-
-                List<LootBox> lootBoxList = new ArrayList<>();
-                for (Cell[] row : map1.getCells()){
-                    for (Cell cell : row){
-                        if (cell.getItem() instanceof LootBox) lootBoxList.add((LootBox) cell.getItem());
-                    }
-                }
-
-                for (Cell[] row : map2.getCells()){
-                    for (Cell cell : row){
-                        if (cell.getItem() instanceof LootBox) lootBoxList.add((LootBox) cell.getItem());
-                    }
-                }
-
-                LootBoxModel lootBoxModel;
-                String lootBoxJsonString;
-                for (LootBox lootBox : lootBoxList) {
-                    lootBoxModel = new LootBoxModel(lootBox);
-                    lootBoxJsonString = gson.toJson(lootBoxModel);
-                    sb.append(lootBoxJsonString);
-                    sb.append(",");
-                }
-
-                String map1String = map1.layoutToString();
-                String map2String = map2.layoutToString();
-
-                SerializeMap serializeMap = new SerializeMap(map1String, map2String);
-                String mapJsonString = gson.toJson(serializeMap);
-
-                sb.append(mapJsonString);
-                sb.append("]");
-
-                serializaton.onExportPressed(converter, Main.getpStage(), sb.toString());
+                converter.export(Main.getpStage());
                 break;
             case S:
                 if (keyEvent.isControlDown()){
@@ -361,24 +299,17 @@ public class Game {
         }
     }
     private void addEnemyMoveHandler() {
-        //GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
-
         enemyMove = new Timeline(
                 new KeyFrame(Duration.seconds(1), (event) -> {
                     this.getActiveMap().moveAllPokemon();
-                    refresh(this.getActiveMap().getPlayer().getInventory()); }));
+                    refresh(player.getInventory()); }));
         enemyMove.setCycleCount(Timeline.INDEFINITE);
         enemyMove.play();
     }
 
-
-
-
-
     public GameMap getActiveMap() {
         return this.activeMap == 1 ? this.map1 : this.map2;
     }
-
 
     public Player getPlayer() {
         return player;
