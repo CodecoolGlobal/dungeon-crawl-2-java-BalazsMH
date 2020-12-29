@@ -222,15 +222,13 @@ public class Game {
                     doorCell.setActor(toKeep);
                     nextMap.getDoor().setOpen();
                     nextMap.setPlayer(toKeep);
-
-
                 }
                 break;
             case A:
                 inventory.changeActivePokemon();
                 break;
             case F:
-                player.fightPokemon(text, map.getPokemonInRange(currentInfo), map);
+                player.fightPokemon(text, map.getPokemonInRange(currentInfo), map); // return text?
                 checkIfGameEnds(inventory);
                 break;
             case H:
@@ -301,7 +299,7 @@ public class Game {
                 serializaton.onExportPressed(converter, Main.getpStage(), sb.toString());
                 break;
             case S:
-                //if (keyEvent.isControlDown()){
+                if (keyEvent.isControlDown()){
                     String saveName = "";
 
                     while(true){
@@ -311,15 +309,15 @@ public class Game {
                         if (converter.ifPlayerSaveExists(saveName, playerName)) {
                             boolean answer = WindowElement.confirmSaveWindow(Main.getpStage());
                             if (answer){
-                                converter.run("update", saveName, playerName);
+                                converter.update(saveName, playerName);
                                 break;
                             }
                         } else {
-                            converter.run("save", saveName, playerName);
+                            converter.save(saveName);
                             break;
                         }
                     }
-                //}
+                }
         }
         refresh(inventory);
     }

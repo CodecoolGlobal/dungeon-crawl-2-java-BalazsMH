@@ -40,12 +40,7 @@ public class Converter {
     public void setMap1(GameMap map1){ this.map1 = map1; }
     public void setMap2(GameMap map2){ this.map2 = map2; }
 
-    public void run(String mode, String saveName, String playerName) {
-        if (mode.equals("save")) save(saveName);
-        else update(saveName, playerName);
-    }
-
-    private void save(String saveName) {
+    public void save(String saveName) {
         saveNameStored = saveName;
         extractDataFromMap();
         manager.savePlayer(player);
