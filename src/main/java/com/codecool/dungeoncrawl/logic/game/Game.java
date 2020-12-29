@@ -1,30 +1,17 @@
 package com.codecool.dungeoncrawl.logic.game;
 
-import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
-import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.EndCondition;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Bulbasaur;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Charizard;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Slowpoke;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
-import com.codecool.dungeoncrawl.logic.map.MapChanger;
 import com.codecool.dungeoncrawl.logic.map.MapGenerator;
 import com.codecool.dungeoncrawl.logic.map.MapLoader;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import com.codecool.dungeoncrawl.model.*;
-import com.codecool.dungeoncrawl.serialization.GameSerialization;
-import com.codecool.dungeoncrawl.serialization.SerializeMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -40,10 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Game {
     private final GameMap map1;
@@ -61,12 +45,12 @@ public class Game {
     private final StringBuilder text = new StringBuilder();
     private Timeline enemyMove;
     private Converter converter;
-//    private GameSerialization serializaton = new GameSerialization();
+    private Stage pStage;
 
 
 
-
-    public Game(Converter converter) {
+    public Game(Converter converter, Stage pStage) {
+        this.pStage = pStage;
         MapGenerator.generateMap(1);
         this.map1 = MapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
@@ -87,7 +71,8 @@ public class Game {
         this.converter.setMap2(map2);
     }
 
-    public Game(GameState gameState, Converter converter) {
+    public Game(GameState gameState, Converter converter, Stage pStage) {
+        this.pStage = pStage;
         PlayerModel playerModel = gameState.getPlayer();
         InventoryModel inventoryModel = gameState.getInventoryModel();
         int currentLevel = playerModel.getLevel();
@@ -234,18 +219,18 @@ public class Game {
                 inventory.heal();
                 break;
             case C:
-                converter.export(Main.getpStage());
+                converter.export(pStage);
                 break;
             case S:
                 if (keyEvent.isControlDown()){
                     String saveName = "";
 
                     while(true){
-                        saveName = WindowElement.saveWindow(Main.getpStage(), saveName);
+                        saveName = WindowElement.saveWindow(pStage, saveName);
                         if (saveName == null) break;
                         String playerName = player.getUserName();
                         if (converter.ifPlayerSaveExists(saveName, playerName)) {
-                            boolean answer = WindowElement.confirmSaveWindow(Main.getpStage());
+                            boolean answer = WindowElement.confirmSaveWindow(pStage);
                             if (answer){
                                 converter.update(saveName, playerName);
                                 break;
@@ -293,9 +278,9 @@ public class Game {
 
     public void checkIfGameEnds(Inventory inventory){
         if (inventory.getActivePokemon() == null){
-            WindowElement.gameEndWindow(EndCondition.LOSE, Main.getpStage());
+            WindowElement.gameEndWindow(EndCondition.LOSE, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
-            WindowElement.gameEndWindow(EndCondition.WIN, Main.getpStage());
+            WindowElement.gameEndWindow(EndCondition.WIN, pStage);
         }
     }
     private void addEnemyMoveHandler() {

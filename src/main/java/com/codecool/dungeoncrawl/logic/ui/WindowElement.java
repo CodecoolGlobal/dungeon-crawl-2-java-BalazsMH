@@ -23,7 +23,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -62,12 +61,6 @@ public class WindowElement {
         loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         return loadGameButton;
     }
-
-//    public static Button createExportGameButton() {
-//        Button loadGameButton = new Button("Export Game");
-//        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-//        return loadGameButton;
-//    }
 
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu, Converter converter){
         VBox loadGamePane = new VBox(20);
@@ -122,8 +115,7 @@ public class WindowElement {
             GameState selectedSave = table.getSelectionModel().getSelectedItem();
             selectedSave = converter.returnFullGameStateOf(selectedSave.getId());
             System.out.println(selectedSave);
-
-            Game game = new Game(selectedSave, converter);
+            Game game = new Game(selectedSave, converter, primaryStage);
 
             primaryStage.setScene(game.showGameScene());
 

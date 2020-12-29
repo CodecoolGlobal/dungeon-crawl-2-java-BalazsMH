@@ -4,7 +4,6 @@ import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.ui.WindowElement;
 import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.serialization.GameSerialization;
 import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -38,21 +37,21 @@ public class Main extends Application {
         primaryStage.setTitle("JavaMon");
         primaryStage.getIcons().add(new Image("file:logo.png"));
 
-        mainMenu = mainMenu(primaryStage);
+        mainMenu = mainMenu();
 
         primaryStage.setScene(mainMenu);
         primaryStage.show();
     }
 
 
-    public Scene mainMenu(Stage primaryStage) {
+    public Scene mainMenu() {
         TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
         Button importGameButton = WindowElement.createImportGameButton();
 
-        newGameButton.setOnMouseClicked((event)-> this.onNewGamePressed(primaryStage, nameInput));
-        loadGameButton.setOnMouseClicked((event)-> this.onLoadPressed(primaryStage));
+        newGameButton.setOnMouseClicked((event)-> onNewGamePressed(nameInput));
+        loadGameButton.setOnMouseClicked((event)-> onLoadPressed());
         importGameButton.setOnMouseClicked((event) -> onImportPressed());
 
         VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, importGameButton);
@@ -70,7 +69,7 @@ public class Main extends Application {
                 Gson gson = new Gson();
                 String s = new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath())));
                 GameState gameState = gson.fromJson(s, GameState.class);
-                Game game = new Game(gameState, converter);
+                Game game = new Game(gameState, converter, pStage);
                 pStage.setScene(game.showGameScene());
             } catch (IOException e){
                 System.out.println(e.getMessage());
@@ -78,8 +77,8 @@ public class Main extends Application {
         } else WindowElement.importErrorWindow(pStage);
     }
 
-    private void onNewGamePressed(Stage primaryStage,TextField nameInput) {
-        Game game = new Game(converter);
+    private void onNewGamePressed(TextField nameInput) {
+        Game game = new Game(converter, pStage);
         String enteredName = nameInput.getText();
         game.getMap1().getPlayer().setUserName(enteredName);
 
@@ -87,17 +86,13 @@ public class Main extends Application {
             game.getMap1().getPlayer().setSuperUser(true);
         }
 
-        primaryStage.setScene(game.showGameScene());
+        pStage.setScene(game.showGameScene());
     }
 
 
-    private void onLoadPressed(Stage primaryStage) {
-        Scene loadGameScene = WindowElement.createLoadGameMenu(primaryStage, mainMenu, converter);
-        primaryStage.setScene(loadGameScene);
-    }
-
-    public static Stage getpStage() {
-        return pStage;
+    private void onLoadPressed() {
+        Scene loadGameScene = WindowElement.createLoadGameMenu(pStage, mainMenu, converter);
+        pStage.setScene(loadGameScene);
     }
 
 }
