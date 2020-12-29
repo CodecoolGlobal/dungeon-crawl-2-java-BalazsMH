@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class MapLoader {
@@ -203,5 +204,36 @@ public class MapLoader {
                 }
             }
         }
+    }
+
+    private static ArrayList<Cell> getEmptyCells(GameMap map) {
+        ArrayList<Cell> possibleCells = new ArrayList<>();
+        for (Cell[] row : map.getCells()) {
+            for (Cell cell : row) {
+                if (cell.getType() == CellType.FLOOR) {
+                    possibleCells.add(cell);
+                }
+            }
+        }
+        return possibleCells;
+    }
+
+    private static Cell getRandomCell(ArrayList<Cell> possibleCells) {
+        Random random = new Random();
+        return possibleCells.get(random.nextInt(possibleCells.size()));
+    }
+
+    public static void placeKey(GameMap map) {
+        ArrayList<Cell> possibleCells = getEmptyCells(map);
+        Cell selectedCell = getRandomCell(possibleCells);
+        selectedCell.setItem(new Key(selectedCell));
+    }
+
+    public static void placeGrunt(GameMap map) {
+        ArrayList<Cell> possibleCells = getEmptyCells(map);
+        Cell selectedCell = getRandomCell(possibleCells);
+        RocketGrunt grunt = new RocketGrunt(selectedCell);
+        selectedCell.setActor(grunt);
+        map.setRocketGrunt(grunt);
     }
 }

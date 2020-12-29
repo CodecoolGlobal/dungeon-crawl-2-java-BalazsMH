@@ -289,6 +289,7 @@ public class WindowElement {
     }
 
     public static void refreshInfoWindow(StringBuilder text, Label currentInfo, GameMap map) {
+        text.setLength(0); //TODO deletes some important info as well, but prevents multiplying others
         Cell standingOn = map.getPlayer().getCell();
         if (standingOn.getDoor() != null){
             text.append("\nOpen door by 'O'\n");
