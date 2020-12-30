@@ -303,11 +303,4 @@ public class Game {
         this.player = player;
     }
 
-    public GameMap getMap1() {
-        return map1;
-    }
-
-    public GameMap getMap2() {
-        return map2;
-    }
 }

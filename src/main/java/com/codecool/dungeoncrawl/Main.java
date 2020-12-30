@@ -50,7 +50,7 @@ public class Main extends Application {
         Button loadGameButton = WindowElement.createLoadGameButton();
         Button importGameButton = WindowElement.createImportGameButton();
 
-        newGameButton.setOnMouseClicked((event)-> onNewGamePressed(nameInput));
+        newGameButton.setOnMouseClicked((event)-> onNewGamePressed(nameInput.getText()));
         loadGameButton.setOnMouseClicked((event)-> onLoadPressed());
         importGameButton.setOnMouseClicked((event) -> onImportPressed());
 
@@ -77,15 +77,10 @@ public class Main extends Application {
         } else WindowElement.importErrorWindow(pStage);
     }
 
-    private void onNewGamePressed(TextField nameInput) {
+    private void onNewGamePressed(String nameInput) {
         Game game = new Game(converter, pStage);
-        String enteredName = nameInput.getText();
-        game.getMap1().getPlayer().setUserName(enteredName);
-
-        if (Arrays.asList(developers).contains(enteredName)) {
-            game.getMap1().getPlayer().setSuperUser(true);
-        }
-
+        game.getPlayer().setUserName(nameInput);
+        if (Arrays.asList(developers).contains(nameInput)) game.getPlayer().setSuperUser(true);
         pStage.setScene(game.showGameScene());
     }
 
