@@ -37,14 +37,14 @@ public class Game {
     private final Canvas canvas;
     private final GraphicsContext context;
     private final Label nameLabel = new Label();
-    private final Label inv = new Label();
-    private final Label currentInfo = new Label();
-    private final Label currentLevel = new Label();
+    private final Label inventoryLabel = new Label();
+    private final Label actionsLabel = new Label();
+    private final Label levelLabel = new Label();
     private int activeMap = 1;
-    private final StringBuilder text = new StringBuilder();
-    private Timeline enemyMove;
-    private Converter converter;
-    private Stage pStage;
+    private final StringBuilder actionsStB = new StringBuilder();
+    private final StringBuilder inRangeStB = new StringBuilder();
+    private final Converter converter;
+    private final Stage pStage;
 
 
 
@@ -132,11 +132,11 @@ public class Game {
 
     public Scene showGameScene() {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
-        WindowElement.setLabels(this.currentLevel, this.nameLabel, this.currentInfo, this.inv, map);
+        WindowElement.setLabels(this.levelLabel, this.nameLabel, this.actionsLabel, this.inventoryLabel, map);
 
 
-        VBox rightPane = WindowElement.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inv, currentInfo);
-        VBox levelBox = WindowElement.createLevelBox(currentLevel);
+        VBox rightPane = WindowElement.createRightPane(map.getPlayer().getInventory(), map, nameLabel, inventoryLabel, actionsLabel);
+        VBox levelBox = WindowElement.createLevelBox(levelLabel);
         VBox bottom = WindowElement.createBottomBox();
 
         this.nameLabel.setText(this.player.getUserName());
@@ -159,28 +159,28 @@ public class Game {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
-        text.setLength(0);
+        actionsStB.setLength(0);
         Inventory inventory = map.getPlayer().getInventory();
         Player player = map.getPlayer();
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
-                player.move(0, -1, "up");
+                player.move(0, -1, "up", actionsStB);
                 break;
             case DOWN:
-                player.move(0, 1, "down");
+                player.move(0, 1, "down", actionsStB);
                 break;
             case LEFT:
-                player.move(-1, 0, "left");
+                player.move(-1, 0, "left", actionsStB);
                 break;
             case RIGHT:
-                player.move(1,0, "right");
+                player.move(1,0, "right", actionsStB);
                 break;
             case R:
                 map.getRocketGrunt().releasePokemon(map);
                 break;
             case T:
-                player.throwPokeBall(text, map.getPokemonInRange(currentInfo), map);
+                player.throwPokeBall(actionsStB, map.getPokemonInRange(actionsLabel), map);
                 checkIfGameEnds(inventory);
                 break;
             case E:
@@ -188,7 +188,7 @@ public class Game {
                     inventory.addKey(player.getCell());
                     player.getCell().setItem(null);
                 } else {
-                    player.pickupItem(text);
+                    player.pickupItem(actionsStB);
                 }
                 break;
             case O:
@@ -211,7 +211,7 @@ public class Game {
                 inventory.changeActivePokemon();
                 break;
             case F:
-                player.fightPokemon(text, map.getPokemonInRange(currentInfo), map); // return text?
+                player.fightPokemon(actionsStB, map.getPokemonInRange(actionsLabel), map); // return text?
                 checkIfGameEnds(inventory);
                 break;
             case H:
@@ -250,8 +250,8 @@ public class Game {
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        WindowElement.refreshInfoWindow(text, currentInfo, map);
-        WindowElement.refreshLevelAndInventory(inventory, inv, currentLevel, map);
+        WindowElement.refreshRangeInfo(inRangeStB, actionsStB, actionsLabel, map);
+        WindowElement.refreshLevelAndInventory(inventory, inventoryLabel, levelLabel, map);
         for (int x = 0; x < map.getDisplayWidth(); x++) {
             for (int y = 0; y < map.getDisplayHeight(); y++) {
                 Cell cell = visibleMap[x][y];
@@ -283,6 +283,7 @@ public class Game {
         }
     }
     private void addEnemyMoveHandler() {
+        Timeline enemyMove;
         enemyMove = new Timeline(
                 new KeyFrame(Duration.seconds(1), (event) -> {
                     this.getActiveMap().moveAllPokemon();

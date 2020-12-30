@@ -304,19 +304,13 @@ public class WindowElement {
         endPopup.show();
     }
 
-    public static void refreshInfoWindow(StringBuilder text, Label currentInfo, GameMap map) {
-        text.setLength(0); //TODO deletes some important info as well, but prevents multiplying others
-        Cell standingOn = map.getPlayer().getCell();
-        if (standingOn.getDoor() != null){
-            text.append("\nOpen door by 'O'\n");
-        } else if (standingOn.getItem() != null){
-            text.append(String.format("\nPick up %s by 'E'!\n", standingOn.getItem().getTileName()));
-        }
+    public static void refreshRangeInfo(StringBuilder rangeText, StringBuilder actionsText, Label currentInfo, GameMap map) {
+        rangeText.setLength(0);
         if (map.getPokemonInRange(currentInfo).isPresent()) {
-            text.append("\n\nPokemon in range:\n");
-            map.getPokemonInRange(currentInfo).get().forEach(p -> text.append("\n" + p.toString()));
+            rangeText.append("\n\nPokemon in range:\n");
+            map.getPokemonInRange(currentInfo).get().forEach(p -> rangeText.append("\n" + p.toString()));
         }
-        currentInfo.setText(text.toString());
+        currentInfo.setText(actionsText.toString() + "\n" + rangeText.toString());
     }
 
     public static void refreshLevelAndInventory(Inventory inventory, Label inv, Label currentLevel, GameMap map) {

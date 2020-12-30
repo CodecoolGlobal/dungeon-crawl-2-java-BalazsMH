@@ -92,7 +92,7 @@ public class Player extends Actor {
         }
     }
 
-    public void move(int dx, int dy, String facing) {
+    public void move(int dx, int dy, String facing, StringBuilder text) {
         Cell nextCell = cell.getNeighbor(dx, dy);
         this.facing = facing;
         if (( superUser && nextCell.getPokemon() == null
@@ -104,6 +104,11 @@ public class Player extends Actor {
             cell.setActor(null);
             nextCell.setActor(this);
             cell = nextCell;
+        }
+        if (cell.getDoor() != null){
+            text.append("\nOpen door by 'O'\n");
+        } else if (cell.getItem() != null){
+            text.append(String.format("\nPick up %s by 'E'!\n", cell.getItem().getTileName()));
         }
 
     }
