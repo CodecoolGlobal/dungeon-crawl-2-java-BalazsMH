@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.game;
 import com.codecool.dungeoncrawl.Tiles;
 import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.actors.Facing;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -165,16 +166,16 @@ public class Game {
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
-                player.move(0, -1, "up", actionsStB);
+                player.move(0, -1, Facing.UP, actionsStB);
                 break;
             case DOWN:
-                player.move(0, 1, "down", actionsStB);
+                player.move(0, 1, Facing.DOWN, actionsStB);
                 break;
             case LEFT:
-                player.move(-1, 0, "left", actionsStB);
+                player.move(-1, 0, Facing.LEFT, actionsStB);
                 break;
             case RIGHT:
-                player.move(1,0, "right", actionsStB);
+                player.move(1,0, Facing.RIGHT, actionsStB);
                 break;
             case R:
                 map.getRocketGrunt().releasePokemon(map);

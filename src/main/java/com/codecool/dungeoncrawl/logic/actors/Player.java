@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Player extends Actor {
-    private String facing = "down";
+    private Facing facing = Facing.DOWN;
     private String userName = "";
     private boolean superUser = false;
     private Inventory inventory;
@@ -60,19 +60,7 @@ public class Player extends Actor {
         return inventory.hasKey();
     }
 
-    public String getTileName() {
-        switch (this.facing) {
-            case "down":
-                return "player_down";
-            case "up":
-                return "player_up";
-            case "right":
-                return "player_right";
-            default:
-                return "player_left";
-        }
-
-    }
+    public String getTileName() { return facing.getTileName(); }
 
     public void pickupItem(StringBuilder text) {
         if (cell.getItem() instanceof LootBox) {
@@ -92,7 +80,7 @@ public class Player extends Actor {
         }
     }
 
-    public void move(int dx, int dy, String facing, StringBuilder text) {
+    public void move(int dx, int dy, Facing facing, StringBuilder text) {
         Cell nextCell = cell.getNeighbor(dx, dy);
         this.facing = facing;
         if (( superUser && nextCell.getPokemon() == null
