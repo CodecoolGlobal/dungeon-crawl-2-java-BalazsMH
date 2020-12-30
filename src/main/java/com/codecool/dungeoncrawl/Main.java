@@ -24,8 +24,8 @@ import java.util.Arrays;
 public class Main extends Application {
     private static Stage pStage;
     private static Scene mainMenu;
-    private Converter converter = new Converter();
-    private String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
+    private final Converter converter = new Converter();
+    private final String[] developers = new String[]{"Fruzsi", "Dani", "Peti", "Balázs"};
 
     public static void main(String[] args) {
         launch(args);

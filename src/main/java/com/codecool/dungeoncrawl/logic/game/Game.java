@@ -35,8 +35,8 @@ public class Game {
     private Player player;
     private final List<List<Integer>> mapWallsLevel1;
     private final List<List<Integer>> mapWallsLevel2;
-    private final Canvas canvas;
-    private final GraphicsContext context;
+    private Canvas canvas;
+    private GraphicsContext context;
     private final Label nameLabel = new Label();
     private final Label inventoryLabel = new Label();
     private final Label actionsLabel = new Label();
@@ -44,13 +44,12 @@ public class Game {
     private int activeMap = 1;
     private final StringBuilder actionsStB = new StringBuilder();
     private final StringBuilder inRangeStB = new StringBuilder();
-    private final Converter converter;
-    private final Stage pStage;
+    private Converter converter;
+    private Stage pStage;
 
 
 
     public Game(Converter converter, Stage pStage) {
-        this.pStage = pStage;
         MapGenerator.generateMap(1);
         this.map1 = MapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
@@ -61,18 +60,10 @@ public class Game {
 
         this.player = this.map1.getPlayer();
 
-        this.canvas = new Canvas(
-                map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,
-                map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
-        this.context = canvas.getGraphicsContext2D();
-        this.addEnemyMoveHandler();
-        this.converter = converter;
-        this.converter.setMap1(map1);
-        this.converter.setMap2(map2);
+        setUpCanvasContextStage(map1, map2, converter, pStage);
     }
 
     public Game(GameState gameState, Converter converter, Stage pStage) {
-        this.pStage = pStage;
         PlayerModel playerModel = gameState.getPlayer();
         InventoryModel inventoryModel = gameState.getInventoryModel();
         int currentLevel = playerModel.getLevel();
@@ -89,18 +80,7 @@ public class Game {
         this.activeMap = (currentLevel == 2)? 2 : 1;
 
         //create player on the cell it was previously on
-
-        if (this.activeMap == 1){
-            this.player = new Player(map1.getCell(playerModel.getX(), playerModel.getY()));
-            map1.setPlayer(this.player);
-            map1.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
-        } else {
-            this.player = new Player((map2.getCell(playerModel.getX(), playerModel.getY())));
-            map2.setPlayer(this.player);
-            map2.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
-        }
-        this.player.setUserName(playerModel.getPlayerName());
-        this.player.setSuperUser(playerModel.getGodMode());
+        createPlayer((this.activeMap==1)? map1:map2, playerModel);
 
         //create pokemon
         MapLoader.placePokemons(map1, gameState);
@@ -119,7 +99,19 @@ public class Game {
                                           inventoryModel.getPokeBallNumber(),
                                           inventoryModel.hasKey()
                                           ));
+        setUpCanvasContextStage(map1, map2, converter, pStage);
+    }
 
+    private void createPlayer(GameMap map, PlayerModel playerModel) {
+        this.player = new Player(map.getCell(playerModel.getX(), playerModel.getY()));
+        map.setPlayer(this.player);
+        map.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
+        this.player.setUserName(playerModel.getPlayerName());
+        this.player.setSuperUser(playerModel.getGodMode());
+    }
+
+    private void setUpCanvasContextStage(GameMap map1, GameMap map2, Converter converter, Stage pStage) {
+        this.pStage = pStage;
         this.canvas = new Canvas(
                 map1.getDisplayWidth() * Tiles.DEFAULT_TILE_WIDTH,
                 map1.getDisplayHeight() * Tiles.DEFAULT_TILE_WIDTH);
@@ -129,7 +121,6 @@ public class Game {
         this.converter.setMap1(map1);
         this.converter.setMap2(map2);
     }
-
 
     public Scene showGameScene() {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
@@ -155,7 +146,6 @@ public class Game {
 
         return scene;
     }
-
 
 
     private void onKeyPressed(KeyEvent keyEvent) {
