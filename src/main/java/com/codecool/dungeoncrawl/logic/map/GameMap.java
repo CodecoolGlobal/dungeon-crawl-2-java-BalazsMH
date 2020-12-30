@@ -6,7 +6,6 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Door;
-import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class GameMap {
 
     public RocketGrunt getRocketGrunt(){ return rocketGrunt;}
 
-    public Optional<List<Pokemon>> getPokemonInRange(Label currentInfo) {
+    public Optional<List<Pokemon>> getPokemonInRange() {
         Optional<List<Pokemon>> toReturn = Optional.empty();
         List<Pokemon> pokemonInRange = new ArrayList<Pokemon>();
         int playerX = player.getCell().getX();
@@ -95,7 +94,6 @@ public class GameMap {
         pokemonList.forEach(p -> {
             if (Math.abs(p.getCell().getX() - playerX) + Math.abs(p.getCell().getY() - playerY) <= 3){
                 pokemonInRange.add(p);
-                currentInfo.setText(p.toString());
             }
         });
         if (pokemonInRange.size() > 0) toReturn = Optional.of(pokemonInRange);
@@ -111,7 +109,6 @@ public class GameMap {
             else {
                 pokemon.attackMove(mapWalls, playerCoordinates, pokemon.getX(), pokemon.getY());
             }
-
         }
     }
 

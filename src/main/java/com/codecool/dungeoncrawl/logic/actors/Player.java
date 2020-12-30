@@ -113,7 +113,8 @@ public class Player extends Actor {
 
     }
 
-    public void fightPokemon(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
+    public void fightPokemon(StringBuilder text, GameMap map){
+        Optional<List<Pokemon>> pokemonInRange = map.getPokemonInRange();
         if (pokemonInRange.isEmpty()) text.append("\nNothing to catch here");
         else {
             Optional<Pokemon> aliveInRange = pokemonInRange.get().stream()
@@ -147,8 +148,8 @@ public class Player extends Actor {
         }
     }
 
-    public void throwPokeBall(StringBuilder text, Optional<List<Pokemon>> pokemonInRange, GameMap map){
-
+    public void throwPokeBall(StringBuilder text, GameMap map){
+        Optional<List<Pokemon>> pokemonInRange = map.getPokemonInRange();
         if (pokemonInRange.isEmpty()){
             text.append("\nNothing to catch here");
         } else {

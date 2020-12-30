@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.dao.Converter;
-import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.game.Game;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -121,8 +120,6 @@ public class WindowElement {
         });
         loadSelectedButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         loadGamePane.getChildren().addAll(navigateBackButton, table, loadSelectedButton);
-
-
 
         return new Scene(loadGamePane);
 
@@ -306,9 +303,9 @@ public class WindowElement {
 
     public static void refreshRangeInfo(StringBuilder rangeText, StringBuilder actionsText, Label currentInfo, GameMap map) {
         rangeText.setLength(0);
-        if (map.getPokemonInRange(currentInfo).isPresent()) {
+        if (map.getPokemonInRange().isPresent()) {
             rangeText.append("\n\nPokemon in range:\n");
-            map.getPokemonInRange(currentInfo).get().forEach(p -> rangeText.append("\n" + p.toString()));
+            map.getPokemonInRange().get().forEach(p -> rangeText.append("\n" + p.toString()));
         }
         currentInfo.setText(actionsText.toString() + "\n" + rangeText.toString());
     }

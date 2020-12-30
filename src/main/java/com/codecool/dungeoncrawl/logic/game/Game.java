@@ -180,7 +180,7 @@ public class Game {
                 map.getRocketGrunt().releasePokemon(map);
                 break;
             case T:
-                player.throwPokeBall(actionsStB, map.getPokemonInRange(actionsLabel), map);
+                player.throwPokeBall(actionsStB, map);
                 checkIfGameEnds(inventory);
                 break;
             case E:
@@ -211,7 +211,7 @@ public class Game {
                 inventory.changeActivePokemon();
                 break;
             case F:
-                player.fightPokemon(actionsStB, map.getPokemonInRange(actionsLabel), map); // return text?
+                player.fightPokemon(actionsStB, map);
                 checkIfGameEnds(inventory);
                 break;
             case H:
