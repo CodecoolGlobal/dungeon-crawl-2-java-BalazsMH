@@ -124,7 +124,7 @@ public class Player extends Actor {
                 if (fightWith.getPokeHealth() <= 0){
                     text.append(String.format("\n%s defeated!", fightWith.getPokeName()));
                     activePokemon.setPokeDamage(activePokemon.getPokeDamage() + 1);
-                    removeFromRocketInventory(map, fightWith);
+                    removeFromRocketInventory(map, fightWith, 2); //!!! to 0
                 }
                 if (activePokemon.getPokeHealth() <= 0){
                     map.removePokemon(activePokemon);
@@ -149,7 +149,7 @@ public class Player extends Actor {
                 Pokemon toCatch = pokemons.stream().min(Comparator.comparing(Pokemon::getPokeHealth)).get();
                 PokeBall PB = currentPB.get();
                 if (PB.hasCaught(toCatch)){
-                    removeFromRocketInventory(map, toCatch);
+                    removeFromRocketInventory(map, toCatch, 0);
                     pokemonFromBoardToInventory(map, inventory, toCatch);
                     text.append("\nPokemon caught!");
                 } else {
@@ -163,11 +163,13 @@ public class Player extends Actor {
         map.removePokemon(toCatch);
         toCatch.removePokemonFromCell();
         toCatch.setPokeHealth(3);
+        toCatch.setLevel(0);
         inventory.addPokemon(toCatch);
     }
 
-    private void removeFromRocketInventory(GameMap map, Pokemon pokemon) {
+    private void removeFromRocketInventory(GameMap map, Pokemon pokemon, int where) {
         if (map.getRocketGrunt() != null && map.getRocketGrunt().getRocketPokemonOnBoard().contains(pokemon)) {
+            pokemon.setLevel(where);
             map.getRocketGrunt().getRocketPokemonOnBoard().remove(pokemon);
             map.getRocketGrunt().releasePokemon(map);
         }

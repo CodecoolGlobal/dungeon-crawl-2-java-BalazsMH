@@ -21,7 +21,7 @@ public abstract class Pokemon implements Drawable {
         this(name);
         this.cell = cell;
         if (cell != null) this.cell.setPokemon(this);
-        this.level = level == 1 ? 1 : 2;
+        this.level = level;
     }
 
     public Pokemon(String name){
