@@ -14,10 +14,6 @@ public class RocketGrunt extends Actor {
 
     public RocketGrunt(Cell cell) {
         super(cell);
-        rocketPokemonList.add(new Dustox("Dustox"));
-        rocketPokemonList.add(new Koffing("Koffing"));
-        rocketPokemonList.add(new Arbok("Arbok"));
-        rocketPokemonList.forEach(p -> p.setLevel(-1));
     }
 
     public void releasePokemon(GameMap map){
@@ -44,6 +40,7 @@ public class RocketGrunt extends Actor {
 
     public List<Pokemon> getRocketPokemonOnBoard() {return rocketPokemonOnBoard; }
 
+    public void addPokemon(Pokemon pokemon){ rocketPokemonList.add(pokemon); }
     @Override
     public String getTileName() {
         return "rocketGrunt";

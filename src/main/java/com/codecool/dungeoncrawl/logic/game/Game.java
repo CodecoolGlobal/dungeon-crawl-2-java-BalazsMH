@@ -73,24 +73,37 @@ public class Game {
         String activeMap = gameState.getActiveMap();
         String storedMap = gameState.getStoredMap();
 
-        //create current map from String, without actors/items placed
-        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, currentLevel);
+        //create level1 map from String, without actors/items placed
+        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, 1);
         this.mapWallsLevel1 = map1.getWalls();
 
-        //create stored map from String, without actors/items placed
-        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, currentLevel == 1 ? 2 : 1);
+        //create level2 map from String, without actors/items placed
+        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, 2);
         this.mapWallsLevel2 = map2.getWalls();
-        this.activeMap = (currentLevel == 2)? 2 : 1;
+        this.activeMap = currentLevel;
 
         //create player on the cell it was previously on
         createPlayer((this.activeMap==1)? map1:map2, playerModel);
         addInventoryToPlayer(inventoryModel, gameState);
+
+        addRocketPokemons(gameState);
+
+//        MapLoader.placeLootBox();
 
         //create pokemon
         MapLoader.placePokemons(map1, gameState);
         MapLoader.placePokemons(map2, gameState);
 
         setUpCanvasContextStage(map1, map2, converter, pStage);
+    }
+
+    private void addRocketPokemons(GameState gameState) {
+        List<Pokemon> rocketPokemon = gameState.getPokemonModelList()
+                .stream()
+                .filter(p -> p.getGameLevel() == -1)
+                .map(p -> PokemonFactory.getPokemon(null, p))
+                .collect(Collectors.toList());
+        rocketPokemon.forEach(p -> map2.getRocketGrunt().addPokemon(p));
     }
 
     private void createPlayer(GameMap map, PlayerModel playerModel) {
@@ -104,7 +117,7 @@ public class Game {
     private void addInventoryToPlayer(InventoryModel model, GameState gameState){
         List<Pokemon> playersPokemon = gameState.getPokemonModelList()
                 .stream()
-                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId())
+                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId()) // active out, why?
                 .map(p -> PokemonFactory.getPokemon(null, p))
                 .collect(Collectors.toList());
         player.setInventory(new Inventory(model.getHealthPotionNumber(), model.getPokeBallNumber(), model.hasKey(), playersPokemon));

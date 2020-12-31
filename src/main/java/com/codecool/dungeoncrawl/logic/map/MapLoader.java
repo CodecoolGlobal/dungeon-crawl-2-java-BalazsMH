@@ -15,7 +15,6 @@ import com.codecool.dungeoncrawl.model.PokemonModel;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 public class MapLoader {
@@ -85,7 +84,11 @@ public class MapLoader {
                             break;
                         case 'R':
                             cell.setType(CellType.FLOOR);
-                            map.setRocketGrunt(new RocketGrunt(cell));
+                            RocketGrunt grunt = new RocketGrunt(cell);
+                            grunt.addPokemon(PokemonFactory.getPokemon(null, "Koffing", -1));
+                            grunt.addPokemon(PokemonFactory.getPokemon(null, "Arbok", -1));
+                            grunt.addPokemon(PokemonFactory.getPokemon(null, "Dustox", -1));
+                            map.setRocketGrunt(grunt);
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
