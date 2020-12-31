@@ -4,14 +4,14 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.*;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.PokemonFactory;
 import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PokemonModel;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,15 +73,15 @@ public class MapLoader {
                             break;
                         case 'C':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Charizard(cell, "Charizard", gameLevel));
+                            map.addPokemon(PokemonFactory.getPokemon(cell, "Charizard", gameLevel));
                             break;
                         case 'S':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Slowpoke(cell, "Slowpoke", gameLevel));
+                            map.addPokemon(PokemonFactory.getPokemon(cell, "Slowpoke", gameLevel));
                             break;
                         case 'B':
                             cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur", gameLevel));
+                            map.addPokemon(PokemonFactory.getPokemon(cell, "Bulbasaur", gameLevel));
                             break;
                         case 'R':
                             cell.setType(CellType.FLOOR);
@@ -136,26 +136,6 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Key(cell);
                             break;
-                        case '@':
-                            cell.setType(CellType.FLOOR);
-                            map.setPlayer(new Player(cell));
-                            break;
-                        case 'L':
-                            cell.setType(CellType.FLOOR);
-                            new LootBox(cell, gameLevel);
-                            break;
-                        case 'C':
-                            cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Charizard(cell, "Charizard", gameLevel));
-                            break;
-                        case 'S':
-                            cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Slowpoke(cell, "Slowpoke", gameLevel));
-                            break;
-                        case 'B':
-                            cell.setType(CellType.FLOOR);
-                            map.addPokemon(new Bulbasaur(cell, "Bulbasaur", gameLevel));
-                            break;
                         case 'R':
                             cell.setType(CellType.FLOOR);
                             map.setRocketGrunt(new RocketGrunt(cell));
@@ -175,28 +155,7 @@ public class MapLoader {
                 for (Cell cell : row) {
                     if (pokemonModel.getGameLevel() == map.getLevel()) {
                         if (pokemonModel.getX() == cell.getX() && pokemonModel.getY() == cell.getY()) {
-                            Pokemon pokemon;
-                            switch (pokemonModel.getPokeName()) {
-                                case "Charizard":
-                                    pokemon = new Charizard(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                                case "Bulbasaur":
-                                    pokemon = new Bulbasaur(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                                case "Slowpoke":
-                                default:
-                                    pokemon = new Slowpoke(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                                case "Arbok":
-                                    pokemon = new Arbok(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                                case "Dustox":
-                                    pokemon = new Dustox(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                                case "Koffing":
-                                    pokemon = new Koffing(cell, pokemonModel.getPokeName(), pokemonModel.getGameLevel());
-                                    break;
-                            }
+                            Pokemon pokemon = PokemonFactory.getPokemon(cell, pokemonModel);
                             cell.setPokemon(pokemon);
                             map.addPokemon(pokemon);
                         }
@@ -206,34 +165,4 @@ public class MapLoader {
         }
     }
 
-    private static ArrayList<Cell> getEmptyCells(GameMap map) {
-        ArrayList<Cell> possibleCells = new ArrayList<>();
-        for (Cell[] row : map.getCells()) {
-            for (Cell cell : row) {
-                if (cell.getType() == CellType.FLOOR) {
-                    possibleCells.add(cell);
-                }
-            }
-        }
-        return possibleCells;
-    }
-
-    private static Cell getRandomCell(ArrayList<Cell> possibleCells) {
-        Random random = new Random();
-        return possibleCells.get(random.nextInt(possibleCells.size()));
-    }
-
-    public static void placeKey(GameMap map) {
-        ArrayList<Cell> possibleCells = getEmptyCells(map);
-        Cell selectedCell = getRandomCell(possibleCells);
-        selectedCell.setItem(new Key(selectedCell));
-    }
-
-    public static void placeGrunt(GameMap map) {
-        ArrayList<Cell> possibleCells = getEmptyCells(map);
-        Cell selectedCell = getRandomCell(possibleCells);
-        RocketGrunt grunt = new RocketGrunt(selectedCell);
-        selectedCell.setActor(grunt);
-        map.setRocketGrunt(grunt);
-    }
 }

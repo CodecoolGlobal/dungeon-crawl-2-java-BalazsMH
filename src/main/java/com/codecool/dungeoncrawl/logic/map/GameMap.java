@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Door;
+import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,9 @@ public class GameMap {
         for (int y = 0; y<height;y++){
             StringBuilder r = new StringBuilder();
             for (int x = 0; x<width;x++){
-                if(cells[x][y].getTileName().equals("floor")) r.append(".");
+                if (cells[x][y].getItem() instanceof Key) r.append("k");
+                else if (cells[x][y].getActor() instanceof RocketGrunt) r.append("R");
+                else if(cells[x][y].getTileName().equals("floor")) r.append(".");
                 else if (cells[x][y].getTileName().equals("wall")) r.append("#");
                 else if (cells[x][y].getTileName().equals("empty")) r.append(" ");
                 else if (cells[x][y].getTileName().equals("door")) r.append("d");
