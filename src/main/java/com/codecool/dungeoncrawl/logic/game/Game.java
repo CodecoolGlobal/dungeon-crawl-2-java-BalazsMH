@@ -5,6 +5,8 @@ import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Facing;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
+import com.codecool.dungeoncrawl.logic.actors.pokemon.PokemonFactory;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -28,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Game {
     private final GameMap map1;
@@ -81,24 +84,12 @@ public class Game {
 
         //create player on the cell it was previously on
         createPlayer((this.activeMap==1)? map1:map2, playerModel);
+        addInventoryToPlayer(inventoryModel, gameState);
 
         //create pokemon
         MapLoader.placePokemons(map1, gameState);
         MapLoader.placePokemons(map2, gameState);
 
-        //place key randomly if player did not have one
-        if (!inventoryModel.hasKey()) {
-            MapLoader.placeKey(map1);
-        }
-
-        //place RocketGrunt randomly regardless of it being defeated previously.
-        MapLoader.placeGrunt(map2);
-
-        //set inventory for the player. Not all data is updated currently.
-        player.setInventory(new Inventory(inventoryModel.getHealthPotionNumber(),
-                                          inventoryModel.getPokeBallNumber(),
-                                          inventoryModel.hasKey()
-                                          ));
         setUpCanvasContextStage(map1, map2, converter, pStage);
     }
 
@@ -108,6 +99,15 @@ public class Game {
         map.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         this.player.setUserName(playerModel.getPlayerName());
         this.player.setSuperUser(playerModel.getGodMode());
+    }
+
+    private void addInventoryToPlayer(InventoryModel model, GameState gameState){
+        List<Pokemon> playersPokemon = gameState.getPokemonModelList()
+                .stream()
+                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId())
+                .map(p -> PokemonFactory.getPokemon(null, p))
+                .collect(Collectors.toList());
+        player.setInventory(new Inventory(model.getHealthPotionNumber(), model.getPokeBallNumber(), model.hasKey(), playersPokemon));
     }
 
     private void setUpCanvasContextStage(GameMap map1, GameMap map2, Converter converter, Stage pStage) {
