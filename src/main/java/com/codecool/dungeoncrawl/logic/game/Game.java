@@ -53,12 +53,13 @@ public class Game {
 
 
     public Game(Converter converter, Stage pStage) {
+        MapLoader mapLoader = new MapLoader();
         MapGenerator.generateMap(1);
-        this.map1 = MapLoader.loadMap(1);
+        this.map1 = mapLoader.loadMap(1);
         this.mapWallsLevel1 = map1.getWalls();
 
         MapGenerator.generateMap(2);
-        this.map2 = MapLoader.loadMap(2);
+        this.map2 = mapLoader.loadMap(2);
         this.mapWallsLevel2 = map2.getWalls();
 
         this.player = this.map1.getPlayer();
@@ -67,32 +68,31 @@ public class Game {
     }
 
     public Game(GameState gameState, Converter converter, Stage pStage) {
+        MapLoader mapLoader = new MapLoader();
+
         PlayerModel playerModel = gameState.getPlayer();
         InventoryModel inventoryModel = gameState.getInventoryModel();
-        int currentLevel = playerModel.getLevel();
-        String activeMap = gameState.getActiveMap();
-        String storedMap = gameState.getStoredMap();
+        activeMap = playerModel.getLevel();
+        String activeMapString = gameState.getActiveMap();
+        String storedMapString = gameState.getStoredMap();
 
         //create level1 map from String, without actors/items placed
-        this.map1 = MapLoader.loadMapFromSave(currentLevel == 1 ? activeMap : storedMap, 1);
+        this.map1 = mapLoader.loadMapFromSave(activeMap == 1 ? activeMapString : storedMapString, 1);
         this.mapWallsLevel1 = map1.getWalls();
 
         //create level2 map from String, without actors/items placed
-        this.map2 = MapLoader.loadMapFromSave(currentLevel == 1 ? storedMap : activeMap, 2);
+        this.map2 = mapLoader.loadMapFromSave(activeMap == 1 ? storedMapString : activeMapString, 2);
         this.mapWallsLevel2 = map2.getWalls();
-        this.activeMap = currentLevel;
 
-        //create player on the cell it was previously on
         createPlayer((this.activeMap==1)? map1:map2, playerModel);
         addInventoryToPlayer(inventoryModel, gameState);
 
         addRocketPokemons(gameState);
 
-//        MapLoader.placeLootBox();
-
-        //create pokemon
-        MapLoader.placePokemons(map1, gameState);
-        MapLoader.placePokemons(map2, gameState);
+        mapLoader.placeLootBoxes(map1, gameState);
+        mapLoader.placeLootBoxes(map2, gameState);
+        mapLoader.placePokemons(map1, gameState);
+        mapLoader.placePokemons(map2, gameState);
 
         setUpCanvasContextStage(map1, map2, converter, pStage);
     }
@@ -108,7 +108,7 @@ public class Game {
 
     private void createPlayer(GameMap map, PlayerModel playerModel) {
         this.player = new Player(map.getCell(playerModel.getX(), playerModel.getY()));
-        player.setLevel(player.getLevel());
+        player.setLevel(playerModel.getLevel());
         map.setPlayer(this.player);
         map.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         this.player.setUserName(playerModel.getPlayerName());

@@ -10,6 +10,7 @@ import com.codecool.dungeoncrawl.logic.items.Door;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.LootBoxModel;
 import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import java.io.InputStream;
@@ -18,8 +19,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MapLoader {
-    private static List<List<Integer>> walls;
-    public static GameMap loadMap(int gameLevel) {
+    private List<List<Integer>> walls;
+    public GameMap loadMap(int gameLevel) {
         InputStream is;
         walls = new ArrayList<>();
         //TODO: map should not be part of the resources folder
@@ -99,12 +100,12 @@ public class MapLoader {
         map.setWalls(walls);
         return map;
     }
-    public static List<List<Integer>> getWalls() {
+    public List<List<Integer>> getWalls() {
         return walls;
     }
 
 
-    public static GameMap loadMapFromSave(String mapString, int gameLevel) {
+    public GameMap loadMapFromSave(String mapString, int gameLevel) {
         walls = new ArrayList<>();
         Scanner scanner = new Scanner(mapString);
 
@@ -153,13 +154,22 @@ public class MapLoader {
         return map;
     }
 
-    public static void placePokemons(GameMap map, GameState gameState) {
+    public void placePokemons(GameMap map, GameState gameState) {
         for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
             if (pokemonModel.getGameLevel() == map.getLevel()){
                 Cell cell = map.getCell(pokemonModel.getX(), pokemonModel.getY());
                 Pokemon pokemon = PokemonFactory.getPokemon(cell, pokemonModel);
                 cell.setPokemon(pokemon);
                 map.addPokemon(pokemon);
+            }
+        }
+    }
+
+    public void placeLootBoxes(GameMap map, GameState gameState) {
+        for (LootBoxModel lootboxModel : gameState.getLootBoxModelList()){
+            if (lootboxModel.getLevel() == map.getLevel()){
+                Cell cell = map.getCell(lootboxModel.getX(), lootboxModel.getY());
+                LootBox lootBox = new LootBox(cell, lootboxModel);
             }
         }
     }
