@@ -271,7 +271,7 @@ public class WindowElement {
         Scene endScene = new Scene(endContent);
         Text winText = new Text("Congratulations! You won!");
         Text loseText = new Text("You lost. Try again!");
-        Text displayedText = endCondition == -1? winText : loseText;
+        Text displayedText = endCondition == 1? winText : loseText;
         Button closeWindow = new Button("Quit game");
         closeWindow.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         displayedText.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 22));

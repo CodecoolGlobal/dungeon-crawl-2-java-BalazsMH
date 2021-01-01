@@ -5,8 +5,6 @@ import com.codecool.dungeoncrawl.dao.Converter;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Facing;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
-import com.codecool.dungeoncrawl.logic.actors.pokemon.PokemonFactory;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
@@ -30,7 +28,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Game {
     private final GameMap map1;
@@ -49,6 +46,7 @@ public class Game {
     private final StringBuilder inRangeStB = new StringBuilder();
     private Converter converter;
     private Stage pStage;
+    private Timeline enemyMove;
 
 
 
@@ -139,8 +137,8 @@ public class Game {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
         actionsStB.setLength(0);
         Inventory inventory = player.getInventory();
-        KeyCode keyPressed = keyEvent.getCode();
-        switch (keyPressed) {
+        boolean ends = false;
+        switch (keyEvent.getCode()) {
             case UP:
                 player.move(0, -1, Facing.UP, actionsStB);
                 break;
@@ -158,7 +156,7 @@ public class Game {
                 break;
             case T:
                 player.throwPokeBall(actionsStB, map);
-                checkIfGameEnds(inventory);
+                ends = checkIfGameEnds(inventory);
                 break;
             case E:
                 if (player.whatAmIStandingOn() instanceof Key){
@@ -189,7 +187,7 @@ public class Game {
                 break;
             case F:
                 player.fightPokemon(actionsStB, map);
-                checkIfGameEnds(inventory);
+                ends = checkIfGameEnds(inventory);
                 break;
             case H:
                 inventory.heal();
@@ -218,7 +216,7 @@ public class Game {
                     }
                 }
         }
-        refresh(inventory);
+        if (!ends) refresh(inventory);
     }
 
     private void refresh(Inventory inventory) {
@@ -252,15 +250,17 @@ public class Game {
         }
     }
 
-    public void checkIfGameEnds(Inventory inventory){
+    public boolean checkIfGameEnds(Inventory inventory){
+        boolean ends = true;
         if (inventory.getActivePokemon() == null){
+            enemyMove.stop();
             WindowElement.gameEndWindow(-1, pStage);
         } else if (map2.getRocketGrunt().getRocketPokemonList().size() == 0 && map2.getRocketGrunt().getRocketPokemonOnBoard().size() == 0){
             WindowElement.gameEndWindow(1, pStage);
-        }
+        } else ends = false;
+        return ends;
     }
     private void addEnemyMoveHandler() {
-        Timeline enemyMove;
         enemyMove = new Timeline(
                 new KeyFrame(Duration.seconds(1), (event) -> {
                     this.getActiveMap().moveAllPokemon();
