@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.logic.items;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.Drawable;
+import com.codecool.dungeoncrawl.model.LootBoxModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,17 @@ public class LootBox extends Item {
         int pokeBallCount = (int) Math.floor(Math.random()*(8.00 - 2.00) + 2.00);
         for (int i = 0; i < pokeBallCount; i++) {
             this.pokeBallList.add(new PokeBall());
+        }
+    }
+
+    public LootBox(Cell cell, LootBoxModel lootBoxModel){
+        super(cell);
+        potionNumber = lootBoxModel.getHealthPotionNumber();
+        level = lootBoxModel.getLevel();
+        lootBoxId = lootBoxModel.getId();
+        pokeBallList = new ArrayList<>();
+        for (int i = 0; i < lootBoxModel.getPokeBallNumber(); i++) {
+            pokeBallList.add(new PokeBall());
         }
     }
 
