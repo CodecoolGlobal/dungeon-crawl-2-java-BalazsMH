@@ -7,16 +7,16 @@ import com.codecool.dungeoncrawl.logic.actors.RocketGrunt;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.PokemonFactory;
 import com.codecool.dungeoncrawl.logic.items.Door;
+import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
-import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.LootBoxModel;
-import com.codecool.dungeoncrawl.model.PokemonModel;
+import com.codecool.dungeoncrawl.model.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class MapLoader {
     private List<List<Integer>> walls;
@@ -152,6 +152,34 @@ public class MapLoader {
         }
         map.setWalls(walls);
         return map;
+    }
+
+    public Player createPlayer(GameMap map, PlayerModel playerModel) {
+        Player player = new Player(map.getCell(playerModel.getX(), playerModel.getY()));
+        player.setLevel(playerModel.getLevel());
+        map.setPlayer(player);
+        map.getCell(playerModel.getX(), playerModel.getY()).setActor(player);
+        player.setUserName(playerModel.getPlayerName());
+        player.setSuperUser(playerModel.getGodMode());
+        return player;
+    }
+
+    public void addInventoryToPlayer(InventoryModel model, GameState gameState, Player player){
+        List<Pokemon> playersPokemon = gameState.getPokemonModelList()
+                .stream()
+                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId()) // active out, why?
+                .map(p -> PokemonFactory.getPokemon(null, p))
+                .collect(Collectors.toList());
+        player.setInventory(new Inventory(model.getHealthPotionNumber(), model.getPokeBallNumber(), model.hasKey(), playersPokemon));
+    }
+
+    public void addRocketPokemons(GameState gameState, GameMap map2) {
+        List<Pokemon> rocketPokemon = gameState.getPokemonModelList()
+                .stream()
+                .filter(p -> p.getGameLevel() == -1)
+                .map(p -> PokemonFactory.getPokemon(null, p))
+                .collect(Collectors.toList());
+        rocketPokemon.forEach(p -> map2.getRocketGrunt().addPokemon(p));
     }
 
     public void placePokemons(GameMap map, GameState gameState) {

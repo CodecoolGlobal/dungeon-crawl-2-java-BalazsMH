@@ -84,10 +84,10 @@ public class Game {
         this.map2 = mapLoader.loadMapFromSave(activeMap == 1 ? storedMapString : activeMapString, 2);
         this.mapWallsLevel2 = map2.getWalls();
 
-        createPlayer((this.activeMap==1)? map1:map2, playerModel);
-        addInventoryToPlayer(inventoryModel, gameState);
+        player = mapLoader.createPlayer((this.activeMap==1)? map1:map2, playerModel);
+        mapLoader.addInventoryToPlayer(inventoryModel, gameState, player);
 
-        addRocketPokemons(gameState);
+        mapLoader.addRocketPokemons(gameState, map2);
 
         mapLoader.placeLootBoxes(map1, gameState);
         mapLoader.placeLootBoxes(map2, gameState);
@@ -95,33 +95,6 @@ public class Game {
         mapLoader.placePokemons(map2, gameState);
 
         setUpCanvasContextStage(map1, map2, converter, pStage);
-    }
-
-    private void addRocketPokemons(GameState gameState) {
-        List<Pokemon> rocketPokemon = gameState.getPokemonModelList()
-                .stream()
-                .filter(p -> p.getGameLevel() == -1)
-                .map(p -> PokemonFactory.getPokemon(null, p))
-                .collect(Collectors.toList());
-        rocketPokemon.forEach(p -> map2.getRocketGrunt().addPokemon(p));
-    }
-
-    private void createPlayer(GameMap map, PlayerModel playerModel) {
-        this.player = new Player(map.getCell(playerModel.getX(), playerModel.getY()));
-        player.setLevel(playerModel.getLevel());
-        map.setPlayer(this.player);
-        map.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
-        this.player.setUserName(playerModel.getPlayerName());
-        this.player.setSuperUser(playerModel.getGodMode());
-    }
-
-    private void addInventoryToPlayer(InventoryModel model, GameState gameState){
-        List<Pokemon> playersPokemon = gameState.getPokemonModelList()
-                .stream()
-                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId()) // active out, why?
-                .map(p -> PokemonFactory.getPokemon(null, p))
-                .collect(Collectors.toList());
-        player.setInventory(new Inventory(model.getHealthPotionNumber(), model.getPokeBallNumber(), model.hasKey(), playersPokemon));
     }
 
     private void setUpCanvasContextStage(GameMap map1, GameMap map2, Converter converter, Stage pStage) {
