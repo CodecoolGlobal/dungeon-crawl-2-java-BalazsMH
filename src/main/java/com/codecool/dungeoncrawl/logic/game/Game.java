@@ -108,6 +108,7 @@ public class Game {
 
     private void createPlayer(GameMap map, PlayerModel playerModel) {
         this.player = new Player(map.getCell(playerModel.getX(), playerModel.getY()));
+        player.setLevel(player.getLevel());
         map.setPlayer(this.player);
         map.getCell(playerModel.getX(), playerModel.getY()).setActor(this.player);
         this.player.setUserName(playerModel.getPlayerName());
@@ -164,8 +165,7 @@ public class Game {
     private void onKeyPressed(KeyEvent keyEvent) {
         GameMap map = this.activeMap == 1 ? this.map1 : this.map2;
         actionsStB.setLength(0);
-        Inventory inventory = map.getPlayer().getInventory();
-        Player player = map.getPlayer();
+        Inventory inventory = player.getInventory();
         KeyCode keyPressed = keyEvent.getCode();
         switch (keyPressed) {
             case UP:
