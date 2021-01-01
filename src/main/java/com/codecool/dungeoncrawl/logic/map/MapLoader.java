@@ -152,18 +152,14 @@ public class MapLoader {
         map.setWalls(walls);
         return map;
     }
+
     public static void placePokemons(GameMap map, GameState gameState) {
         for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
-            for (Cell[] row : map.getCells()) {
-                for (Cell cell : row) {
-                    if (pokemonModel.getGameLevel() == map.getLevel()) {
-                        if (pokemonModel.getX() == cell.getX() && pokemonModel.getY() == cell.getY()) {
-                            Pokemon pokemon = PokemonFactory.getPokemon(cell, pokemonModel);
-                            cell.setPokemon(pokemon);
-                            map.addPokemon(pokemon);
-                        }
-                    }
-                }
+            if (pokemonModel.getGameLevel() == map.getLevel()){
+                Cell cell = map.getCell(pokemonModel.getX(), pokemonModel.getY());
+                Pokemon pokemon = PokemonFactory.getPokemon(cell, pokemonModel);
+                cell.setPokemon(pokemon);
+                map.addPokemon(pokemon);
             }
         }
     }
