@@ -30,7 +30,7 @@ public class LootBox extends Item {
         super(cell);
         potionNumber = lootBoxModel.getHealthPotionNumber();
         level = lootBoxModel.getLevel();
-        lootBoxId = lootBoxModel.getId();
+        lootBoxId = lootBoxModel.getLootBoxId();
         pokeBallList = new ArrayList<>();
         for (int i = 0; i < lootBoxModel.getPokeBallNumber(); i++) {
             pokeBallList.add(new PokeBall());
