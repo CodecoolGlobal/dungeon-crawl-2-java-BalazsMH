@@ -27,8 +27,8 @@ import java.util.List;
 public class WindowElement {
 
 
-    public static VBox createMainPane(TextField nameInput, Button newGameButton, Button loadGameButton, Button importGameButton ) {
-        VBox mainPane = new VBox(20, nameInput, newGameButton, loadGameButton, importGameButton);
+    public static VBox createMainPane(Button newGameButton, Button loadGameButton, Button importGameButton ) {
+        VBox mainPane = new VBox(20, newGameButton, loadGameButton, importGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
         Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
                 BackgroundRepeat.NO_REPEAT,
@@ -125,7 +125,7 @@ public class WindowElement {
     }
 
 
-    public static TextField createNameInput() {
+    private static TextField createNameInput() {
         TextField nameInput = new TextField();
         nameInput.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
         nameInput.setMaxSize(220,220);
@@ -312,5 +312,31 @@ public class WindowElement {
     public static void refreshLevelAndInventory(Inventory inventory, Label inv, Label currentLevel, GameMap map) {
         inv.setText(inventory.toString());
         currentLevel.setText("Level " + map.getLevel());
+    }
+
+    public static String createStartScreen(Stage pStage) {
+        Stage startPopup = new Stage();
+        startPopup.initModality(Modality.APPLICATION_MODAL);
+        startPopup.initOwner(pStage);
+        startPopup.setTitle("START GAME!");
+
+        TextField inputField = createNameInput();
+        Button startButton = new Button("Start");
+        Button cancelButton = new Button("Cancel");
+        StringBuilder name = new StringBuilder();
+        startButton.setOnMouseClicked((event) -> {
+            name.append(inputField.getText());
+            startPopup.close();
+        });
+        cancelButton.setOnMouseClicked((event) -> startPopup.close());
+
+        VBox layout= new VBox(10, inputField, startButton, cancelButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1= new Scene(layout, 300, 250);
+        startPopup.setScene(scene1);
+        startPopup.showAndWait();
+
+        return name.toString();
     }
 }

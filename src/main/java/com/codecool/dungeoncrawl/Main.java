@@ -45,16 +45,16 @@ public class Main extends Application {
 
 
     public Scene mainMenu() {
-        TextField nameInput = WindowElement.createNameInput();
+//        TextField nameInput = WindowElement.createNameInput();
         Button newGameButton = WindowElement.createNewGameButton();
         Button loadGameButton = WindowElement.createLoadGameButton();
         Button importGameButton = WindowElement.createImportGameButton();
 
-        newGameButton.setOnMouseClicked((event)-> onNewGamePressed(nameInput.getText()));
+        newGameButton.setOnMouseClicked((event)-> onNewGamePressed());
         loadGameButton.setOnMouseClicked((event)-> onLoadPressed());
         importGameButton.setOnMouseClicked((event) -> onImportPressed());
 
-        VBox mainPane = WindowElement.createMainPane(nameInput, newGameButton, loadGameButton, importGameButton);
+        VBox mainPane = WindowElement.createMainPane(newGameButton, loadGameButton, importGameButton);
 
         return new Scene(mainPane);
     }
@@ -77,7 +77,8 @@ public class Main extends Application {
         } else WindowElement.importErrorWindow(pStage);
     }
 
-    private void onNewGamePressed(String nameInput) {
+    private void onNewGamePressed() {
+        String nameInput = WindowElement.createStartScreen(pStage);
         Game game = new Game(converter, pStage);
         game.getPlayer().setUserName(nameInput);
         if (Arrays.asList(developers).contains(nameInput)) game.getPlayer().setSuperUser(true);
