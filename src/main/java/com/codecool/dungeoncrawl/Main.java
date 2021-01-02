@@ -78,6 +78,7 @@ public class Main extends Application {
 
     private void onNewGamePressed() {
         String nameInput = WindowElement.createStartScreen(pStage);
+        if ("".equals(nameInput)) return;
         Game game = new Game(converter, pStage);
         game.getPlayer().setUserName(nameInput);
         if (Arrays.asList(developers).contains(nameInput)) game.getPlayer().setSuperUser(true);

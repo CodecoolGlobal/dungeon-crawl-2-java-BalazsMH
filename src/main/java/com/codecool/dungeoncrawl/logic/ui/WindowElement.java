@@ -306,8 +306,11 @@ public class WindowElement {
         Button cancelButton = new Button("Cancel");
         StringBuilder name = new StringBuilder();
         startButton.setOnMouseClicked((event) -> {
-            name.append(inputField.getText());
-            startPopup.close();
+            if ("".equals(inputField.getText())) emptyNameAlert(pStage);
+            else {
+                name.append(inputField.getText());
+                startPopup.close();
+            }
         });
         cancelButton.setOnMouseClicked((event) -> startPopup.close());
 
@@ -319,5 +322,15 @@ public class WindowElement {
         startPopup.showAndWait();
 
         return name.toString();
+    }
+
+    public static void emptyNameAlert(Stage pStage){
+        Alert nameAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        nameAlert.setTitle("Missing username");
+        nameAlert.setHeaderText(null);
+        nameAlert.setContentText("Username field cannot be left empty!");
+        ButtonType okButton = new ButtonType("GOT IT!", ButtonBar.ButtonData.NO);
+        nameAlert.getButtonTypes().setAll(okButton);
+        nameAlert.showAndWait();
     }
 }
