@@ -12,6 +12,11 @@ public class LootBoxModel extends BaseModel {
     private int level;
     private int lootBoxId;
 
+    public LootBoxModel(LootBox lootBox, int playerId){
+        this(lootBox);
+        this.playerId = playerId;
+    }
+
     public LootBoxModel(LootBox lootBox){
         this.healthPotionNumber = lootBox.getPotionNumber();
         this.pokeBallNumber = lootBox.getPokeBallList().size();

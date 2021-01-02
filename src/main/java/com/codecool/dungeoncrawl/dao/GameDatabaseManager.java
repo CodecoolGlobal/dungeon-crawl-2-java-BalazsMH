@@ -86,21 +86,28 @@ public class GameDatabaseManager {
     }
 
     public void saveLootbox(LootBox lootBox){
-        LootBoxModel lootboxModel = new LootBoxModel(lootBox);
+        LootBoxModel lootboxModel = new LootBoxModel(lootBox, playerModel.getId());
         lootboxModel.setPlayerId(playerModel.getId());
         lootBoxModels.add(lootboxModel);
         lootBoxDao.add(lootboxModel);
     }
 
-    public void updateLootboxes(List<Integer> ids){
+    public void updateLootboxes(List<LootBox> lootBoxes){
+        List<Integer> onBoardIds = lootBoxes.stream().map(l -> l.getLootBoxId()).collect(Collectors.toList());
         lootBoxModels.forEach(lm -> {
-            if (!ids.contains(lm.getLootBoxId())) {
+            if (!onBoardIds.contains(lm.getLootBoxId())) {
                 lm.setLevel(0);
                 lm.setX(null);
                 lm.setY(null);
                 lootBoxDao.update(lm);
             }
         });
+        List<Integer> allIds = lootBoxModels.stream().map(l -> l.getLootBoxId()).collect(Collectors.toList());
+        for (Integer id : onBoardIds){
+            if (!allIds.contains(id)){
+                lootBoxDao.add(new LootBoxModel(lootBoxes.stream().filter(l -> l.getLootBoxId()==id).findFirst().get(), playerModel.getId()));
+            }
+        }
     }
 
     public PokemonModel getPokemon(int id){

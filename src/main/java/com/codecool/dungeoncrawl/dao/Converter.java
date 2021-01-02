@@ -61,7 +61,7 @@ public class Converter {
         manager.updateGameState(active.layoutToString(), stored.layoutToString(), new Date(System.currentTimeMillis()));
         manager.updateInventory(inventory);
         pokemonList.forEach(manager::updatePokemon);
-        manager.updateLootboxes(lootBoxes.stream().map(l -> l.getLootBoxId()).collect(Collectors.toList()));
+        manager.updateLootboxes(lootBoxes);
     }
 
     public void export(Stage stage){
