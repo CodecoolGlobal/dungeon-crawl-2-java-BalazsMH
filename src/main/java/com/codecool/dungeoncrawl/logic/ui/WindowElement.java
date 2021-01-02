@@ -79,16 +79,16 @@ public class WindowElement {
 
         //Create columns
         TableColumn<GameState, Player> playerColumn = new TableColumn<>("Player");
-        playerColumn.setMinWidth(300);
+        playerColumn.setMinWidth(200);
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
 
-        TableColumn<GameState, Date> dateTableColumn = new TableColumn<>("Saved on");
-        dateTableColumn.setMinWidth(300);
-        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
+        TableColumn<GameState, GameState> saveNameColumn = new TableColumn<>("Save");
+        saveNameColumn.setMinWidth(200);
+        saveNameColumn.setCellValueFactory(new PropertyValueFactory<>("saveName"));
 
-        TableColumn<GameState, Integer> currentMapTableColumn = new TableColumn<>("Current level");
-        currentMapTableColumn.setMinWidth(200);
-        currentMapTableColumn.setCellValueFactory(new PropertyValueFactory<>("currentMap"));
+        TableColumn<GameState, Date> dateTableColumn = new TableColumn<>("Saved on");
+        dateTableColumn.setMinWidth(200);
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("savedAt"));
 
         //Set table properties
         TableView<GameState> table = new TableView<>();
@@ -99,8 +99,7 @@ public class WindowElement {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        //TODO: currentMap temporarily disabled, since it loaded the whole map layout. Find different solution.
-        table.getColumns().addAll(playerColumn, dateTableColumn/*, currentMapTableColumn*/);
+        table.getColumns().addAll(playerColumn, saveNameColumn, dateTableColumn);
 
         Button navigateBackButton = new Button("Main menu");
         navigateBackButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
