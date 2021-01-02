@@ -167,7 +167,7 @@ public class MapLoader {
     public void addInventoryToPlayer(InventoryModel model, GameState gameState, Player player){
         List<Pokemon> playersPokemon = gameState.getPokemonModelList()
                 .stream()
-                .filter(p -> p.getGameLevel() == 0 && model.getActivePokemonId() != p.getId()) // active out, why?
+                .filter(p -> p.getGameLevel() == 0)
                 .map(p -> PokemonFactory.getPokemon(null, p))
                 .collect(Collectors.toList());
         player.setInventory(new Inventory(model.getHealthPotionNumber(), model.getPokeBallNumber(), model.hasKey(), playersPokemon));
