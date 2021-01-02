@@ -42,21 +42,9 @@ public class WindowElement {
         return mainPane;
     }
 
-    public static Button createNewGameButton() {
-        Button newGameButton = new Button("Start a new Game!");
-        newGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return newGameButton;
-    }
-
-    public static Button createLoadGameButton() {
-        Button loadGameButton = new Button("Load Game");
-        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
-        return loadGameButton;
-    }
-
-    public static Button createImportGameButton() {
-        Button loadGameButton = new Button("Import Game");
-        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 14));
+    public static Button createButton(String text, int fontSize){
+        Button loadGameButton = new Button(text);
+        loadGameButton.setFont(Font.loadFont("file:Pokemon_Classic.ttf", fontSize));
         return loadGameButton;
     }
 

@@ -45,10 +45,9 @@ public class Main extends Application {
 
 
     public Scene mainMenu() {
-//        TextField nameInput = WindowElement.createNameInput();
-        Button newGameButton = WindowElement.createNewGameButton();
-        Button loadGameButton = WindowElement.createLoadGameButton();
-        Button importGameButton = WindowElement.createImportGameButton();
+        Button newGameButton = WindowElement.createButton("New Game", 14);
+        Button loadGameButton = WindowElement.createButton("Load Game", 14);
+        Button importGameButton = WindowElement.createButton("Import Game", 14);
 
         newGameButton.setOnMouseClicked((event)-> onNewGamePressed());
         loadGameButton.setOnMouseClicked((event)-> onLoadPressed());
