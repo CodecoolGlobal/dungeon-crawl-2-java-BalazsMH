@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GameDatabaseManager {
@@ -91,19 +92,15 @@ public class GameDatabaseManager {
         lootBoxDao.add(lootboxModel);
     }
 
-    public void updateLootbox(LootBox lootBox){
-        int idx = lootBoxModels.indexOf(lootBoxModels.stream()
-                .filter(l -> l.getLootBoxId() == lootBox.getLootBoxId())
-                .collect(Collectors.toList())
-                .get(0));
-        System.out.println("current box: " +lootBoxModels.get(idx).getLevel());
-        if (lootBox.getLevel() == 0){
-            System.out.println("found");
-            lootBoxModels.get(idx).setLevel(0);
-            lootBoxModels.get(idx).setX(null);
-            lootBoxModels.get(idx).setY(null);
-        }
-        lootBoxDao.update(lootBoxModels.get(idx));
+    public void updateLootboxes(List<Integer> ids){
+        lootBoxModels.forEach(lm -> {
+            if (!ids.contains(lm.getLootBoxId())) {
+                lm.setLevel(0);
+                lm.setX(null);
+                lm.setY(null);
+                lootBoxDao.update(lm);
+            }
+        });
     }
 
     public PokemonModel getPokemon(int id){
