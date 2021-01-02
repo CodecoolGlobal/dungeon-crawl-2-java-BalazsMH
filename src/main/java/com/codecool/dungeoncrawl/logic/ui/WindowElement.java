@@ -30,16 +30,20 @@ public class WindowElement {
     public static VBox createMainPane(Button newGameButton, Button loadGameButton, Button importGameButton ) {
         VBox mainPane = new VBox(20, newGameButton, loadGameButton, importGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
-        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
+        Background background = createBackground("/main_menu.png");
+        mainPane.setBackground(background);
+        mainPane.setAlignment(Pos.CENTER);
+        mainPane.requestFocus();
+        return mainPane;
+    }
+
+    private static Background createBackground(String path){
+        return new Background(new BackgroundImage(new Image(path),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
                 BackgroundSize.AUTO,
                 false, false, true, true)));
-        mainPane.setBackground(background);
-        mainPane.setAlignment(Pos.CENTER);
-        mainPane.requestFocus();
-        return mainPane;
     }
 
     public static Button createButton(String text, int fontSize){
@@ -51,12 +55,7 @@ public class WindowElement {
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu, Converter converter){
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
-        Background background = new Background(new BackgroundImage(new Image("/main_menu.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
+        Background background = createBackground("/main_menu.png");
         loadGamePane.setBackground(background);
         loadGamePane.setAlignment(Pos.CENTER);
         loadGamePane.requestFocus();
@@ -275,13 +274,7 @@ public class WindowElement {
 
         endContent.getChildren().addAll(displayedText, closeWindow);
         endContent.setPrefSize(800.0/2,761.0/2);
-        Background background = new Background(new BackgroundImage(
-                new Image(endCondition == -1? "/lose.png": "/win.png"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO,
-                BackgroundSize.AUTO,
-                false, false, true, true)));
+        Background background = createBackground(endCondition == -1? "/lose.png": "/win.png");
 
         endPopup.setScene(endScene);
         endContent.setBackground(background);
