@@ -1,5 +1,6 @@
-package com.codecool.dungeoncrawl.dao;
+package com.codecool.dungeoncrawl.dao.jdbc;
 
+import com.codecool.dungeoncrawl.dao.daoInterface.PokemonDao;
 import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import javax.sql.DataSource;
@@ -7,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PokemonDaoJdbc implements PokemonDao{
+public class PokemonDaoJdbc implements PokemonDao {
 
     DataSource dataSource;
 

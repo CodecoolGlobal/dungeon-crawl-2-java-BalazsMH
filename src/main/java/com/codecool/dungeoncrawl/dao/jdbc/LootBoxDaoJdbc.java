@@ -1,7 +1,7 @@
-package com.codecool.dungeoncrawl.dao;
+package com.codecool.dungeoncrawl.dao.jdbc;
 
+import com.codecool.dungeoncrawl.dao.daoInterface.LootBoxDao;
 import com.codecool.dungeoncrawl.model.LootBoxModel;
-import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import javax.sql.DataSource;
 import java.sql.*;

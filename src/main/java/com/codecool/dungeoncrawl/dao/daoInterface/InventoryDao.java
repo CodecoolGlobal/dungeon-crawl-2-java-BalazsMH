@@ -1,7 +1,6 @@
-package com.codecool.dungeoncrawl.dao;
+package com.codecool.dungeoncrawl.dao.daoInterface;
 
 import com.codecool.dungeoncrawl.model.InventoryModel;
-import com.codecool.dungeoncrawl.model.PokemonModel;
 
 import java.util.List;
 

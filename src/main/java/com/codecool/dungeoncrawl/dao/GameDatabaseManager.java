@@ -1,5 +1,7 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.dao.daoInterface.*;
+import com.codecool.dungeoncrawl.dao.jdbc.*;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.pokemon.Pokemon;
 import com.codecool.dungeoncrawl.logic.items.Inventory;
@@ -12,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GameDatabaseManager {

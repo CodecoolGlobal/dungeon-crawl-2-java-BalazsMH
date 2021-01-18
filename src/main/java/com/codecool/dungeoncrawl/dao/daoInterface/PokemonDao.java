@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl.dao;
+package com.codecool.dungeoncrawl.dao.daoInterface;
 
 import com.codecool.dungeoncrawl.model.PokemonModel;
 

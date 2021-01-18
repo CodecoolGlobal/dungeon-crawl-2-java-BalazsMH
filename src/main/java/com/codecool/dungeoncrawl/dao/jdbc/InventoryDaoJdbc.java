@@ -1,5 +1,6 @@
-package com.codecool.dungeoncrawl.dao;
+package com.codecool.dungeoncrawl.dao.jdbc;
 
+import com.codecool.dungeoncrawl.dao.daoInterface.InventoryDao;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 
 import javax.sql.DataSource;
