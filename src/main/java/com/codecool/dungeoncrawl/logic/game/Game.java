@@ -19,7 +19,6 @@ import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.canvas.*;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -27,14 +26,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Game {
-    private final GameMap map1;
-    private final GameMap map2;
+    private GameMap map1;
+    private GameMap map2;
     private Player player;
-    private final List<List<Integer>> mapWallsLevel1;
-    private final List<List<Integer>> mapWallsLevel2;
+    private List<List<Integer>> mapWallsLevel1;
+    private List<List<Integer>> mapWallsLevel2;
     private Canvas canvas;
     private GraphicsContext context;
     private final Label nameLabel = new Label();
@@ -53,16 +53,18 @@ public class Game {
     public Game(Converter converter, Stage pStage) {
         MapLoader mapLoader = new MapLoader();
         MapGenerator.generateMap(1);
-        this.map1 = mapLoader.loadMap(1);
-        this.mapWallsLevel1 = map1.getWalls();
-
         MapGenerator.generateMap(2);
-        this.map2 = mapLoader.loadMap(2);
-        this.mapWallsLevel2 = map2.getWalls();
+        try{
+            this.map1 = mapLoader.loadMap(1);
+            this.mapWallsLevel1 = map1.getWalls();
+            this.map2 = mapLoader.loadMap(2);
+            this.mapWallsLevel2 = map2.getWalls();
+            this.player = this.map1.getPlayer();
+            setUpCanvasContextStage(map1, map2, converter, pStage);
+        } catch (IOException e){
+            System.out.println("failed to load");
+        }
 
-        this.player = this.map1.getPlayer();
-
-        setUpCanvasContextStage(map1, map2, converter, pStage);
     }
 
     public Game(GameState gameState, Converter converter, Stage pStage) {

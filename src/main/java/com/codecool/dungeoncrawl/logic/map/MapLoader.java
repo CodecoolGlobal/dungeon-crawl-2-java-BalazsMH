@@ -12,34 +12,30 @@ import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.model.*;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class MapLoader {
-    private List<List<Integer>> walls;
-    public GameMap loadMap(int gameLevel) {
-        InputStream is;
-        walls = new ArrayList<>();
-        //TODO: map should not be part of the resources folder
+    private List<List<Integer>> walls = new ArrayList<>();
+    private final String mapLocation = "./src/main/java/com/codecool/dungeoncrawl/logic/map/";
+    public GameMap loadMap(int gameLevel) throws IOException {
+        BufferedReader reader;
         if (gameLevel == 1) {
-            is = MapLoader.class.getResourceAsStream("/map.txt");
+            reader = new BufferedReader(new FileReader(mapLocation + "map1.txt"));
         } else {
-            is = MapLoader.class.getResourceAsStream("/map2.txt");
+            reader = new BufferedReader(new FileReader(mapLocation + "map2.txt"));
         }
 
-        Scanner scanner = new Scanner(is);
-
-        int width = scanner.nextInt();
-        int height = scanner.nextInt();
-
-        scanner.nextLine(); // empty line
+        String[] nums = reader.readLine().split(" ");
+        int width = Integer.parseInt(nums[0]);
+        int height = Integer.parseInt(nums[1]);
 
         GameMap map = new GameMap(width, height, CellType.EMPTY, gameLevel);
         for (int y = 0; y < height; y++) {
-            String line = scanner.nextLine();
+            String line = reader.readLine();
             for (int x = 0; x < width; x++) {
                 if (x < line.length()) {
                     Cell cell = map.getCell(x, y);

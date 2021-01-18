@@ -22,18 +22,14 @@ public class Layout {
         upperMargin = (int) (rows * cols * 0.8);
         lowerMargin = (int) (rows * cols * 0.6);
         if (level == 1){
-            this.filename = "./src/main/resources/map.txt";
+            this.filename = "./src/main/java/com/codecool/dungeoncrawl/logic/map/map1.txt";
             this.pokemonAndItemList.addAll(List.of("C", "S", "B", "B", "k", "L", "L", "@", "d"));
         } else if (level == 2){
-            this.filename = "./src/main/resources/map2.txt";
+            this.filename = "./src/main/java/com/codecool/dungeoncrawl/logic/map/map2.txt";
             this.pokemonAndItemList.addAll(List.of("C", "S", "R", "L", "d"));
         }
     }
 
-    /** Calling generateLayout creates new .txt
-     * TODO BUG fix: map generated will be used in next game (not the current one)
-     * -> program works properly when ran for the second time
-     */
     public void generateLayout(){
         while (true){
             createEmptyBase();
@@ -124,6 +120,7 @@ public class Layout {
             }
             fw.close();
         } catch (IOException e){
+            System.out.println("could not write file");
             System.out.println(e.getMessage());
             System.exit(1);
         }
