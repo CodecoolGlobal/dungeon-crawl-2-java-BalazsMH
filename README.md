@@ -1,101 +1,55 @@
-# Dungeon Crawl (sprint 2)
+![logo](logo.png | width=100x100)
+# javaMON! - Dungeon Crawler Game
 
 ## Story
 
+This game allows you to step into the shoes of Ash and explore two levels while trying to capture pokemons and ultimately defeat the Rocket Grunt.
+
+**How to catch pokemons?** 
+
+You can try simply throwing pokeballs at them. Depending on the pokeball's strength, you may catch it without engaging in a fight. But pokeballs are scarce resources (found in some lootboxes)!
+
+Alternatively, you can fight the pokemon too. But beware that it will fight back and your damage value does not guarantee that amount of damage, merely sets the upper limit to a random number. If the health of your enemy decreases to 0, you can catch it by throwing a pokeball.
+
+When you defeat a pokemon, the damage value of the one you used to fight it increases - your pokemon develops.
+
+If you manage to catch a pokemon, it will appear in your inventory, and you can choose that in a subsequent fight (press 'A' to change active pokemon). If you have health potions in your inventory, you can also heal your active pokemon after a fight (press 'H').
+
+**Levels**
+
+There is an "info board" somewhere on level 1. You need to get that to be able to unlock the door to level 2.
+
+**End of the game**
+
+The game ends if you defeated all pokemons of the Rocket Grunt (waiting for you on level 2), or if you lose all of your pokemons on your journey.
+
+## Main features
+#### Saving gamestate
+The app allows you to save a (very close to complete) game state. The physical layout itself, the pokemons on the field (including all their attributes like health and damage) will be retained, as well as your inventory, with the pokemons you have already captured, the available pokeballs, health potions and your key to the next level (if already obtained)! 
+
+What is more, you can select *how* you want to preserve your game:
+1. Save to PostgreSQL database
+2. Export to json so that you can take your game with you and continue at a friend's place, maybe? Very nineties..
+
+#### Loading previous game
+You can pick up where you left off. You can load a game from the database (identified by username, savename and date) or import it from your json file.
+
+#### Randomly generated, resizeable game field
+
+No two games are the same! 
+
+For every game, new maps are created randomly, with walls delimiting the watery, off-limits areas. You may find yourself on a really hard to navigate field if luck brings it.
+
+Generating the game field programmatically also means that you can change it's size if you would like to roam larger areas. What is more, if the game field is bigger than the game window, your avatar can gradually uncover places that are out of sight at first.
+
+#### Wanna cheat?
+Using the developers' names as username (Balázs, Dani, Fruzsi or Peti) you will be able to cut corners by moving through walls.
+
+
+
+
+
+
 Last week you created a pretty good [Roguelike](https://en.wikipedia.org/wiki/Roguelike) game. It already has some features but the players have no opportunity to save their games. It can be annoying especially when you have to leave the game aside suddenly.
 
-The gamer community bragging for saving functionality and some other new interesting ideas like:
-
-- sharing game with each other
-- maps of different sizes
-- player tracking camera movement
-
-The management is handing out a **prioritized list** of new user stories that should be appended to the unfinished stories from last week in your product backlog. Try to estimate these new stories as well, and based on the estimations pick the stories your team can finish in this sprint.
-
 > Using database for saving game state feature is a business critical item which overrides every other priority now!
-
-Let's continue this entertaining project, and make our players happier!
-
-## What are you going to learn?
-
-- Serialization of objects
-- Communicating with database
-- Writing unit tests for your classes
-- Design pattern: **Data Access Object**
-
-## Tasks
-
-1. Create a new sprint from the existing backlog. Last week you had a long list of stories, a few new stories this week.
-    - The new items are added to the backlog
-    - The team has created a new sprint plan based upon the unified backlog
-    - The mandatory "Saving game" backlog item is in Sprint 2 and planned in detail
-
-2. As you will work in a new repository but you need the code from the previous sprint, add the `dungeon-crawl-2` repository as a new remote to the previous sprint's repository, then pull (merge) and push your changes into it.
-    - There is a merge commit in the project's repository that contains code from the previous sprint
-
-3. Allow the user to save the current state of the game in a database. Extend the given schema if needed.
-    - The application uses PostgreSQL database with the given schema: `schema_ddl.sql`
-    - The application respects the `PSQL_USER_NAME`, `PSQL_PASSWORD`, `PSQL_DB_NAME` environment variables
-    - Students has an Entity Relationship diagram (connections between classes, 1-1, 1-many...) in a digitalized format.
-    - When the user hits `Ctrl+s`, a modal window pops up with one text input field (labelled `Name`) and two buttons, `Save` and `Cancel`.
-- When the user clicks on `Save`, the game saves the current state (current map, player' position and content of inventory) in the database
-  - If the given name is new then it saves the state
-  - If the given username already exist in the db the system shows a dialogbox with a question: `Would you like to overwrite the already existing state?`
-    - Choosing `Yes`: the already existing state is updated and all modal window closes
-    - Choosing `No`: the dialog closes and the name input field content on the saving dialog is selected again
-  - In case of clicking on `Cancel` the saving process terminates without any further action
-- The modal window is automatically closed after the operation
-    - Already discovered maps are also saved in DB.
-    - There is a `Load` menu which brings up a modal window, showing the previously saved states with their names as a selectable list. Choosing an element loads the selected game state with the proper map, position and inventory.
-
-4. Allow the user to export (serialize) his game state into a text file, and load (deserialize) the game from the exported file.
-    - There is a menu item with a label `Export game` which triggers the export mechanism
-    - The exporting process asks the user for the location and the name of the exported file. The file is created in the defined directory using the given name as a JSON file. eg. `<my-fantastic-game>.json`
-    - The file stores every necessary game state information in JSON format.
-    - There is a menu button labeled `Import` for importing a previously saved game.
-- The system shows a file browser to select an exported file
-  - If the chosen file isn't in proper format, the application shows a dialog window (OK, Cancel) with the following message: `IMPORT ERROR! Unfortunately the given file is in wrong format. Please try another one!`
-    - If the user clicks on `OK` button then the window closes without any further action
-    - If the user click on `Cancel` all dialog and modal window closes
-  - In case the file is in the required format, the game loads the state, and navigates on the map to the point where the user left the game with its inventory
-
-5. The customer seeks for quality assurance and wants to see that your code is covered by unit tests. It is important that beyond positive test cases also cover negative scenarios.
-    - Every unit test method is well arranged and follows the `arrange`-`act`-`assert` structure
-    - Unit test classes and methods follow these naming conventions consistently:
-- classes: `<The name of the tested class>Test`
-- methods: `<the name of the tested method>_<expected input / tested state>_<expected behavior>`
-    - Every test class has at least one negative test case (and more if it's plausible)
-    - Code coverage of self-created business logic classes is above 90%
-
-## General requirements
-
-None
-
-## Hints
-
-- Break the backlog items into smaller tasks so that you can work in parallel
-- The given DB schema is only an example. Probably you need to alter is according to the requirements. For instance it doesn't contain any info about inventory or discovered maps by the player
-- Write as many unit tests as possible to cover your business logic
-- If a method takes a reference type parameter there should be test for getting `null` as an argument. It is called negative test cases.
-- You can read easily an environment variable's value: `System.getenv("VAR_NAME");`
-- You can import the sample data file into `psql` with the `\i` command or run it via the Database tool in IntelliJ.
-- In IntelliJ language injections let you work with pieces of code in other languages embedded in your code. When you inject a language (such as PostgreSQL) into a string literal, you get comprehensive code assistance for editing that literal.
-- Do you remember how to set environment variables for your run configuration? [here](https://www.jetbrains.com/help/objc/add-environment-variables-and-program-arguments.html)
-- For serialization you need to add necessary dependency to your `pom.xml` and reload the maven project
-
-
-## Starting your project
-
-
-
-## Background materials
-
-- <i class="far fa-exclamation"></i> [Software testing](project/curriculum/materials/pages/general/software-testing.md)
-- <i class="far fa-book-open"></i> [Positive or negative](https://stackoverflow.com/questions/8162423)
-- <i class="far fa-exclamation"></i> [How to design classes](project/curriculum/materials/pages/java/how-to-design-classes.md)
-- <i class="far fa-exclamation"></i> [Introduction to jdbc](project/curriculum/materials/pages/java/introduction-to-jdbc.md)
-- <i class="far fa-exclamation"></i> [jdbc basics](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html)
-- <i class="far fa-exclamation"></i> [DAO pattern in Java](https://www.baeldung.com/java-dao-pattern)
-- <i class="far fa-exclamation"></i> [Serialization in Java](project/curriculum/materials/pages/java/serialization-in-java.md)
-- <i class="far fa-exclamation"></i> [Compare two popular serialization framwork](https://www.baeldung.com/jackson-vs-gson)
-- Reference: the tiles used in the game are from [1-Bit Pack by Kenney](https://kenney.nl/assets/bit-pack), shared on [CC0 1.0 Universal license](https://creativecommons.org/publicdomain/zero/1.0/)
