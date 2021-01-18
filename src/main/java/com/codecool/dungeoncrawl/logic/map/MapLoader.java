@@ -179,12 +179,17 @@ public class MapLoader {
     }
 
     public void placePokemons(GameMap map, GameState gameState) {
+        List<String> rocketPokeNames = new ArrayList<>(List.of(new String[]{"Koffing", "Dustox", "Arbok"}));
+
         for (PokemonModel pokemonModel : gameState.getPokemonModelList()){
             if (pokemonModel.getGameLevel() == map.getLevel()){
                 Cell cell = map.getCell(pokemonModel.getX(), pokemonModel.getY());
                 Pokemon pokemon = PokemonFactory.getPokemon(cell, pokemonModel);
                 cell.setPokemon(pokemon);
                 map.addPokemon(pokemon);
+                if (rocketPokeNames.contains(pokemon.getPokeName())){
+                    map.getRocketGrunt().addRocketPokemonOnBoard(pokemon);
+                };
             }
         }
     }

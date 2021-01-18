@@ -41,6 +41,8 @@ public class RocketGrunt extends Actor {
     public List<Pokemon> getRocketPokemonOnBoard() {return rocketPokemonOnBoard; }
 
     public void addPokemon(Pokemon pokemon){ rocketPokemonList.add(pokemon); }
+
+    public void addRocketPokemonOnBoard(Pokemon pokemon){ rocketPokemonOnBoard.add(pokemon); }
     @Override
     public String getTileName() {
         return "rocketGrunt";
