@@ -155,7 +155,7 @@ public class Game {
                 player.move(1,0, Facing.RIGHT, actionsStB);
                 break;
             case R:
-                map.getRocketGrunt().releasePokemon(map);
+                if (map.getRocketGrunt() != null) map.getRocketGrunt().releasePokemon(map);
                 break;
             case T:
                 player.throwPokeBall(actionsStB, map);
