@@ -135,11 +135,11 @@ public class WindowElement {
     }
 
     public static VBox createBottomBox() {
-        Text movementInfo = new Text("Hint:\nUse the arrow keys to move the character on the map\n" +
+        Text movementInfo = new Text("Use the arrow keys to move the character on the map\n" +
                 "Press 'A' to change active pokemon and 'H' to heal it\n" +
-                "Press 'F' to fight and 'T' to catch pokemon\n" +
+                "Press 'F' to fight and 'T' to catch pokemon. Engage Rocket Grunt by 'R'\n" +
                 "Pick things up by 'E'\n" +
-                "Engage Rocket Grunt by 'R'\n");
+                "Save game by Ctrl + 'S' or export by pressing 'C' \n");
         movementInfo.setFont(Font.loadFont("file:Pokemon_Classic.ttf", 12));
         movementInfo.setTextAlignment(TextAlignment.CENTER);
         movementInfo.setLineSpacing(1.5);
