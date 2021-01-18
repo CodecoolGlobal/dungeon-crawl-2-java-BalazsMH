@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl;
+package com.codecool.dungeoncrawl.logic.ui;
 
 import com.codecool.dungeoncrawl.logic.Drawable;
 import javafx.scene.canvas.GraphicsContext;
