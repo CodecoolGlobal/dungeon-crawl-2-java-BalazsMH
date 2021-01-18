@@ -106,6 +106,8 @@ public class GameDatabaseManager {
         for (Integer id : onBoardIds){
             if (!allIds.contains(id)){
                 lootBoxDao.add(new LootBoxModel(lootBoxes.stream().filter(l -> l.getLootBoxId()==id).findFirst().get(), playerModel.getId()));
+            } else {
+                lootBoxDao.update(new LootBoxModel(lootBoxes.stream().filter(l -> l.getLootBoxId()==id).findFirst().get(), playerModel.getId()));
             }
         }
     }
