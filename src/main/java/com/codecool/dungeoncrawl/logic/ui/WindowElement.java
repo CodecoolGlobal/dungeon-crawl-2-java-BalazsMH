@@ -301,12 +301,13 @@ public class WindowElement {
         startPopup.initOwner(pStage);
         startPopup.setTitle("START GAME!");
 
+        Label instruction = new Label("Enter your name!");
         TextField inputField = createNameInput();
         Button startButton = new Button("Start");
         Button cancelButton = new Button("Cancel");
         StringBuilder name = new StringBuilder();
         startButton.setOnMouseClicked((event) -> {
-            if ("".equals(inputField.getText())) emptyNameAlert(pStage);
+            if ("".equals(inputField.getText())) emptyNameAlert();
             else {
                 name.append(inputField.getText());
                 startPopup.close();
@@ -314,7 +315,7 @@ public class WindowElement {
         });
         cancelButton.setOnMouseClicked((event) -> startPopup.close());
 
-        VBox layout= new VBox(10, inputField, startButton, cancelButton);
+        VBox layout= new VBox(10, instruction, inputField, startButton, cancelButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene1= new Scene(layout, 300, 250);
@@ -324,7 +325,7 @@ public class WindowElement {
         return name.toString();
     }
 
-    public static void emptyNameAlert(Stage pStage){
+    public static void emptyNameAlert(){
         Alert nameAlert = new Alert(Alert.AlertType.CONFIRMATION);
         nameAlert.setTitle("Missing username");
         nameAlert.setHeaderText(null);
