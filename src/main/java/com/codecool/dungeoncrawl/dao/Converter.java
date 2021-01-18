@@ -8,7 +8,6 @@ import com.codecool.dungeoncrawl.logic.items.Inventory;
 import com.codecool.dungeoncrawl.logic.items.LootBox;
 import com.codecool.dungeoncrawl.logic.map.GameMap;
 import com.codecool.dungeoncrawl.model.*;
-import com.codecool.dungeoncrawl.serialization.GameSerialization;
 import com.google.gson.Gson;
 import javafx.stage.Stage;
 
