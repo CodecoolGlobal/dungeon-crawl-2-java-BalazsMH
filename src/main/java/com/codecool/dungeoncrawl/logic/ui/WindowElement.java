@@ -30,7 +30,7 @@ public class WindowElement {
     public static VBox createMainPane(Button newGameButton, Button loadGameButton, Button importGameButton ) {
         VBox mainPane = new VBox(20, newGameButton, loadGameButton, importGameButton);
         mainPane.setPrefSize(1287/1.5,797/1.5);
-        Background background = createBackground("/main_menu.png");
+        Background background = createBackground("/images/main_menu.png");
         mainPane.setBackground(background);
         mainPane.setAlignment(Pos.CENTER);
         mainPane.requestFocus();
@@ -55,7 +55,7 @@ public class WindowElement {
     public static Scene createLoadGameMenu(Stage primaryStage, Scene mainMenu, Converter converter){
         VBox loadGamePane = new VBox(20);
         loadGamePane.setPrefSize(1287/1.5,797/1.5);
-        Background background = createBackground("/main_menu.png");
+        Background background = createBackground("/images/main_menu.png");
         loadGamePane.setBackground(background);
         loadGamePane.setAlignment(Pos.CENTER);
         loadGamePane.requestFocus();
@@ -274,7 +274,7 @@ public class WindowElement {
 
         endContent.getChildren().addAll(displayedText, closeWindow);
         endContent.setPrefSize(800.0/2,761.0/2);
-        Background background = createBackground(endCondition == -1? "/lose.png": "/win.png");
+        Background background = createBackground(endCondition == -1? "/images/lose.png" : "/images/win.png");
 
         endPopup.setScene(endScene);
         endContent.setBackground(background);
