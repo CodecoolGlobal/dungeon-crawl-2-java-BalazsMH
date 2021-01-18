@@ -5,7 +5,7 @@
 
 This game allows you to step into the shoes of Ash and explore two levels while trying to capture pokemons and ultimately defeat the Rocket Grunt.
 
-####How to catch pokemons?
+#### How to catch pokemons?
 
 You can try simply throwing pokeballs at them. Depending on the pokeball's strength, you may catch it without engaging in a fight. But pokeballs are scarce resources (found in some lootboxes)!
 
@@ -15,11 +15,11 @@ When you defeat a pokemon, the damage value of the one you used to fight it incr
 
 If you manage to catch a pokemon, it will appear in your inventory, and you can choose that in a subsequent fight (press 'A' to change active pokemon). If you have health potions in your inventory, you can also heal your active pokemon after a fight (press 'H').
 
-####Levels
+#### Levels
 
 There is an "info board" somewhere on level 1. You need to get that to be able to unlock the door to level 2.
 
-####End of the game
+#### End of the game
 
 The game ends if you defeated all pokemons of the Rocket Grunt (waiting for you on level 2), or if you lose all of your pokemons on your journey.
 
